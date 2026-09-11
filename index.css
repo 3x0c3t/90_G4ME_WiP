@@ -550,216 +550,67 @@ body {
     pointer-events:
         none;
 
-}
+    /*
+       Le JS définit maintenant :
+       - left
+       - top
+       - width
+       - transform
 
-
-.menu-game {
-
-    top:
-        0;
-
-    left:
-        25%;
-
-    width:
-        50%;
-
-    height:
-        46%;
-
-    align-items:
-        flex-start;
-
-    padding-top:
-        5%;
+       Les anciennes positions
+       top/right/bottom/left sont
+       volontairement supprimées.
+    */
 
 }
 
 
-.menu-cell {
-
-    top:
-        0;
-
-    right:
-        0;
-
-    width:
-        46%;
-
-    height:
-        50%;
-
-    justify-content:
-        flex-end;
-
-    padding-right:
-        4%;
-
-}
-
-
-.menu-action {
-
-    top:
-        25%;
-
-    right:
-        0;
-
-    width:
-        46%;
-
-    height:
-        50%;
-
-    justify-content:
-        flex-end;
-
-    padding-right:
-        4%;
-
-}
-
-
-.menu-position {
-
-    right:
-        0;
-
-    bottom:
-        0;
-
-    width:
-        50%;
-
-    height:
-        46%;
-
-    align-items:
-        flex-end;
-
-    justify-content:
-        flex-end;
-
-    padding-right:
-        4%;
-
-    padding-bottom:
-        5%;
-
-}
-
-
-.menu-system {
-
-    bottom:
-        0;
-
-    left:
-        25%;
-
-    width:
-        50%;
-
-    height:
-        46%;
-
-    align-items:
-        flex-end;
-
-    padding-bottom:
-        5%;
-
-}
-
-
-.menu-grid {
-
-    bottom:
-        0;
-
-    left:
-        0;
-
-    width:
-        46%;
-
-    height:
-        50%;
-
-    align-items:
-        flex-end;
-
-    justify-content:
-        flex-start;
-
-    padding-left:
-        4%;
-
-    padding-bottom:
-        5%;
-
-}
-
-
-.menu-map {
-
-    top:
-        25%;
-
-    left:
-        0;
-
-    width:
-        46%;
-
-    height:
-        50%;
-
-    justify-content:
-        flex-start;
-
-    padding-left:
-        4%;
-
-}
-
-
+.menu-game,
+.menu-cell,
+.menu-action,
+.menu-position,
+.menu-system,
+.menu-grid,
+.menu-map,
 .menu-player {
 
     top:
-        0;
+        auto;
+
+    right:
+        auto;
+
+    bottom:
+        auto;
 
     left:
-        0;
+        auto;
 
     width:
-        46%;
+        auto;
 
     height:
-        50%;
+        auto;
 
-    justify-content:
-        flex-start;
-
-    padding-left:
-        4%;
+    padding:
+        0;
 
 }
 
 
-/* =========================================================
-   CONTENU
-   ========================================================= */
-
 .content-inner {
 
+    width:
+        100%;
+
     min-width:
-        170px;
+        0;
+
+    max-width:
+        100%;
 
     padding:
-        10px 15px;
+        10px 12px;
 
     background:
         rgba(2, 8, 13, 0.70);
@@ -773,6 +624,10 @@ body {
 
 }
 
+
+/* =========================================================
+   CONTENU
+   ========================================================= */
 
 .content-label {
 
@@ -1237,7 +1092,7 @@ body {
     .content-inner {
 
         min-width:
-            130px;
+            0;
 
         padding:
             7px 9px;
@@ -1255,8 +1110,10 @@ body {
 
     .menu-content-panel {
 
-        transform:
-            scale(0.85);
+        /*
+           Le positionnement reste entièrement
+           géré par le calcul radial du JS.
+        */
 
     }
 

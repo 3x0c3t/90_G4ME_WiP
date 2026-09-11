@@ -42,6 +42,11 @@ const DOM = {
             "menu-title-layer"
         ),
 
+    menuContent:
+        document.getElementById(
+            "menu-content"
+        ),
+
     turnValue:
         document.getElementById(
             "turn-value"
@@ -130,8 +135,10 @@ const MENUS = [
             "GAME",
 
         angle:
-            -90
+            -90,
 
+        panel:
+            "panel-top"
     },
 
     {
@@ -139,8 +146,10 @@ const MENUS = [
             "CELL",
 
         angle:
-            -45
+            -45,
 
+        panel:
+            "panel-top-right"
     },
 
     {
@@ -148,8 +157,10 @@ const MENUS = [
             "ACTION",
 
         angle:
-            0
+            0,
 
+        panel:
+            "panel-right"
     },
 
     {
@@ -157,8 +168,10 @@ const MENUS = [
             "POSITION",
 
         angle:
-            45
+            45,
 
+        panel:
+            "panel-bottom-right"
     },
 
     {
@@ -166,8 +179,10 @@ const MENUS = [
             "SYSTEM",
 
         angle:
-            90
+            90,
 
+        panel:
+            "panel-bottom"
     },
 
     {
@@ -175,8 +190,10 @@ const MENUS = [
             "GRID",
 
         angle:
-            135
+            135,
 
+        panel:
+            "panel-bottom-left"
     },
 
     {
@@ -184,8 +201,10 @@ const MENUS = [
             "MAP",
 
         angle:
-            180
+            180,
 
+        panel:
+            "panel-left"
     },
 
     {
@@ -193,8 +212,10 @@ const MENUS = [
             "PLAYER",
 
         angle:
-            225
+            225,
 
+        panel:
+            "panel-top-left"
     }
 
 ];
@@ -219,6 +240,29 @@ const TITLE_RING_GAP =
 
 const TITLE_WHEEL_ROTATION =
     22.5;
+
+
+/*
+   Zone de contenu.
+
+   Le contenu est placé entre :
+   - le cercle extérieur de la map
+   - le bord disponible de l'écran
+
+   Chaque panneau occupe le secteur correspondant.
+*/
+
+const CONTENT_INNER_GAP =
+    18;
+
+const CONTENT_OUTER_GAP =
+    28;
+
+const CONTENT_MAX_WIDTH =
+    250;
+
+const CONTENT_MIN_WIDTH =
+    130;
 
 
 /* =========================================================
@@ -768,6 +812,185 @@ function drawTitles(
 
 
 /* =========================================================
+   CONTENU DES MENUS
+   ========================================================= */
+
+function positionMenuContents(
+    cx,
+    cy,
+    mapRadius,
+    titleRadius,
+    width,
+    height
+) {
+
+    if (
+        !DOM.menuContent
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+       Le cercle de la map constitue
+       le bord intérieur des parts de pizza.
+    */
+
+    const innerRadius =
+        titleRadius +
+        CONTENT_INNER_GAP;
+
+
+    /*
+       Distance jusqu'au bord de l'écran
+       dans chaque direction.
+    */
+
+    const outerDistances =
+        MENUS.map(
+            menu => {
+
+                const point =
+                    rayToScreen(
+                        cx,
+                        cy,
+                        menu.angle +
+                        TITLE_WHEEL_ROTATION,
+                        width,
+                        height
+                    );
+
+
+                return Math.hypot(
+                    point.x - cx,
+                    point.y - cy
+                );
+
+            }
+        );
+
+
+    const maxOuterRadius =
+        Math.min(
+            ...outerDistances
+        );
+
+
+    const outerRadius =
+        maxOuterRadius -
+        CONTENT_OUTER_GAP;
+
+
+    /*
+       Centre radial du contenu.
+
+       On ne colle ni au cercle,
+       ni au bord.
+    */
+
+    const contentRadius =
+        innerRadius +
+        (
+            outerRadius -
+            innerRadius
+        ) *
+        0.48;
+
+
+    /*
+       Largeur disponible.
+
+       Chaque secteur fait 45°.
+       On limite la largeur pour
+       éviter de mordre dans les
+       secteurs voisins.
+    */
+
+    const sectorWidth =
+        contentRadius *
+        2 *
+        Math.sin(
+            Math.PI /
+            8
+        );
+
+
+    const contentWidth =
+        Math.max(
+            CONTENT_MIN_WIDTH,
+            Math.min(
+                CONTENT_MAX_WIDTH,
+                sectorWidth *
+                0.82
+            )
+        );
+
+
+    MENUS.forEach(
+        menu => {
+
+            const panel =
+                document.getElementById(
+                    menu.panel
+                );
+
+
+            if (
+                !panel
+            ) {
+
+                return;
+
+            }
+
+
+            /*
+               Même rotation que les titres.
+
+               Les titres ont été corrigés
+               avec +22.5°.
+               Les contenus utilisent donc
+               exactement le même secteur.
+            */
+
+            const sectorAngle =
+                menu.angle +
+                TITLE_WHEEL_ROTATION;
+
+
+            const position =
+                polarPoint(
+                    cx,
+                    cy,
+                    contentRadius,
+                    sectorAngle
+                );
+
+
+            panel.style.left =
+                `${position.x}px`;
+
+            panel.style.top =
+                `${position.y}px`;
+
+            panel.style.width =
+                `${contentWidth}px`;
+
+            panel.style.height =
+                "auto";
+
+            panel.style.transform =
+                "translate(-50%, -50%)";
+
+        }
+    );
+
+}
+
+
+/* =========================================================
    INTERFACE RADIALE
    ========================================================= */
 
@@ -841,6 +1064,16 @@ function drawRadialInterface() {
         cx,
         cy,
         titleRadius
+    );
+
+
+    positionMenuContents(
+        cx,
+        cy,
+        mapRadius,
+        titleRadius,
+        width,
+        height
     );
 
 }
