@@ -1,52 +1,148 @@
 "use strict";
 
-/* ============================================================
+
+/* =========================================================
    DOM
-============================================================ */
+   ========================================================= */
 
 const DOM = {
 
-    game:
-        document.getElementById("game"),
-
     radialInterface:
-        document.getElementById("radial-interface"),
+        document.getElementById(
+            "radial-interface"
+        ),
 
-    radialMenus:
-        document.getElementById("radial-menus"),
+    svg:
+        document.getElementById(
+            "radial-interface-svg"
+        ),
 
-    menuSectors:
-        document.getElementById("menu-sectors"),
+    sectorLines:
+        document.getElementById(
+            "menu-sector-lines"
+        ),
 
-    menuGuides:
-        document.getElementById("menu-guides"),
+    mapCircleLayer:
+        document.getElementById(
+            "map-circle-layer"
+        ),
 
-    menuTitlePaths:
-        document.getElementById("menu-title-paths"),
+    titleCircleLayer:
+        document.getElementById(
+            "title-circle-layer"
+        ),
 
-    menuTitles:
-        document.getElementById("menu-titles"),
-
-    menuInformation:
-        document.getElementById("menu-information"),
+    titleLayer:
+        document.getElementById(
+            "menu-title-layer"
+        ),
 
     map:
-        document.getElementById("map"),
+        document.getElementById(
+            "map"
+        ),
 
     octagonGrid:
-        document.getElementById("octagon-grid"),
+        document.getElementById(
+            "octagon-grid"
+        ),
 
     squareGrid:
-        document.getElementById("square-grid"),
+        document.getElementById(
+            "square-grid"
+        ),
 
-    playerValue:
-        document.getElementById("player-value")
+    turnValue:
+        document.getElementById(
+            "turn-value"
+        ),
+
+    roundValue:
+        document.getElementById(
+            "round-value"
+        ),
+
+    playersValue:
+        document.getElementById(
+            "players-value"
+        ),
+
+    selectedCell:
+        document.getElementById(
+            "selected-cell"
+        ),
+
+    selectedType:
+        document.getElementById(
+            "selected-type"
+        ),
+
+    positionX:
+        document.getElementById(
+            "position-x"
+        ),
+
+    positionY:
+        document.getElementById(
+            "position-y"
+        ),
+
+    systemMessage:
+        document.getElementById(
+            "system-message"
+        ),
+
+    zoomValue:
+        document.getElementById(
+            "zoom-value"
+        ),
+
+    playerName:
+        document.getElementById(
+            "player-name"
+        ),
+
+    btnReset:
+        document.getElementById(
+            "btn-reset"
+        ),
+
+    btnMenu:
+        document.getElementById(
+            "btn-menu"
+        ),
+
+    btnSelect:
+        document.getElementById(
+            "btn-select"
+        ),
+
+    btnConfirm:
+        document.getElementById(
+            "btn-confirm"
+        ),
+
+    btnCancel:
+        document.getElementById(
+            "btn-cancel"
+        ),
+
+    btnZoomIn:
+        document.getElementById(
+            "btn-zoom-in"
+        ),
+
+    btnZoomOut:
+        document.getElementById(
+            "btn-zoom-out"
+        )
+
 };
 
 
-/* ============================================================
-   GAME STATE
-============================================================ */
+/* =========================================================
+   ETAT
+   ========================================================= */
 
 const GAME_STATE = {
 
@@ -56,93 +152,132 @@ const GAME_STATE = {
 
     round: 1,
 
+    players: 2,
+
     selectedCell: null,
 
     selectedX: null,
 
     selectedY: null,
 
-    zoom: 100
+    zoom: 100,
+
+    menuOpen: true
+
 };
 
 
-/* ============================================================
+/* =========================================================
    MENUS
-============================================================ */
+   ========================================================= */
 
 const MENUS = [
 
     {
-        id: "game",
-        title: "GAME",
-        center: -112.5
+        label: "GAME",
+        angle: -90
     },
 
     {
-        id: "cell",
-        title: "CELL",
-        center: -67.5
+        label: "CELL",
+        angle: -45
     },
 
     {
-        id: "action",
-        title: "ACTION",
-        center: -22.5
+        label: "ACTION",
+        angle: 0
     },
 
     {
-        id: "position",
-        title: "POSITION",
-        center: 22.5
+        label: "POSITION",
+        angle: 45
     },
 
     {
-        id: "system",
-        title: "SYSTEM",
-        center: 67.5
+        label: "SYSTEM",
+        angle: 90
     },
 
     {
-        id: "grid",
-        title: "GRID",
-        center: 112.5
+        label: "GRID",
+        angle: 135
     },
 
     {
-        id: "map",
-        title: "MAP",
-        center: 157.5
+        label: "MAP",
+        angle: 180
     },
 
     {
-        id: "player",
-        title: "PLAYER",
-        center: 202.5
+        label: "PLAYER",
+        angle: 225
     }
 
 ];
 
 
-/* ============================================================
-   SVG
-============================================================ */
-
 const SVG_NS =
     "http://www.w3.org/2000/svg";
 
 
-function svgElement(name) {
+/* =========================================================
+   GEOMETRIE
+   ========================================================= */
 
-    return document.createElementNS(
-        SVG_NS,
-        name
+const MAP_RADIUS_RATIO =
+    0.25;
+
+
+const MAP_RING_GAP =
+    13;
+
+
+const TITLE_RING_GAP =
+    32;
+
+
+const TITLE_ARC_HALF =
+    13;
+
+
+/* =========================================================
+   SVG
+   ========================================================= */
+
+function svgElement(
+    name,
+    attributes = {}
+) {
+
+    const element =
+        document.createElementNS(
+            SVG_NS,
+            name
+        );
+
+
+    Object.entries(
+        attributes
+    ).forEach(
+        ([key, value]) => {
+
+            element.setAttribute(
+                key,
+                value
+            );
+
+        }
     );
+
+
+    return element;
+
 }
 
 
-/* ============================================================
-   POLAR
-============================================================ */
+/* =========================================================
+   POINT POLAIRE
+   ========================================================= */
 
 function polarPoint(
     cx,
@@ -151,7 +286,7 @@ function polarPoint(
     angle
 ) {
 
-    const radians =
+    const rad =
         angle *
         Math.PI /
         180;
@@ -161,22 +296,24 @@ function polarPoint(
 
         x:
             cx +
-            radius *
-            Math.cos(radians),
+            Math.cos(rad) *
+            radius,
 
         y:
             cy +
-            radius *
-            Math.sin(radians)
+            Math.sin(rad) *
+            radius
+
     };
+
 }
 
 
-/* ============================================================
-   RECTANGLE RAY
-============================================================ */
+/* =========================================================
+   INTERSECTION AVEC LE BORD
+   ========================================================= */
 
-function rayToRectangle(
+function rayToScreen(
     cx,
     cy,
     angle,
@@ -184,17 +321,18 @@ function rayToRectangle(
     height
 ) {
 
-    const radians =
+    const rad =
         angle *
         Math.PI /
         180;
 
 
     const dx =
-        Math.cos(radians);
+        Math.cos(rad);
+
 
     const dy =
-        Math.sin(radians);
+        Math.sin(rad);
 
 
     const distances = [];
@@ -206,11 +344,15 @@ function rayToRectangle(
             (width - cx) / dx
         );
 
-    } else if (dx < 0) {
+    }
+
+
+    if (dx < 0) {
 
         distances.push(
             -cx / dx
         );
+
     }
 
 
@@ -220,11 +362,15 @@ function rayToRectangle(
             (height - cy) / dy
         );
 
-    } else if (dy < 0) {
+    }
+
+
+    if (dy < 0) {
 
         distances.push(
             -cy / dy
         );
+
     }
 
 
@@ -237,7 +383,9 @@ function rayToRectangle(
 
 
     const distance =
-        Math.min(...valid);
+        Math.min(
+            ...valid
+        );
 
 
     return {
@@ -251,91 +399,415 @@ function rayToRectangle(
             cy +
             dy *
             distance
+
     };
+
 }
 
 
-/* ============================================================
-   ARC
-============================================================ */
+/* =========================================================
+   CREATION DES CERCLES
+   ========================================================= */
 
-function arcPath(
+function drawCircles(
     cx,
     cy,
-    radius,
-    startAngle,
-    endAngle,
-    sweep
+    mapRadius
 ) {
 
-    const start =
-        polarPoint(
-            cx,
-            cy,
-            radius,
-            startAngle
+    DOM.mapCircleLayer.innerHTML =
+        "";
+
+    DOM.titleCircleLayer.innerHTML =
+        "";
+
+
+    /*
+       CERCLE 1
+       juste autour de la MAP
+    */
+
+    const mapRingRadius =
+        mapRadius +
+        MAP_RING_GAP;
+
+
+    const mapRing =
+        svgElement(
+            "circle",
+            {
+
+                class:
+                    "map-circle",
+
+                cx:
+                    cx,
+
+                cy:
+                    cy,
+
+                r:
+                    mapRingRadius
+
+            }
         );
 
 
-    const end =
-        polarPoint(
-            cx,
-            cy,
-            radius,
-            endAngle
+    DOM.mapCircleLayer.appendChild(
+        mapRing
+    );
+
+
+    /*
+       Petit anneau secondaire
+    */
+
+    const secondaryRing =
+        svgElement(
+            "circle",
+            {
+
+                class:
+                    "map-circle-secondary",
+
+                cx:
+                    cx,
+
+                cy:
+                    cy,
+
+                r:
+                    mapRadius + 5
+
+            }
         );
 
 
-    let delta =
-        Math.abs(
-            endAngle -
-            startAngle
+    DOM.mapCircleLayer.appendChild(
+        secondaryRing
+    );
+
+
+    /*
+       CERCLE 2
+       cercle exact des titres
+    */
+
+    const titleRadius =
+        mapRingRadius +
+        TITLE_RING_GAP;
+
+
+    const titleRing =
+        svgElement(
+            "circle",
+            {
+
+                class:
+                    "title-circle",
+
+                cx:
+                    cx,
+
+                cy:
+                    cy,
+
+                r:
+                    titleRadius
+
+            }
         );
 
 
-    delta %= 360;
+    DOM.titleCircleLayer.appendChild(
+        titleRing
+    );
 
 
-    if (delta === 0) {
+    return titleRadius;
 
-        delta = 360;
-    }
-
-
-    const largeArc =
-        delta > 180
-            ? 1
-            : 0;
-
-
-    return [
-
-        "M",
-        start.x,
-        start.y,
-
-        "A",
-        radius,
-        radius,
-        0,
-        largeArc,
-        sweep,
-        end.x,
-        end.y
-
-    ].join(" ");
 }
 
 
-/* ============================================================
-   MAP GEOMETRY
-============================================================ */
+/* =========================================================
+   RAYONS
+   ========================================================= */
 
-function getMapGeometry() {
+function drawSectorLines(
+    cx,
+    cy,
+    mapRadius,
+    width,
+    height
+) {
+
+    DOM.sectorLines.innerHTML =
+        "";
+
+
+    /*
+       Les lignes commencent au cercle
+       autour de la MAP.
+    */
+
+    const startRadius =
+        mapRadius +
+        MAP_RING_GAP;
+
+
+    MENUS.forEach(
+        menu => {
+
+            const start =
+                polarPoint(
+                    cx,
+                    cy,
+                    startRadius,
+                    menu.angle
+                );
+
+
+            const end =
+                rayToScreen(
+                    cx,
+                    cy,
+                    menu.angle,
+                    width,
+                    height
+                );
+
+
+            const line =
+                svgElement(
+                    "line",
+                    {
+
+                        class:
+                            "menu-sector-line",
+
+                        x1:
+                            start.x,
+
+                        y1:
+                            start.y,
+
+                        x2:
+                            end.x,
+
+                        y2:
+                            end.y
+
+                    }
+                );
+
+
+            DOM.sectorLines.appendChild(
+                line
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   TITRES SUR LE CERCLE
+   ========================================================= */
+
+function drawTitles(
+    cx,
+    cy,
+    titleRadius
+) {
+
+    DOM.titleLayer.innerHTML =
+        "";
+
+
+    MENUS.forEach(
+        (
+            menu,
+            index
+        ) => {
+
+            const center =
+                menu.angle;
+
+
+            let startAngle =
+                center -
+                TITLE_ARC_HALF;
+
+
+            let endAngle =
+                center +
+                TITLE_ARC_HALF;
+
+
+            /*
+               Pour la moitié inférieure,
+               le chemin est inversé afin
+               que le texte reste lisible.
+            */
+
+            const normalized =
+                (
+                    center + 360
+                ) % 360;
+
+
+            let sweep =
+                1;
+
+
+            if (
+                normalized >= 0 &&
+                normalized < 180
+            ) {
+
+                const temp =
+                    startAngle;
+
+                startAngle =
+                    endAngle;
+
+                endAngle =
+                    temp;
+
+                sweep =
+                    0;
+
+            }
+
+
+            const start =
+                polarPoint(
+                    cx,
+                    cy,
+                    titleRadius,
+                    startAngle
+                );
+
+
+            const end =
+                polarPoint(
+                    cx,
+                    cy,
+                    titleRadius,
+                    endAngle
+                );
+
+
+            const pathId =
+                `titleArc${index}`;
+
+
+            const path =
+                svgElement(
+                    "path",
+                    {
+
+                        id:
+                            pathId,
+
+                        class:
+                            "menu-title-arc",
+
+                        d:
+                            [
+                                "M",
+                                start.x,
+                                start.y,
+
+                                "A",
+                                titleRadius,
+                                titleRadius,
+
+                                0,
+                                0,
+                                sweep,
+
+                                end.x,
+                                end.y
+
+                            ].join(" ")
+
+                    }
+                );
+
+
+            DOM.titleLayer.appendChild(
+                path
+            );
+
+
+            const text =
+                svgElement(
+                    "text",
+                    {
+
+                        class:
+                            "menu-title",
+
+                        "text-anchor":
+                            "middle"
+
+                    }
+                );
+
+
+            const textPath =
+                svgElement(
+                    "textPath",
+                    {
+
+                        href:
+                            `#${pathId}`,
+
+                        startOffset:
+                            "50%"
+
+                    }
+                );
+
+
+            textPath.textContent =
+                menu.label;
+
+
+            text.appendChild(
+                textPath
+            );
+
+
+            DOM.titleLayer.appendChild(
+                text
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   INTERFACE RADIALE
+   ========================================================= */
+
+function drawRadialInterface() {
+
+    /*
+       IMPORTANT :
+       on récupère le rectangle du CONTENEUR COMMUN,
+       pas celui du SVG.
+
+       Ainsi la MAP et les cercles utilisent
+       exactement le même centre.
+    */
 
     const rect =
-        DOM.radialInterface
-            .getBoundingClientRect();
+        DOM.radialInterface.getBoundingClientRect();
 
 
     const width =
@@ -346,6 +818,20 @@ function getMapGeometry() {
         rect.height;
 
 
+    if (
+        width <= 0 ||
+        height <= 0
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+       CENTRE UNIQUE
+    */
+
     const cx =
         width / 2;
 
@@ -354,786 +840,90 @@ function getMapGeometry() {
         height / 2;
 
 
-    const mapRect =
-        DOM.map
-            ? DOM.map.getBoundingClientRect()
-            : null;
+    /*
+       Rayon MAP
+    */
 
-
-    let mapRadius =
+    const mapRadius =
         Math.min(
             width,
             height
-        ) * 0.312;
-
-
-    if (mapRect) {
-
-        mapRadius =
-            Math.min(
-                mapRect.width,
-                mapRect.height
-            ) / 2;
-    }
-
-
-    return {
-
-        width,
-
-        height,
-
-        cx,
-
-        cy,
-
-        mapRadius
-    };
-}
-
-
-/* ============================================================
-   MENU OUTER RADIUS
-============================================================ */
-
-function getOuterRadius(
-    mapRadius,
-    width,
-    height
-) {
-
-    const available =
-        Math.min(
-            width,
-            height
-        ) / 2;
-
-
-    const depth =
-        Math.min(
-            155,
-            Math.max(
-                95,
-                available -
-                mapRadius
-            )
-        );
-
-
-    return mapRadius + depth;
-}
-
-
-/* ============================================================
-   CLEAR RADIAL LAYERS
-============================================================ */
-
-function clearRadialLayers() {
-
-    if (DOM.menuGuides) {
-
-        DOM.menuGuides.innerHTML =
-            "";
-    }
-
-
-    if (DOM.menuTitlePaths) {
-
-        DOM.menuTitlePaths.innerHTML =
-            "";
-    }
-
-
-    if (DOM.menuTitles) {
-
-        DOM.menuTitles.innerHTML =
-            "";
-    }
-}
-
-
-/* ============================================================
-   MAP CIRCLE
-============================================================ */
-
-function createMapCircle(
-    cx,
-    cy,
-    radius
-) {
-
-    if (!DOM.menuGuides) {
-        return;
-    }
-
-
-    const circle =
-        svgElement(
-            "circle"
-        );
-
-
-    circle.setAttribute(
-        "cx",
-        cx
-    );
-
-
-    circle.setAttribute(
-        "cy",
-        cy
-    );
-
-
-    circle.setAttribute(
-        "r",
-        radius
-    );
-
-
-    circle.classList.add(
-        "map-circle-guide"
-    );
-
-
-    DOM.menuGuides.appendChild(
-        circle
-    );
-}
-
-
-/* ============================================================
-   OUTER CIRCLE
-============================================================ */
-
-function createOuterCircle(
-    cx,
-    cy,
-    radius
-) {
-
-    if (!DOM.menuGuides) {
-        return;
-    }
-
-
-    const circle =
-        svgElement(
-            "circle"
-        );
-
-
-    circle.setAttribute(
-        "cx",
-        cx
-    );
-
-
-    circle.setAttribute(
-        "cy",
-        cy
-    );
-
-
-    circle.setAttribute(
-        "r",
-        radius
-    );
-
-
-    circle.classList.add(
-        "menu-outer-guide"
-    );
-
-
-    DOM.menuGuides.appendChild(
-        circle
-    );
-}
-
-
-/* ============================================================
-   SEPARATORS
-============================================================ */
-
-function createSeparators(
-    cx,
-    cy,
-    mapRadius,
-    width,
-    height
-) {
-
-    if (!DOM.menuGuides) {
-        return;
-    }
-
-
-    MENUS.forEach(
-        menu => {
-
-            const angle =
-                menu.center -
-                22.5;
-
-
-            const start =
-                polarPoint(
-                    cx,
-                    cy,
-                    mapRadius,
-                    angle
-                );
-
-
-            const end =
-                rayToRectangle(
-                    cx,
-                    cy,
-                    angle,
-                    width,
-                    height
-                );
-
-
-            const line =
-                svgElement(
-                    "line"
-                );
-
-
-            line.setAttribute(
-                "x1",
-                start.x
-            );
-
-
-            line.setAttribute(
-                "y1",
-                start.y
-            );
-
-
-            line.setAttribute(
-                "x2",
-                end.x
-            );
-
-
-            line.setAttribute(
-                "y2",
-                end.y
-            );
-
-
-            line.classList.add(
-                "menu-separator"
-            );
-
-
-            DOM.menuGuides.appendChild(
-                line
-            );
-        }
-    );
-}
-
-
-/* ============================================================
-   CREATE TITLE
-   ============================================================ */
-
-function createTitle(
-    menu,
-    cx,
-    cy,
-    radius
-) {
-
-    if (
-        !DOM.menuTitlePaths ||
-        !DOM.menuTitles
-    ) {
-
-        return;
-    }
+        ) *
+        MAP_RADIUS_RATIO;
 
 
     /*
-     * IMPORTANT :
-     *
-     * Cette géométrie correspond à la version
-     * fonctionnelle des titres.
-     *
-     * On ne déplace pas les titres.
-     */
+       Le SVG possède exactement
+       les dimensions du conteneur.
+    */
+
+    DOM.svg.setAttribute(
+        "viewBox",
+        `0 0 ${width} ${height}`
+    );
+
+
+    /*
+       MAP
+       ↓
+       cercle MAP
+       ↓
+       cercle titres
+    */
 
     const titleRadius =
-        radius + 28;
-
-
-    const arcSize =
-        30;
-
-
-    const halfArc =
-        arcSize / 2;
-
-
-    const normalized =
-        (
-            menu.center %
-            360 +
-            360
-        ) % 360;
-
-
-    /*
-     * Partie haute :
-     * lecture gauche -> droite.
-     *
-     * Partie basse :
-     * inversion de l'arc pour conserver
-     * le texte lisible.
-     */
-
-    const upper =
-        normalized >= 180 ||
-        normalized <= 0;
-
-
-    let startAngle;
-    let endAngle;
-    let sweep;
-
-
-    if (upper) {
-
-        startAngle =
-            menu.center -
-            halfArc;
-
-        endAngle =
-            menu.center +
-            halfArc;
-
-        sweep = 1;
-
-    } else {
-
-        startAngle =
-            menu.center +
-            halfArc;
-
-        endAngle =
-            menu.center -
-            halfArc;
-
-        sweep = 0;
-    }
-
-
-    const path =
-        svgElement(
-            "path"
-        );
-
-
-    const pathId =
-        `title-path-${menu.id}`;
-
-
-    path.setAttribute(
-        "id",
-        pathId
-    );
-
-
-    path.setAttribute(
-        "d",
-
-        arcPath(
+        drawCircles(
             cx,
             cy,
-            titleRadius,
-            startAngle,
-            endAngle,
-            sweep
-        )
-    );
-
-
-    path.classList.add(
-        "menu-title-path"
-    );
-
-
-    DOM.menuTitlePaths.appendChild(
-        path
-    );
-
-
-    const text =
-        svgElement(
-            "text"
-        );
-
-
-    text.classList.add(
-        "menu-title"
-    );
-
-
-    const textPath =
-        svgElement(
-            "textPath"
-        );
-
-
-    textPath.setAttribute(
-        "href",
-        `#${pathId}`
-    );
-
-
-    textPath.setAttribute(
-        "startOffset",
-        "50%"
-    );
-
-
-    textPath.setAttribute(
-        "text-anchor",
-        "middle"
-    );
-
-
-    textPath.textContent =
-        menu.title;
-
-
-    text.appendChild(
-        textPath
-    );
-
-
-    DOM.menuTitles.appendChild(
-        text
-    );
-}
-
-
-/* ============================================================
-   CREATE ALL TITLES
-============================================================ */
-
-function createTitles(
-    cx,
-    cy,
-    mapRadius
-) {
-
-    MENUS.forEach(
-        menu => {
-
-            createTitle(
-                menu,
-                cx,
-                cy,
-                mapRadius
-            );
-        }
-    );
-}
-
-
-/* ============================================================
-   CONTENT POSITION
-============================================================ */
-
-function getContentPosition(
-    menu,
-    cx,
-    cy,
-    mapRadius,
-    outerRadius
-) {
-
-    /*
-     * Le contenu se trouve dans le secteur,
-     * entre la MAP et le bord extérieur.
-     *
-     * On laisse le titre sur son arc,
-     * puis le contenu plus près du centre.
-     */
-
-    const radius =
-        mapRadius +
-        (
-            outerRadius -
             mapRadius
-        ) * 0.54;
-
-
-    const point =
-        polarPoint(
-            cx,
-            cy,
-            radius,
-            menu.center
         );
 
 
-    return point;
-}
+    /*
+       Séparations
+    */
 
-
-/* ============================================================
-   POSITION EXISTING CONTENT
-============================================================ */
-
-function positionRadialContent() {
-
-    if (!DOM.menuInformation) {
-
-        return;
-    }
-
-
-    const geometry =
-        getMapGeometry();
-
-
-    const outerRadius =
-        getOuterRadius(
-            geometry.mapRadius,
-            geometry.width,
-            geometry.height
-        );
-
-
-    MENUS.forEach(
-        menu => {
-
-            const selector =
-                `.radial-content-${menu.id}`;
-
-
-            const content =
-                DOM.menuInformation
-                    .querySelector(
-                        selector
-                    );
-
-
-            if (!content) {
-
-                return;
-            }
-
-
-            const point =
-                getContentPosition(
-                    menu,
-                    geometry.cx,
-                    geometry.cy,
-                    geometry.mapRadius,
-                    outerRadius
-                );
-
-
-            content.style.position =
-                "absolute";
-
-
-            content.style.left =
-                `${point.x}px`;
-
-
-            content.style.top =
-                `${point.y}px`;
-
-
-            content.style.right =
-                "auto";
-
-
-            content.style.bottom =
-                "auto";
-
-
-            content.style.transform =
-                "translate(-50%, -50%)";
-        }
-    );
-}
-
-
-/* ============================================================
-   REMOVE DUPLICATED TITLES FROM CONTENT
-============================================================ */
-
-function removeDuplicatedContentTitles() {
-
-    if (!DOM.menuInformation) {
-
-        return;
-    }
-
-
-    const titles =
-        DOM.menuInformation
-            .querySelectorAll(
-                ".panel-title"
-            );
-
-
-    titles.forEach(
-        title => {
-
-            title.style.display =
-                "none";
-        }
-    );
-}
-
-
-/* ============================================================
-   RADIAL INTERFACE
-============================================================ */
-
-function buildRadialInterface() {
-
-    if (!DOM.radialInterface) {
-
-        return;
-    }
-
-
-    const geometry =
-        getMapGeometry();
-
-
-    const outerRadius =
-        getOuterRadius(
-            geometry.mapRadius,
-            geometry.width,
-            geometry.height
-        );
-
-
-    clearRadialLayers();
-
-
-    createMapCircle(
-        geometry.cx,
-        geometry.cy,
-        geometry.mapRadius
-    );
-
-
-    createOuterCircle(
-        geometry.cx,
-        geometry.cy,
-        outerRadius
-    );
-
-
-    createSeparators(
-        geometry.cx,
-        geometry.cy,
-        geometry.mapRadius,
-        geometry.width,
-        geometry.height
+    drawSectorLines(
+        cx,
+        cy,
+        mapRadius,
+        width,
+        height
     );
 
 
     /*
-     * Les titres sont générés ici,
-     * une seule fois par reconstruction.
-     */
+       Titres
+    */
 
-    createTitles(
-        geometry.cx,
-        geometry.cy,
-        geometry.mapRadius
+    drawTitles(
+        cx,
+        cy,
+        titleRadius
     );
 
-
-    /*
-     * Le contenu existant est simplement
-     * repositionné dans les secteurs.
-     */
-
-    removeDuplicatedContentTitles();
-
-    positionRadialContent();
 }
 
 
-/* ============================================================
-   OCTAGON GRID
-============================================================ */
+/* =========================================================
+   GRILLE OCTOGONALE
+   ========================================================= */
 
-function generateOctagonGrid() {
+function createOctagonGrid() {
 
-    if (!DOM.octagonGrid) {
-
-        return;
-    }
-
-
-    /*
-     * Ne pas régénérer si la grille
-     * existe déjà dans le HTML.
-     */
-
-    const existing =
-        DOM.octagonGrid
-            .querySelectorAll(
-                ".octagon-cell"
-            );
-
-
-    if (existing.length > 0) {
-
-        return;
-    }
-
-
-    const size =
-        7;
+    DOM.octagonGrid.innerHTML =
+        "";
 
 
     for (
         let y = 0;
-        y < size;
+        y < 7;
         y++
     ) {
 
-        const row =
-            document.createElement(
-                "div"
-            );
-
-
-        row.className =
-            "octagon-row";
-
-
-        if (
-            y % 2 === 1
-        ) {
-
-            row.classList.add(
-                "offset"
-            );
-        }
-
-
         for (
             let x = 0;
-            x < size;
+            x < 7;
             x++
         ) {
 
@@ -1148,68 +938,60 @@ function generateOctagonGrid() {
 
 
             cell.dataset.x =
-                x + 1;
+                String(
+                    x + 1
+                );
 
 
             cell.dataset.y =
-                y + 1;
+                String(
+                    y + 1
+                );
 
 
-            cell.dataset.id =
-                `${x + 1}-${y + 1}`;
+            cell.dataset.type =
+                "EMPTY";
 
 
-            row.appendChild(
+            cell.addEventListener(
+                "click",
+                () =>
+                    selectCell(
+                        cell
+                    )
+            );
+
+
+            DOM.octagonGrid.appendChild(
                 cell
             );
+
         }
 
-
-        DOM.octagonGrid.appendChild(
-            row
-        );
     }
+
 }
 
 
-/* ============================================================
-   SQUARE GRID
-============================================================ */
+/* =========================================================
+   GRILLE CARREE
+   ========================================================= */
 
-function generateSquareGrid() {
+function createSquareGrid() {
 
-    if (!DOM.squareGrid) {
-
-        return;
-    }
-
-
-    const existing =
-        DOM.squareGrid
-            .querySelectorAll(
-                ".square-cell"
-            );
-
-
-    if (existing.length > 0) {
-
-        return;
-    }
-
-
-    const size =
-        8;
+    DOM.squareGrid.innerHTML =
+        "";
 
 
     for (
         let y = 0;
-        y < size;
+        y < 8;
         y++
     ) {
 
         for (
             let x = 0;
-            x < size;
+            x < 8;
             x++
         ) {
 
@@ -1223,174 +1005,364 @@ function generateSquareGrid() {
                 "square-cell";
 
 
-            cell.dataset.x =
-                x + 1;
-
-
-            cell.dataset.y =
-                y + 1;
-
-
             DOM.squareGrid.appendChild(
                 cell
             );
+
         }
+
     }
+
 }
 
 
-/* ============================================================
-   GRID EVENTS
-============================================================ */
+/* =========================================================
+   CELLULE
+   ========================================================= */
 
-function setupGridEvents() {
+function selectCell(
+    cell
+) {
 
-    if (!DOM.octagonGrid) {
-
-        return;
-    }
-
-
-    const cells =
-        DOM.octagonGrid
-            .querySelectorAll(
-                ".octagon-cell"
-            );
-
-
-    cells.forEach(
-        cell => {
-
-            cell.addEventListener(
-                "click",
-                () => {
-
-                    cells.forEach(
-                        other => {
-
-                            other.classList.remove(
-                                "selected"
-                            );
-                        }
-                    );
-
-
-                    cell.classList.add(
-                        "selected"
-                    );
-
-
-                    GAME_STATE.selectedCell =
-                        cell.dataset.id;
-
-
-                    GAME_STATE.selectedX =
-                        cell.dataset.x;
-
-
-                    GAME_STATE.selectedY =
-                        cell.dataset.y;
-
-
-                    updateCellInformation();
-                }
-            );
-        }
-    );
-}
-
-
-/* ============================================================
-   CELL INFORMATION
-============================================================ */
-
-function updateCellInformation() {
-
-    if (!DOM.menuInformation) {
-
-        return;
-    }
-
-
-    const cell =
-        DOM.menuInformation
-            .querySelector(
-                ".radial-content-cell"
-            );
-
-
-    if (!cell) {
-
-        return;
-    }
-
-
-    const values =
-        cell.querySelectorAll(
-            "[data-cell-value]"
+    document
+        .querySelectorAll(
+            ".octagon-cell.selected"
+        )
+        .forEach(
+            selected =>
+                selected.classList.remove(
+                    "selected"
+                )
         );
 
 
-    values.forEach(
-        element => {
-
-            const type =
-                element.dataset.cellValue;
-
-
-            if (
-                type === "id"
-            ) {
-
-                element.textContent =
-                    GAME_STATE.selectedCell ||
-                    "NONE";
-            }
-
-
-            if (
-                type === "x"
-            ) {
-
-                element.textContent =
-                    GAME_STATE.selectedX ||
-                    "--";
-            }
-
-
-            if (
-                type === "y"
-            ) {
-
-                element.textContent =
-                    GAME_STATE.selectedY ||
-                    "--";
-            }
-        }
+    cell.classList.add(
+        "selected"
     );
+
+
+    GAME_STATE.selectedX =
+        Number(
+            cell.dataset.x
+        );
+
+
+    GAME_STATE.selectedY =
+        Number(
+            cell.dataset.y
+        );
+
+
+    GAME_STATE.selectedCell =
+        `X${GAME_STATE.selectedX}-Y${GAME_STATE.selectedY}`;
+
+
+    DOM.selectedCell.textContent =
+        GAME_STATE.selectedCell;
+
+
+    DOM.selectedType.textContent =
+        cell.dataset.type;
+
+
+    DOM.positionX.textContent =
+        String(
+            GAME_STATE.selectedX
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    DOM.positionY.textContent =
+        String(
+            GAME_STATE.selectedY
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    DOM.systemMessage.textContent =
+        "CELL SELECTED";
+
 }
 
 
-/* ============================================================
-   PLAYER
-============================================================ */
+/* =========================================================
+   INTERFACE
+   ========================================================= */
 
-function updatePlayerDisplay() {
+function updateInterface() {
 
-    if (!DOM.playerValue) {
+    DOM.turnValue.textContent =
+        String(
+            GAME_STATE.turn
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    DOM.roundValue.textContent =
+        String(
+            GAME_STATE.round
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    DOM.playersValue.textContent =
+        String(
+            GAME_STATE.players
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    DOM.zoomValue.textContent =
+        String(
+            GAME_STATE.zoom
+        );
+
+
+    DOM.playerName.textContent =
+        `PLAYER ${String(
+            GAME_STATE.player
+        ).padStart(
+            2,
+            "0"
+        )}`;
+
+
+    if (
+        !GAME_STATE.selectedCell
+    ) {
+
+        DOM.selectedCell.textContent =
+            "NONE";
+
+        DOM.selectedType.textContent =
+            "EMPTY";
+
+        DOM.positionX.textContent =
+            "--";
+
+        DOM.positionY.textContent =
+            "--";
+
+    }
+
+}
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+function resetGame() {
+
+    GAME_STATE.player =
+        1;
+
+    GAME_STATE.turn =
+        1;
+
+    GAME_STATE.round =
+        1;
+
+    GAME_STATE.selectedCell =
+        null;
+
+    GAME_STATE.selectedX =
+        null;
+
+    GAME_STATE.selectedY =
+        null;
+
+    GAME_STATE.zoom =
+        100;
+
+
+    document
+        .querySelectorAll(
+            ".octagon-cell.selected"
+        )
+        .forEach(
+            cell =>
+                cell.classList.remove(
+                    "selected"
+                )
+        );
+
+
+    DOM.map.style.transform =
+        "";
+
+
+    DOM.systemMessage.textContent =
+        "SYSTEM RESET";
+
+
+    updateInterface();
+
+}
+
+
+/* =========================================================
+   MENU
+   ========================================================= */
+
+function toggleMenu() {
+
+    GAME_STATE.menuOpen =
+        !GAME_STATE.menuOpen;
+
+
+    DOM.radialInterface.classList.toggle(
+        "menu-hidden",
+        !GAME_STATE.menuOpen
+    );
+
+
+    DOM.btnMenu.textContent =
+        GAME_STATE.menuOpen
+            ? "MENU"
+            : "SHOW";
+
+}
+
+
+/* =========================================================
+   ZOOM
+   ========================================================= */
+
+function setZoom(
+    value
+) {
+
+    GAME_STATE.zoom =
+        Math.max(
+            50,
+            Math.min(
+                200,
+                value
+            )
+        );
+
+
+    DOM.map.style.transform =
+        `scale(${GAME_STATE.zoom / 100})`;
+
+
+    updateInterface();
+
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+function selectAction() {
+
+    DOM.systemMessage.textContent =
+        "SELECT MODE ACTIVE";
+
+}
+
+
+function confirmAction() {
+
+    if (
+        !GAME_STATE.selectedCell
+    ) {
+
+        DOM.systemMessage.textContent =
+            "NO CELL SELECTED";
 
         return;
+
     }
 
 
-    DOM.playerValue.textContent =
-        `P${GAME_STATE.player}`;
+    GAME_STATE.turn++;
+
+
+    DOM.systemMessage.textContent =
+        "ACTION CONFIRMED";
+
+
+    updateInterface();
+
 }
 
 
-/* ============================================================
+function cancelAction() {
+
+    DOM.systemMessage.textContent =
+        "ACTION CANCELLED";
+
+}
+
+
+/* =========================================================
+   EVENTS
+   ========================================================= */
+
+DOM.btnReset.addEventListener(
+    "click",
+    resetGame
+);
+
+
+DOM.btnMenu.addEventListener(
+    "click",
+    toggleMenu
+);
+
+
+DOM.btnSelect.addEventListener(
+    "click",
+    selectAction
+);
+
+
+DOM.btnConfirm.addEventListener(
+    "click",
+    confirmAction
+);
+
+
+DOM.btnCancel.addEventListener(
+    "click",
+    cancelAction
+);
+
+
+DOM.btnZoomIn.addEventListener(
+    "click",
+    () =>
+        setZoom(
+            GAME_STATE.zoom + 10
+        )
+);
+
+
+DOM.btnZoomOut.addEventListener(
+    "click",
+    () =>
+        setZoom(
+            GAME_STATE.zoom - 10
+        )
+);
+
+
+/* =========================================================
    RESIZE
-============================================================ */
+   ========================================================= */
 
 let resizeTimer =
     null;
@@ -1407,50 +1379,29 @@ window.addEventListener(
 
         resizeTimer =
             setTimeout(
-                () => {
-
-                    buildRadialInterface();
-
-                },
+                drawRadialInterface,
                 50
             );
+
     }
 );
 
 
-/* ============================================================
+/* =========================================================
    INIT
-============================================================ */
+   ========================================================= */
 
-function initGame() {
+function init() {
 
-    generateOctagonGrid();
+    createOctagonGrid();
 
-    generateSquareGrid();
+    createSquareGrid();
 
-    setupGridEvents();
+    updateInterface();
 
-    updatePlayerDisplay();
+    drawRadialInterface();
 
-    buildRadialInterface();
 }
 
 
-/* ============================================================
-   DOM READY
-============================================================ */
-
-if (
-    document.readyState ===
-    "loading"
-) {
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        initGame
-    );
-
-} else {
-
-    initGame();
-}
+init();

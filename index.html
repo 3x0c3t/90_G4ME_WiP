@@ -1,70 +1,350 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#02070c">
-    <title>90_G4ME_WiP | 3xØc3t L4B</title>
+
+    <title>90_G4ME_WiP | -3xØc3t- L4B</title>
+
+    <meta
+        name="description"
+        content="-3xØc3t- L4B | 90_G4ME_WiP"
+    >
+
     <link rel="stylesheet" href="index.css">
 </head>
 
 <body>
 
-<div id="game">
+<header id="main-header">
 
-    <header id="header">
+    <div class="header-left">
 
-        <div class="header-brand">
-
-            <div class="header-title">
-                -3xØc3t- L4B
-            </div>
-
-            <div class="header-subtitle">
+        <div class="brand">
+            <span class="brand-main">-3xØc3t- L4B</span>
+            <span class="brand-sub">
                 DIGITAL L4B &amp; EXPERIMENTATION
-            </div>
+            </span>
+        </div>
+
+    </div>
+
+
+    <div class="header-center">
+
+        <div class="game-title">
+            <span class="game-number">90</span>
+            <span class="game-name">G4ME_WiP</span>
+        </div>
+
+        <div class="game-status">
+            <span class="status-dot"></span>
+            <span>WORK IN PROGRESS</span>
+        </div>
+
+    </div>
+
+
+    <div class="header-right">
+
+        <button
+            class="header-button"
+            id="btn-reset"
+            type="button"
+        >
+            RESET
+        </button>
+
+        <button
+            class="header-button"
+            id="btn-menu"
+            type="button"
+        >
+            MENU
+        </button>
+
+    </div>
+
+</header>
+
+
+<main id="game">
+
+    <div id="radial-interface">
+
+
+        <!-- =================================================
+             CONTENU DES MENUS
+             ================================================= -->
+
+        <div id="menu-content">
+
+            <section
+                class="menu-content-panel menu-game"
+                id="panel-top"
+            >
+                <div class="content-inner">
+
+                    <div class="content-label">
+                        GAME
+                    </div>
+
+                    <div class="game-info">
+
+                        <div>
+                            <span>TURN</span>
+                            <strong id="turn-value">01</strong>
+                        </div>
+
+                        <div>
+                            <span>ROUND</span>
+                            <strong id="round-value">01</strong>
+                        </div>
+
+                        <div>
+                            <span>PLAYERS</span>
+                            <strong id="players-value">02</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+
+
+            <section
+                class="menu-content-panel menu-cell"
+                id="panel-top-right"
+            >
+                <div class="content-inner">
+
+                    <div class="content-label">
+                        CELL
+                    </div>
+
+                    <div class="cell-info">
+
+                        <div>
+                            <span>SELECTED</span>
+                            <strong id="selected-cell">NONE</strong>
+                        </div>
+
+                        <div>
+                            <span>TYPE</span>
+                            <strong id="selected-type">EMPTY</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+
+
+            <section
+                class="menu-content-panel menu-action"
+                id="panel-right"
+            >
+                <div class="content-inner">
+
+                    <div class="content-label">
+                        ACTION
+                    </div>
+
+                    <div class="actions">
+
+                        <button
+                            class="action-button"
+                            id="btn-select"
+                            type="button"
+                        >
+                            SELECT
+                        </button>
+
+                        <button
+                            class="action-button"
+                            id="btn-confirm"
+                            type="button"
+                        >
+                            CONFIRM
+                        </button>
+
+                        <button
+                            class="action-button"
+                            id="btn-cancel"
+                            type="button"
+                        >
+                            CANCEL
+                        </button>
+
+                    </div>
+
+                </div>
+            </section>
+
+
+            <section
+                class="menu-content-panel menu-position"
+                id="panel-bottom-right"
+            >
+                <div class="content-inner">
+
+                    <div class="content-label">
+                        POSITION
+                    </div>
+
+                    <div class="position-info">
+
+                        <span>
+                            X:
+                            <strong id="position-x">--</strong>
+                        </span>
+
+                        <span>
+                            Y:
+                            <strong id="position-y">--</strong>
+                        </span>
+
+                    </div>
+
+                </div>
+            </section>
+
+
+            <section
+                class="menu-content-panel menu-system"
+                id="panel-bottom"
+            >
+                <div class="content-inner">
+
+                    <div class="content-label">
+                        SYSTEM
+                    </div>
+
+                    <div
+                        class="system-message"
+                        id="system-message"
+                    >
+                        SYSTEM READY
+                    </div>
+
+                </div>
+            </section>
+
+
+            <section
+                class="menu-content-panel menu-grid"
+                id="panel-bottom-left"
+            >
+                <div class="content-inner">
+
+                    <div class="content-label">
+                        GRID
+                    </div>
+
+                    <div class="grid-info">
+
+                        <div>
+                            <span>OCTAGONS</span>
+                            <strong id="octagon-count">49</strong>
+                        </div>
+
+                        <div>
+                            <span>SQUARES</span>
+                            <strong id="square-count">64</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+
+
+            <section
+                class="menu-content-panel menu-map"
+                id="panel-left"
+            >
+                <div class="content-inner">
+
+                    <div class="content-label">
+                        MAP
+                    </div>
+
+                    <div class="map-controls">
+
+                        <button
+                            class="control-button"
+                            id="btn-zoom-in"
+                            type="button"
+                        >
+                            +
+                        </button>
+
+                        <span class="zoom-value">
+                            <span id="zoom-value">100</span>%
+                        </span>
+
+                        <button
+                            class="control-button"
+                            id="btn-zoom-out"
+                            type="button"
+                        >
+                            −
+                        </button>
+
+                    </div>
+
+                </div>
+            </section>
+
+
+            <section
+                class="menu-content-panel menu-player"
+                id="panel-top-left"
+            >
+                <div class="content-inner">
+
+                    <div class="content-label">
+                        PLAYER
+                    </div>
+
+                    <div class="player-indicator">
+
+                        <span class="player-color"></span>
+
+                        <div>
+                            <strong id="player-name">
+                                PLAYER 01
+                            </strong>
+
+                            <small id="player-state">
+                                READY
+                            </small>
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
 
         </div>
 
-        <div class="header-project">
 
-            <span class="project-name">
-                90_G4ME_WiP
-            </span>
-
-            <span class="project-version">
-                v1.0
-            </span>
-
-        </div>
-
-        <div class="header-player">
-
-            <span>
-                PLAYER
-            </span>
-
-            <strong id="player-value">
-                P1
-            </strong>
-
-        </div>
-
-    </header>
-
-
-    <main id="game-area">
+        <!-- =================================================
+             STRUCTURE CIRCULAIRE
+             ================================================= -->
 
         <svg
-            id="radial-interface"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-label="Interface radiale"
+            id="radial-interface-svg"
+            viewBox="0 0 1000 1000"
+            preserveAspectRatio="none"
+            aria-hidden="true"
         >
 
             <defs>
 
                 <filter
-                    id="cyan-glow"
+                    id="title-glow"
                     x="-50%"
                     y="-50%"
                     width="200%"
@@ -72,80 +352,108 @@
                 >
 
                     <feGaussianBlur
-                        stdDeviation="2.5"
+                        stdDeviation="2"
                         result="blur"
                     />
 
                     <feMerge>
-
                         <feMergeNode in="blur"></feMergeNode>
-
                         <feMergeNode in="SourceGraphic"></feMergeNode>
-
                     </feMerge>
 
                 </filter>
 
             </defs>
 
-            <g id="menu-ring"></g>
 
-            <g id="menu-guides"></g>
+            <!-- Limites des 8 secteurs -->
 
-            <g id="menu-title-paths"></g>
+            <g id="menu-sector-lines"></g>
 
-            <g id="menu-titles"></g>
+
+            <!-- Cercle immédiatement autour de la MAP -->
+
+            <g id="map-circle-layer"></g>
+
+
+            <!-- Cercle support des titres -->
+
+            <g id="title-circle-layer"></g>
+
+
+            <!-- Arcs des titres -->
+
+            <g id="menu-title-layer"></g>
 
         </svg>
 
 
+        <!-- =================================================
+             MAP CENTRALE
+             ================================================= -->
+
         <section
-            id="map"
-            aria-label="MAP"
+            id="map-container"
+            aria-label="Carte de jeu"
         >
 
-            <div id="map-inner">
+            <div id="map">
 
-                <div id="map-label">
-                    MAP
-                </div>
+                <div
+                    id="octagon-grid"
+                    aria-label="Grille octogonale"
+                ></div>
 
-                <div id="map-grid">
-
-                    <div id="octagon-grid"></div>
-
-                    <div id="square-grid"></div>
-
-                </div>
+                <div
+                    id="square-grid"
+                    aria-label="Grille carrée"
+                ></div>
 
                 <div id="map-center">
-                    3xØc3t
+
+                    <span class="center-number">
+                        90
+                    </span>
+
+                    <span class="center-label">
+                        G4ME
+                    </span>
+
                 </div>
 
             </div>
 
         </section>
 
-    </main>
+    </div>
+
+</main>
 
 
-    <footer id="footer">
+<footer id="main-footer">
+
+    <div class="footer-left">
+        -3xØc3t- L4B
+    </div>
+
+    <div class="footer-center">
+
+        <span>90_G4ME_WiP</span>
+
+        <span class="footer-separator">•</span>
 
         <span>
-            90_G4ME_WiP
+            EXPERIMENTAL GAME INTERFACE
         </span>
 
-        <span>
-            DIGITAL EXPERIMENT
-        </span>
+    </div>
 
-        <span>
-            v1.0
-        </span>
+    <div class="footer-right">
+        <span id="footer-status">ONLINE</span>
+    </div>
 
-    </footer>
+</footer>
 
-</div>
 
 <script src="index.js"></script>
 
