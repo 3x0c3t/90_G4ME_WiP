@@ -1,0 +1,406 @@
+/* =========================================================
+   MAP
+   ========================================================= */
+
+#map-container {
+
+    position:
+        absolute;
+
+    top:
+        50%;
+
+    left:
+        50%;
+
+    width:
+        min(48vh, 48vw);
+
+    height:
+        min(48vh, 48vw);
+
+    transform:
+        translate(-50%, -50%);
+
+    z-index:
+        20;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    pointer-events:
+        auto;
+
+}
+
+
+/* =========================================================
+   MAP PRINCIPALE
+   ========================================================= */
+
+#map {
+
+    position:
+        relative;
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    transform-origin:
+        center center;
+
+    transition:
+        transform 160ms ease;
+
+}
+
+
+/* =========================================================
+   GRILLE OCTOGONALE
+   ========================================================= */
+
+#octagon-grid {
+
+    position:
+        absolute;
+
+    top:
+        50%;
+
+    left:
+        50%;
+
+    width:
+        76%;
+
+    height:
+        76%;
+
+    transform:
+        translate(-50%, -50%);
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(7, 1fr);
+
+    grid-template-rows:
+        repeat(7, 1fr);
+
+    gap:
+        1px;
+
+    padding:
+        5px;
+
+    pointer-events:
+        auto;
+
+}
+
+
+/* =========================================================
+   CELLULE OCTOGONALE
+   ========================================================= */
+
+.octagon-cell {
+
+    position:
+        relative;
+
+    min-width:
+        0;
+
+    min-height:
+        0;
+
+    background:
+        rgba(0, 234, 255, 0.035);
+
+    border:
+        1px solid
+        rgba(0, 234, 255, 0.20);
+
+    clip-path:
+        polygon(
+            25% 0%,
+            75% 0%,
+            100% 25%,
+            100% 75%,
+            75% 100%,
+            25% 100%,
+            0% 75%,
+            0% 25%
+        );
+
+    cursor:
+        pointer;
+
+    transition:
+        background 120ms ease,
+        border-color 120ms ease,
+        box-shadow 120ms ease;
+
+}
+
+
+.octagon-cell:hover {
+
+    background:
+        rgba(0, 234, 255, 0.12);
+
+    border-color:
+        rgba(0, 234, 255, 0.65);
+
+}
+
+
+.octagon-cell.selected {
+
+    background:
+        rgba(0, 255, 153, 0.15);
+
+    border-color:
+        var(--green);
+
+    box-shadow:
+        inset 0 0 12px
+        rgba(0, 255, 153, 0.20),
+        0 0 8px
+        rgba(0, 255, 153, 0.20);
+
+}
+
+
+.octagon-cell::after {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    inset:
+        3px;
+
+    pointer-events:
+        none;
+
+    border:
+        1px solid
+        rgba(0, 234, 255, 0.035);
+
+    clip-path:
+        inherit;
+
+}
+
+
+/* =========================================================
+   GRILLE CARREE
+   ========================================================= */
+
+#square-grid {
+
+    position:
+        absolute;
+
+    top:
+        50%;
+
+    left:
+        50%;
+
+    width:
+        92%;
+
+    height:
+        92%;
+
+    transform:
+        translate(-50%, -50%);
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(8, 1fr);
+
+    grid-template-rows:
+        repeat(8, 1fr);
+
+    pointer-events:
+        none;
+
+    opacity:
+        0.20;
+
+}
+
+
+.square-cell {
+
+    border:
+        1px solid
+        rgba(0, 234, 255, 0.12);
+
+}
+
+
+/* =========================================================
+   CENTRE MAP
+   ========================================================= */
+
+#map-center {
+
+    position:
+        absolute;
+
+    top:
+        50%;
+
+    left:
+        50%;
+
+    width:
+        20%;
+
+    height:
+        20%;
+
+    transform:
+        translate(-50%, -50%);
+
+    z-index:
+        10;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border:
+        1px solid
+        rgba(0, 234, 255, 0.35);
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(2, 7, 12, 0.92);
+
+    box-shadow:
+        0 0 18px
+        rgba(0, 234, 255, 0.08);
+
+    pointer-events:
+        none;
+
+}
+
+
+.center-number {
+
+    color:
+        var(--cyan);
+
+    font-size:
+        clamp(18px, 3vw, 30px);
+
+    font-weight:
+        bold;
+
+    line-height:
+        1;
+
+}
+
+
+.center-label {
+
+    margin-top:
+        4px;
+
+    color:
+        var(--white);
+
+    font-size:
+        clamp(7px, 0.8vw, 10px);
+
+    letter-spacing:
+        2px;
+
+}
+
+
+/* =========================================================
+   ETAT MAP
+   ========================================================= */
+
+#map.map-disabled {
+
+    opacity:
+        0.45;
+
+    filter:
+        grayscale(0.5);
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (
+    max-width: 700px
+) {
+
+    #map-container {
+
+        width:
+            min(58vh, 58vw);
+
+        height:
+            min(58vh, 58vw);
+
+    }
+
+
+    #octagon-grid {
+
+        width:
+            78%;
+
+        height:
+            78%;
+
+    }
+
+}

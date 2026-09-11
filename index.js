@@ -2,6 +2,11 @@
 
 
 /* =========================================================
+   INTERFACE GENERALE
+   ========================================================= */
+
+
+/* =========================================================
    DOM
    ========================================================= */
 
@@ -12,89 +17,64 @@ const DOM = {
             "radial-interface"
         ),
 
-    menuGuides:
+    svg:
         document.getElementById(
-            "menu-guides"
+            "radial-interface-svg"
         ),
 
-    menuTitlePaths:
+    sectorLines:
         document.getElementById(
-            "menu-title-paths"
+            "menu-sector-lines"
         ),
 
-    menuTitles:
+    mapCircleLayer:
         document.getElementById(
-            "menu-titles"
+            "map-circle-layer"
         ),
 
-    menuInformation:
+    titleCircleLayer:
         document.getElementById(
-            "menu-information"
+            "title-circle-layer"
         ),
 
-    map:
+    titleLayer:
         document.getElementById(
-            "map"
+            "menu-title-layer"
         ),
 
-    octagonGrid:
+    turnValue:
         document.getElementById(
-            "octagon-grid"
+            "turn-value"
         ),
 
-    squareGrid:
+    roundValue:
         document.getElementById(
-            "square-grid"
+            "round-value"
         ),
 
-    playerValue:
+    playersValue:
         document.getElementById(
-            "player-value"
+            "players-value"
         ),
 
-    contentPlayer:
+    playerName:
         document.getElementById(
-            "content-player"
+            "player-name"
         ),
 
-    contentTurn:
+    playerState:
         document.getElementById(
-            "content-turn"
+            "player-state"
         ),
 
-    contentRound:
+    btnReset:
         document.getElementById(
-            "content-round"
+            "btn-reset"
         ),
 
-    contentCell:
+    btnMenu:
         document.getElementById(
-            "content-cell"
-        ),
-
-    contentType:
-        document.getElementById(
-            "content-type"
-        ),
-
-    contentX:
-        document.getElementById(
-            "content-x"
-        ),
-
-    contentY:
-        document.getElementById(
-            "content-y"
-        ),
-
-    contentZoom:
-        document.getElementById(
-            "content-zoom"
-        ),
-
-    systemMessage:
-        document.getElementById(
-            "system-message"
+            "btn-menu"
         ),
 
     btnSelect:
@@ -110,23 +90,13 @@ const DOM = {
     btnCancel:
         document.getElementById(
             "btn-cancel"
-        ),
-
-    btnZoomIn:
-        document.getElementById(
-            "btn-zoom-in"
-        ),
-
-    btnZoomOut:
-        document.getElementById(
-            "btn-zoom-out"
         )
 
 };
 
 
 /* =========================================================
-   STATE
+   ETAT GENERAL
    ========================================================= */
 
 const GAME_STATE = {
@@ -143,17 +113,8 @@ const GAME_STATE = {
     players:
         2,
 
-    selectedCell:
-        null,
-
-    selectedX:
-        null,
-
-    selectedY:
-        null,
-
-    zoom:
-        100
+    menuOpen:
+        true
 
 };
 
@@ -165,97 +126,73 @@ const GAME_STATE = {
 const MENUS = [
 
     {
-        id:
-            "game",
-
-        title:
+        label:
             "GAME",
 
-        center:
+        angle:
             -90
 
     },
 
     {
-        id:
-            "cell",
-
-        title:
+        label:
             "CELL",
 
-        center:
+        angle:
             -45
 
     },
 
     {
-        id:
-            "action",
-
-        title:
+        label:
             "ACTION",
 
-        center:
+        angle:
             0
 
     },
 
     {
-        id:
-            "position",
-
-        title:
+        label:
             "POSITION",
 
-        center:
+        angle:
             45
 
     },
 
     {
-        id:
-            "system",
-
-        title:
+        label:
             "SYSTEM",
 
-        center:
+        angle:
             90
 
     },
 
     {
-        id:
-            "grid",
-
-        title:
+        label:
             "GRID",
 
-        center:
+        angle:
             135
 
     },
 
     {
-        id:
-            "map",
-
-        title:
+        label:
             "MAP",
 
-        center:
+        angle:
             180
 
     },
 
     {
-        id:
-            "player",
-
-        title:
+        label:
             "PLAYER",
 
-        center:
+        angle:
             225
 
     }
@@ -263,68 +200,64 @@ const MENUS = [
 ];
 
 
+const SVG_NS =
+    "http://www.w3.org/2000/svg";
+
+
 /* =========================================================
-   GEOMETRY
+   GEOMETRIE
    ========================================================= */
 
 const MAP_RADIUS_RATIO =
     0.30;
 
-
 const MAP_RING_GAP =
     13;
 
-
 const TITLE_RING_GAP =
     32;
-
 
 const TITLE_WHEEL_ROTATION =
     22.5;
 
 
-const MENU_ANGLE =
-    45;
-
-
-const CONTENT_ANGLE_MARGIN =
-    7;
-
-
-/*
-   Dimensions du cartouche titre.
-*/
-
-const TITLE_PADDING_X =
-    13;
-
-
-const TITLE_PADDING_Y =
-    6;
-
-
 /* =========================================================
-   SVG
+   CREATION SVG
    ========================================================= */
 
-const SVG_NS =
-    "http://www.w3.org/2000/svg";
-
-
 function svgElement(
-    name
+    name,
+    attributes = {}
 ) {
 
-    return document.createElementNS(
-        SVG_NS,
-        name
+    const element =
+        document.createElementNS(
+            SVG_NS,
+            name
+        );
+
+
+    Object.entries(
+        attributes
+    ).forEach(
+        ([key, value]) => {
+
+            element.setAttribute(
+                key,
+                value
+            );
+
+        }
     );
+
+
+    return element;
 
 }
 
 
 /* =========================================================
-   POLAR
+   COORDONNEES POLAIRES
    ========================================================= */
 
 function polarPoint(
@@ -344,17 +277,17 @@ function polarPoint(
 
         x:
             cx +
-            radius *
             Math.cos(
                 radians
-            ),
+            ) *
+            radius,
 
         y:
             cy +
-            radius *
             Math.sin(
                 radians
-            )
+            ) *
+            radius
 
     };
 
@@ -362,10 +295,10 @@ function polarPoint(
 
 
 /* =========================================================
-   RECTANGLE RAY
+   RAYON JUSQU'AU BORD
    ========================================================= */
 
-function rayToRectangle(
+function rayToScreen(
     cx,
     cy,
     angle,
@@ -391,21 +324,25 @@ function rayToRectangle(
         );
 
 
-    const distances = [];
+    const distances =
+        [];
 
 
-    if (dx > 0) {
+    if (
+        dx > 0
+    ) {
 
         distances.push(
-            (
-                width -
-                cx
-            ) /
+            (width - cx) /
             dx
         );
 
     }
-    else if (dx < 0) {
+
+
+    if (
+        dx < 0
+    ) {
 
         distances.push(
             -cx /
@@ -415,18 +352,21 @@ function rayToRectangle(
     }
 
 
-    if (dy > 0) {
+    if (
+        dy > 0
+    ) {
 
         distances.push(
-            (
-                height -
-                cy
-            ) /
+            (height - cy) /
             dy
         );
 
     }
-    else if (dy < 0) {
+
+
+    if (
+        dy < 0
+    ) {
 
         distances.push(
             -cy /
@@ -438,11 +378,11 @@ function rayToRectangle(
 
     const valid =
         distances.filter(
-            value =>
+            distance =>
                 Number.isFinite(
-                    value
+                    distance
                 ) &&
-                value > 0
+                distance > 0
         );
 
 
@@ -470,344 +410,155 @@ function rayToRectangle(
 
 
 /* =========================================================
-   ARC
+   CERCLES
    ========================================================= */
 
-function arcPath(
+function drawCircles(
     cx,
     cy,
-    radius,
-    startAngle,
-    endAngle,
-    sweep
+    mapRadius
 ) {
 
-    const start =
-        polarPoint(
-            cx,
-            cy,
-            radius,
-            startAngle
-        );
+    DOM.mapCircleLayer.innerHTML =
+        "";
 
 
-    const end =
-        polarPoint(
-            cx,
-            cy,
-            radius,
-            endAngle
-        );
+    DOM.titleCircleLayer.innerHTML =
+        "";
 
 
-    let delta =
-        Math.abs(
-            endAngle -
-            startAngle
-        );
-
-
-    delta %= 360;
-
-
-    if (delta === 0) {
-
-        delta =
-            360;
-
-    }
-
-
-    const largeArc =
-        delta >
-        180
-            ? 1
-            : 0;
-
-
-    return [
-
-        "M",
-        start.x,
-        start.y,
-
-        "A",
-        radius,
-        radius,
-        0,
-        largeArc,
-        sweep,
-        end.x,
-        end.y
-
-    ].join(" ");
-
-}
-
-
-/* =========================================================
-   MAP GEOMETRY
-   ========================================================= */
-
-function getMapGeometry() {
-
-    const rect =
-        DOM.radialInterface
-            .getBoundingClientRect();
-
-
-    const width =
-        rect.width;
-
-
-    const height =
-        rect.height;
-
-
-    const cx =
-        width /
-        2;
-
-
-    const cy =
-        height /
-        2;
-
-
-    let mapRadius =
-        Math.min(
-            width,
-            height
-        ) *
-        MAP_RADIUS_RATIO;
-
-
-    if (
-        DOM.map
-    ) {
-
-        const mapRect =
-            DOM.map
-                .getBoundingClientRect();
-
-
-        if (
-            mapRect.width > 0 &&
-            mapRect.height > 0
-        ) {
-
-            mapRadius =
-                Math.min(
-                    mapRect.width,
-                    mapRect.height
-                ) /
-                2;
-
-        }
-
-    }
-
-
-    return {
-
-        width,
-
-        height,
-
-        cx,
-
-        cy,
-
-        mapRadius
-
-    };
-
-}
-
-
-/* =========================================================
-   OUTER RADIUS
-   ========================================================= */
-
-function getOuterRadius(
-    mapRadius,
-    width,
-    height
-) {
-
-    const available =
-        Math.min(
-            width,
-            height
-        ) /
-        2;
-
-
-    const depth =
-        Math.min(
-            155,
-
-            Math.max(
-                95,
-
-                available -
-                mapRadius
-            )
-        );
-
-
-    return (
+    const mapRingRadius =
         mapRadius +
-        depth
-    );
-
-}
+        MAP_RING_GAP;
 
 
-/* =========================================================
-   CLEAR RADIAL
-   ========================================================= */
-
-function clearRadialLayers() {
-
-    DOM.menuGuides.innerHTML =
-        "";
-
-    DOM.menuTitlePaths.innerHTML =
-        "";
-
-    DOM.menuTitles.innerHTML =
-        "";
-
-}
-
-
-/* =========================================================
-   MAP CIRCLE
-   ========================================================= */
-
-function createMapCircle(
-    cx,
-    cy,
-    radius
-) {
-
-    const circle =
+    const mapRing =
         svgElement(
-            "circle"
+            "circle",
+            {
+
+                class:
+                    "map-circle",
+
+                cx:
+                    cx,
+
+                cy:
+                    cy,
+
+                r:
+                    mapRingRadius
+
+            }
         );
 
 
-    circle.setAttribute(
-        "cx",
-        cx
+    DOM.mapCircleLayer.appendChild(
+        mapRing
     );
 
 
-    circle.setAttribute(
-        "cy",
-        cy
-    );
-
-
-    circle.setAttribute(
-        "r",
-        radius
-    );
-
-
-    circle.classList.add(
-        "map-circle-guide"
-    );
-
-
-    DOM.menuGuides.appendChild(
-        circle
-    );
-
-}
-
-
-/* =========================================================
-   OUTER CIRCLE
-   ========================================================= */
-
-function createOuterCircle(
-    cx,
-    cy,
-    radius
-) {
-
-    const circle =
+    const secondaryRing =
         svgElement(
-            "circle"
+            "circle",
+            {
+
+                class:
+                    "map-circle-secondary",
+
+                cx:
+                    cx,
+
+                cy:
+                    cy,
+
+                r:
+                    mapRadius +
+                    5
+
+            }
         );
 
 
-    circle.setAttribute(
-        "cx",
-        cx
+    DOM.mapCircleLayer.appendChild(
+        secondaryRing
     );
 
 
-    circle.setAttribute(
-        "cy",
-        cy
+    const titleRadius =
+        mapRingRadius +
+        TITLE_RING_GAP;
+
+
+    const titleRing =
+        svgElement(
+            "circle",
+            {
+
+                class:
+                    "title-circle",
+
+                cx:
+                    cx,
+
+                cy:
+                    cy,
+
+                r:
+                    titleRadius
+
+            }
+        );
+
+
+    DOM.titleCircleLayer.appendChild(
+        titleRing
     );
 
 
-    circle.setAttribute(
-        "r",
-        radius
-    );
-
-
-    circle.classList.add(
-        "menu-outer-guide"
-    );
-
-
-    DOM.menuGuides.appendChild(
-        circle
-    );
+    return titleRadius;
 
 }
 
 
 /* =========================================================
-   SEPARATORS
+   LIGNES DE SECTEURS
    ========================================================= */
 
-function createSeparators(
+function drawSectorLines(
     cx,
     cy,
     mapRadius,
     width,
     height
 ) {
+
+    DOM.sectorLines.innerHTML =
+        "";
+
+
+    const startRadius =
+        mapRadius +
+        MAP_RING_GAP;
+
 
     MENUS.forEach(
         menu => {
-
-            const angle =
-                menu.center -
-                22.5;
-
 
             const start =
                 polarPoint(
                     cx,
                     cy,
-                    mapRadius,
-                    angle
+                    startRadius,
+                    menu.angle
                 );
 
 
             const end =
-                rayToRectangle(
+                rayToScreen(
                     cx,
                     cy,
-                    angle,
+                    menu.angle,
                     width,
                     height
                 );
@@ -815,40 +566,29 @@ function createSeparators(
 
             const line =
                 svgElement(
-                    "line"
+                    "line",
+                    {
+
+                        class:
+                            "menu-sector-line",
+
+                        x1:
+                            start.x,
+
+                        y1:
+                            start.y,
+
+                        x2:
+                            end.x,
+
+                        y2:
+                            end.y
+
+                    }
                 );
 
 
-            line.setAttribute(
-                "x1",
-                start.x
-            );
-
-
-            line.setAttribute(
-                "y1",
-                start.y
-            );
-
-
-            line.setAttribute(
-                "x2",
-                end.x
-            );
-
-
-            line.setAttribute(
-                "y2",
-                end.y
-            );
-
-
-            line.classList.add(
-                "menu-separator"
-            );
-
-
-            DOM.menuGuides.appendChild(
+            DOM.sectorLines.appendChild(
                 line
             );
 
@@ -859,383 +599,40 @@ function createSeparators(
 
 
 /* =========================================================
-   TITLE PATH
+   TITRES
    ========================================================= */
 
-function createTitlePath(
-    menu,
+function drawTitles(
     cx,
     cy,
-    radius
+    titleRadius
 ) {
 
-    const path =
-        svgElement(
-            "path"
-        );
+    DOM.titleLayer.innerHTML =
+        "";
 
 
-    const pathId =
-        `title-path-${menu.id}`;
+    const textRadius =
+        titleRadius -
+        TITLE_RING_GAP / 2;
 
-
-    const arcSize =
-        26;
-
-
-    const halfArc =
-        arcSize /
-        2;
-
-
-    const startAngle =
-        menu.center -
-        halfArc;
-
-
-    const endAngle =
-        menu.center +
-        halfArc;
-
-
-    path.setAttribute(
-        "id",
-        pathId
-    );
-
-
-    path.setAttribute(
-        "d",
-
-        arcPath(
-            cx,
-            cy,
-            radius,
-            startAngle,
-            endAngle,
-            1
-        )
-    );
-
-
-    path.classList.add(
-        "menu-title-path"
-    );
-
-
-    DOM.menuTitlePaths.appendChild(
-        path
-    );
-
-
-    return pathId;
-
-}
-
-
-/* =========================================================
-   TITLE
-   ========================================================= */
-
-function createTitle(
-    menu,
-    cx,
-    cy,
-    radius
-) {
-
-    /*
-       Le titre tourne avec la roue.
-    */
-
-    const angle =
-        menu.center +
-        TITLE_WHEEL_ROTATION;
-
-
-    const position =
-        polarPoint(
-            cx,
-            cy,
-            radius,
-            angle
-        );
-
-
-    /*
-       Rotation tangentielle.
-    */
-
-    let rotation =
-        angle +
-        90;
-
-
-    /*
-       Lecture normale
-       dans la moitié basse.
-    */
-
-    if (
-        rotation > 90 &&
-        rotation < 270
-    ) {
-
-        rotation +=
-            180;
-
-    }
-
-
-    rotation =
-        (
-            rotation %
-            360 +
-            360
-        ) %
-        360;
-
-
-    /*
-       Groupe global du titre.
-    */
-
-    const group =
-        svgElement(
-            "g"
-        );
-
-
-    group.classList.add(
-        "menu-title-group"
-    );
-
-
-    group.setAttribute(
-        "transform",
-
-        [
-            "translate(",
-            position.x,
-            ",",
-            position.y,
-            ") rotate(",
-            rotation,
-            ")"
-
-        ].join("")
-    );
-
-
-    /*
-       Largeur estimée du texte.
-    */
-
-    const estimatedWidth =
-        menu.title.length *
-        7.4 +
-        TITLE_PADDING_X *
-        2;
-
-
-    const backgroundWidth =
-        Math.max(
-            42,
-            estimatedWidth
-        );
-
-
-    const backgroundHeight =
-        24;
-
-
-    /*
-       BACKGROUND
-    */
-
-    const background =
-        svgElement(
-            "rect"
-        );
-
-
-    background.classList.add(
-        "menu-title-background"
-    );
-
-
-    background.setAttribute(
-        "x",
-        -backgroundWidth / 2
-    );
-
-
-    background.setAttribute(
-        "y",
-        -backgroundHeight / 2
-    );
-
-
-    background.setAttribute(
-        "width",
-        backgroundWidth
-    );
-
-
-    background.setAttribute(
-        "height",
-        backgroundHeight
-    );
-
-
-    group.appendChild(
-        background
-    );
-
-
-    /*
-       BORDER INTERNE
-    */
-
-    const inner =
-        svgElement(
-            "rect"
-        );
-
-
-    inner.classList.add(
-        "menu-title-background-inner"
-    );
-
-
-    inner.setAttribute(
-        "x",
-        -backgroundWidth / 2 + 2
-    );
-
-
-    inner.setAttribute(
-        "y",
-        -backgroundHeight / 2 + 2
-    );
-
-
-    inner.setAttribute(
-        "width",
-        backgroundWidth - 4
-    );
-
-
-    inner.setAttribute(
-        "height",
-        backgroundHeight - 4
-    );
-
-
-    group.appendChild(
-        inner
-    );
-
-
-    /*
-       TEXTE
-    */
-
-    const text =
-        svgElement(
-            "text"
-        );
-
-
-    text.classList.add(
-        "menu-title"
-    );
-
-
-    text.setAttribute(
-        "x",
-        0
-    );
-
-
-    text.setAttribute(
-        "y",
-        0
-    );
-
-
-    text.setAttribute(
-        "text-anchor",
-        "middle"
-    );
-
-
-    text.setAttribute(
-        "dominant-baseline",
-        "middle"
-    );
-
-
-    text.textContent =
-        menu.title;
-
-
-    group.appendChild(
-        text
-    );
-
-
-    DOM.menuTitles.appendChild(
-        group
-    );
-
-}
-
-
-/* =========================================================
-   TITLES
-   ========================================================= */
-
-function createTitles(
-    cx,
-    cy,
-    mapRadius
-) {
-
-    const titleRadius =
-        mapRadius +
-        MAP_RING_GAP +
-        TITLE_RING_GAP;
-
-
-    /*
-       On conserve la roue de titres
-       avec sa rotation de 22.5°.
-    */
 
     const wheel =
         svgElement(
-            "g"
+            "g",
+            {
+
+                class:
+                    "menu-title-wheel",
+
+                transform:
+                    `rotate(${TITLE_WHEEL_ROTATION} ${cx} ${cy})`
+
+            }
         );
 
 
-    wheel.setAttribute(
-        "transform",
-
-        [
-            "rotate(",
-            TITLE_WHEEL_ROTATION,
-            " ",
-            cx,
-            " ",
-            cy,
-            ")"
-
-        ].join("")
-    );
-
-
-    DOM.menuTitles.appendChild(
+    DOM.titleLayer.appendChild(
         wheel
     );
 
@@ -1243,26 +640,17 @@ function createTitles(
     MENUS.forEach(
         menu => {
 
-            /*
-               Création directe dans
-               la roue.
-            */
-
-            const angle =
-                menu.center;
-
-
             const position =
                 polarPoint(
                     cx,
                     cy,
-                    titleRadius,
-                    angle
+                    textRadius,
+                    menu.angle
                 );
 
 
             let rotation =
-                angle +
+                menu.angle +
                 90;
 
 
@@ -1288,78 +676,47 @@ function createTitles(
 
             const group =
                 svgElement(
-                    "g"
+                    "g",
+                    {
+
+                        class:
+                            "menu-title-group",
+
+                        transform:
+                            `translate(${position.x} ${position.y}) rotate(${rotation})`
+
+                    }
                 );
-
-
-            group.classList.add(
-                "menu-title-group"
-            );
-
-
-            group.setAttribute(
-                "transform",
-
-                [
-                    "translate(",
-                    position.x,
-                    ",",
-                    position.y,
-                    ") rotate(",
-                    rotation,
-                    ")"
-
-                ].join("")
-            );
-
-
-            const backgroundWidth =
-                Math.max(
-                    42,
-                    menu.title.length *
-                    7.4 +
-                    TITLE_PADDING_X *
-                    2
-                );
-
-
-            const backgroundHeight =
-                24;
 
 
             const background =
                 svgElement(
-                    "rect"
+                    "rect",
+                    {
+
+                        class:
+                            "menu-title-background",
+
+                        x:
+                            -58,
+
+                        y:
+                            -17,
+
+                        width:
+                            116,
+
+                        height:
+                            34,
+
+                        rx:
+                            7,
+
+                        ry:
+                            7
+
+                    }
                 );
-
-
-            background.classList.add(
-                "menu-title-background"
-            );
-
-
-            background.setAttribute(
-                "x",
-                -backgroundWidth / 2
-            );
-
-
-            background.setAttribute(
-                "y",
-                -backgroundHeight / 2
-            );
-
-
-            background.setAttribute(
-                "width",
-                backgroundWidth
-            );
-
-
-            background.setAttribute(
-                "height",
-                backgroundHeight
-            );
 
 
             group.appendChild(
@@ -1367,71 +724,32 @@ function createTitles(
             );
 
 
-            const inner =
-                svgElement(
-                    "rect"
-                );
-
-
-            inner.classList.add(
-                "menu-title-background-inner"
-            );
-
-
-            inner.setAttribute(
-                "x",
-                -backgroundWidth / 2 + 2
-            );
-
-
-            inner.setAttribute(
-                "y",
-                -backgroundHeight / 2 + 2
-            );
-
-
-            inner.setAttribute(
-                "width",
-                backgroundWidth - 4
-            );
-
-
-            inner.setAttribute(
-                "height",
-                backgroundHeight - 4
-            );
-
-
-            group.appendChild(
-                inner
-            );
-
-
             const text =
                 svgElement(
-                    "text"
+                    "text",
+                    {
+
+                        class:
+                            "menu-title",
+
+                        x:
+                            0,
+
+                        y:
+                            0,
+
+                        "text-anchor":
+                            "middle",
+
+                        "dominant-baseline":
+                            "middle"
+
+                    }
                 );
-
-
-            text.classList.add(
-                "menu-title"
-            );
-
-
-            text.setAttribute(
-                "x",
-                0
-            );
-
-
-            text.setAttribute(
-                "y",
-                0
-            );
 
 
             text.textContent =
-                menu.title;
+                menu.label;
 
 
             group.appendChild(
@@ -1450,511 +768,97 @@ function createTitles(
 
 
 /* =========================================================
-   CONTENT POSITION
+   INTERFACE RADIALE
    ========================================================= */
 
-function getContentPosition(
-    menu,
-    cx,
-    cy,
-    mapRadius,
-    outerRadius
-) {
+function drawRadialInterface() {
 
-    const radialDepth =
-        outerRadius -
-        mapRadius;
+    const rect =
+        DOM.radialInterface
+            .getBoundingClientRect();
 
 
-    const radius =
-        mapRadius +
-        radialDepth *
-        0.63;
+    const width =
+        rect.width;
 
 
-    return polarPoint(
+    const height =
+        rect.height;
+
+
+    if (
+        width <= 0 ||
+        height <= 0
+    ) {
+
+        return;
+
+    }
+
+
+    const cx =
+        width /
+        2;
+
+
+    const cy =
+        height /
+        2;
+
+
+    const mapRadius =
+        Math.min(
+            width,
+            height
+        ) *
+        MAP_RADIUS_RATIO;
+
+
+    DOM.svg.setAttribute(
+        "viewBox",
+        `0 0 ${width} ${height}`
+    );
+
+
+    const titleRadius =
+        drawCircles(
+            cx,
+            cy,
+            mapRadius
+        );
+
+
+    drawSectorLines(
         cx,
         cy,
-        radius,
-        menu.center
+        mapRadius,
+        width,
+        height
+    );
+
+
+    drawTitles(
+        cx,
+        cy,
+        titleRadius
     );
 
 }
 
 
 /* =========================================================
-   CONTENT SIZE
+   INTERFACE JEU
    ========================================================= */
 
-function getContentSize(
-    radius,
-    outerRadius,
-    width
-) {
-
-    const halfAngle =
-        (
-            MENU_ANGLE /
-            2
-        ) -
-        CONTENT_ANGLE_MARGIN;
-
-
-    const halfAngleRad =
-        halfAngle *
-        Math.PI /
-        180;
-
-
-    const chord =
-        2 *
-        radius *
-        Math.sin(
-            halfAngleRad
-        );
-
-
-    let panelWidth =
-        Math.min(
-            126,
-            chord
-        );
-
+function updateInterface() {
 
     if (
-        width < 900
+        DOM.turnValue
     ) {
 
-        panelWidth =
-            Math.min(
-                108,
-                chord
-            );
-
-    }
-
-
-    if (
-        width < 600
-    ) {
-
-        panelWidth =
-            Math.min(
-                82,
-                chord
-            );
-
-    }
-
-
-    return {
-
-        width:
-            Math.max(
-                64,
-                panelWidth
-            ),
-
-        height:
-            Math.min(
-                92,
-                Math.max(
-                    58,
-                    outerRadius -
-                    radius
-                )
-            )
-
-    };
-
-}
-
-
-/* =========================================================
-   POSITION CONTENT
-   ========================================================= */
-
-function positionRadialContent() {
-
-    const geometry =
-        getMapGeometry();
-
-
-    const outerRadius =
-        getOuterRadius(
-            geometry.mapRadius,
-            geometry.width,
-            geometry.height
-        );
-
-
-    MENUS.forEach(
-        menu => {
-
-            const content =
-                DOM.menuInformation
-                    .querySelector(
-                        `.radial-content-${menu.id}`
-                    );
-
-
-            if (
-                !content
-            ) {
-
-                return;
-
-            }
-
-
-            const position =
-                getContentPosition(
-                    menu,
-                    geometry.cx,
-                    geometry.cy,
-                    geometry.mapRadius,
-                    outerRadius
-                );
-
-
-            const distance =
-                Math.hypot(
-                    position.x -
-                    geometry.cx,
-
-                    position.y -
-                    geometry.cy
-                );
-
-
-            const size =
-                getContentSize(
-                    distance,
-                    outerRadius,
-                    geometry.width
-                );
-
-
-            content.style.left =
-                `${position.x}px`;
-
-
-            content.style.top =
-                `${position.y}px`;
-
-
-            content.style.width =
-                `${size.width}px`;
-
-
-            content.style.minHeight =
-                `${size.height}px`;
-
-
-            content.style.transform =
-                "translate(-50%, -50%)";
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   RADIAL BUILD
-   ========================================================= */
-
-function buildRadialInterface() {
-
-    const geometry =
-        getMapGeometry();
-
-
-    clearRadialLayers();
-
-
-    createMapCircle(
-        geometry.cx,
-        geometry.cy,
-        geometry.mapRadius +
-        MAP_RING_GAP
-    );
-
-
-    const outerRadius =
-        getOuterRadius(
-            geometry.mapRadius,
-            geometry.width,
-            geometry.height
-        );
-
-
-    createOuterCircle(
-        geometry.cx,
-        geometry.cy,
-        outerRadius
-    );
-
-
-    createSeparators(
-        geometry.cx,
-        geometry.cy,
-        geometry.mapRadius +
-        MAP_RING_GAP,
-        geometry.width,
-        geometry.height
-    );
-
-
-    createTitles(
-        geometry.cx,
-        geometry.cy,
-        geometry.mapRadius
-    );
-
-
-    positionRadialContent();
-
-}
-
-
-/* =========================================================
-   OCTAGON GRID
-   ========================================================= */
-
-function generateOctagonGrid() {
-
-    if (
-        DOM.octagonGrid
-            .querySelector(
-                ".octagon-cell"
-            )
-    ) {
-
-        return;
-
-    }
-
-
-    for (
-        let y = 0;
-        y < 7;
-        y++
-    ) {
-
-        for (
-            let x = 0;
-            x < 7;
-            x++
-        ) {
-
-            const cell =
-                document.createElement(
-                    "div"
-                );
-
-
-            cell.className =
-                "octagon-cell";
-
-
-            cell.dataset.x =
-                String(
-                    x + 1
-                );
-
-
-            cell.dataset.y =
-                String(
-                    y + 1
-                );
-
-
-            cell.dataset.type =
-                "EMPTY";
-
-
-            cell.addEventListener(
-                "click",
-                () =>
-                    selectCell(
-                        cell
-                    )
-            );
-
-
-            DOM.octagonGrid.appendChild(
-                cell
-            );
-
-        }
-
-    }
-
-}
-
-
-/* =========================================================
-   SQUARE GRID
-   ========================================================= */
-
-function generateSquareGrid() {
-
-    if (
-        DOM.squareGrid
-            .querySelector(
-                ".square-cell"
-            )
-    ) {
-
-        return;
-
-    }
-
-
-    for (
-        let y = 0;
-        y < 8;
-        y++
-    ) {
-
-        for (
-            let x = 0;
-            x < 8;
-            x++
-        ) {
-
-            const cell =
-                document.createElement(
-                    "div"
-                );
-
-
-            cell.className =
-                "square-cell";
-
-
-            DOM.squareGrid.appendChild(
-                cell
-            );
-
-        }
-
-    }
-
-}
-
-
-/* =========================================================
-   CELL
-   ========================================================= */
-
-function selectCell(
-    cell
-) {
-
-    document
-        .querySelectorAll(
-            ".octagon-cell.selected"
-        )
-        .forEach(
-            selected =>
-                selected.classList.remove(
-                    "selected"
-                )
-        );
-
-
-    cell.classList.add(
-        "selected"
-    );
-
-
-    GAME_STATE.selectedX =
-        Number(
-            cell.dataset.x
-        );
-
-
-    GAME_STATE.selectedY =
-        Number(
-            cell.dataset.y
-        );
-
-
-    GAME_STATE.selectedCell =
-        `X${GAME_STATE.selectedX}-Y${GAME_STATE.selectedY}`;
-
-
-    updateContent();
-
-
-    DOM.systemMessage.textContent =
-        "CELL SELECTED";
-
-}
-
-
-/* =========================================================
-   UPDATE
-   ========================================================= */
-
-function updateContent() {
-
-    DOM.playerValue.textContent =
-        `P${GAME_STATE.player}`;
-
-
-    DOM.contentPlayer.textContent =
-        `P${GAME_STATE.player}`;
-
-
-    DOM.contentTurn.textContent =
-        String(
-            GAME_STATE.turn
-        ).padStart(
-            2,
-            "0"
-        );
-
-
-    DOM.contentRound.textContent =
-        String(
-            GAME_STATE.round
-        ).padStart(
-            2,
-            "0"
-        );
-
-
-    DOM.contentZoom.textContent =
-        `${GAME_STATE.zoom}%`;
-
-
-    if (
-        GAME_STATE.selectedCell
-    ) {
-
-        DOM.contentCell.textContent =
-            GAME_STATE.selectedCell;
-
-
-        DOM.contentType.textContent =
-            "EMPTY";
-
-
-        DOM.contentX.textContent =
+        DOM.turnValue.textContent =
             String(
-                GAME_STATE.selectedX
-            ).padStart(
-                2,
-                "0"
-            );
-
-
-        DOM.contentY.textContent =
-            String(
-                GAME_STATE.selectedY
+                GAME_STATE.turn
             ).padStart(
                 2,
                 "0"
@@ -1962,29 +866,130 @@ function updateContent() {
 
     }
 
+
+    if (
+        DOM.roundValue
+    ) {
+
+        DOM.roundValue.textContent =
+            String(
+                GAME_STATE.round
+            ).padStart(
+                2,
+                "0"
+            );
+
+    }
+
+
+    if (
+        DOM.playersValue
+    ) {
+
+        DOM.playersValue.textContent =
+            String(
+                GAME_STATE.players
+            ).padStart(
+                2,
+                "0"
+            );
+
+    }
+
+
+    if (
+        DOM.playerName
+    ) {
+
+        DOM.playerName.textContent =
+            `PLAYER ${String(
+                GAME_STATE.player
+            ).padStart(
+                2,
+                "0"
+            )}`;
+
+    }
+
 }
 
 
 /* =========================================================
-   ACTIONS
+   MENU
+   ========================================================= */
+
+function toggleMenu() {
+
+    GAME_STATE.menuOpen =
+        !GAME_STATE.menuOpen;
+
+
+    DOM.radialInterface
+        .classList.toggle(
+            "menu-hidden",
+            !GAME_STATE.menuOpen
+        );
+
+
+    if (
+        DOM.btnMenu
+    ) {
+
+        DOM.btnMenu.textContent =
+            GAME_STATE.menuOpen
+                ? "MENU"
+                : "SHOW";
+
+    }
+
+}
+
+
+/* =========================================================
+   ACTION SELECT
    ========================================================= */
 
 function selectAction() {
 
-    DOM.systemMessage.textContent =
-        "SELECT MODE ACTIVE";
+    if (
+        typeof MAP !== "undefined"
+    ) {
+
+        MAP.setSystemMessage(
+            "SELECT MODE ACTIVE"
+        );
+
+    }
 
 }
 
 
+/* =========================================================
+   ACTION CONFIRM
+   ========================================================= */
+
 function confirmAction() {
 
     if (
-        !GAME_STATE.selectedCell
+        typeof MAP === "undefined"
     ) {
 
-        DOM.systemMessage.textContent =
-            "NO CELL SELECTED";
+        return;
+
+    }
+
+
+    const state =
+        MAP.getState();
+
+
+    if (
+        !state.selectedCell
+    ) {
+
+        MAP.setSystemMessage(
+            "NO CELL SELECTED"
+        );
 
         return;
 
@@ -1994,50 +999,63 @@ function confirmAction() {
     GAME_STATE.turn++;
 
 
-    DOM.systemMessage.textContent =
-        "ACTION CONFIRMED";
+    MAP.setSystemMessage(
+        "ACTION CONFIRMED"
+    );
 
 
-    updateContent();
-
-}
-
-
-function cancelAction() {
-
-    DOM.systemMessage.textContent =
-        "ACTION CANCELLED";
+    updateInterface();
 
 }
 
 
 /* =========================================================
-   ZOOM
+   ACTION CANCEL
    ========================================================= */
 
-function setZoom(
-    value
-) {
+function cancelAction() {
 
-    GAME_STATE.zoom =
-        Math.max(
-            50,
-            Math.min(
-                200,
-                value
-            )
+    if (
+        typeof MAP !== "undefined"
+    ) {
+
+        MAP.setSystemMessage(
+            "ACTION CANCELLED"
         );
 
+    }
 
-    DOM.map.style.transform =
-        [
-            "translate(-50%, -50%)",
-            `scale(${GAME_STATE.zoom / 100})`
-
-        ].join(" ");
+}
 
 
-    updateContent();
+/* =========================================================
+   RESET
+   ========================================================= */
+
+function resetGame() {
+
+    GAME_STATE.player =
+        1;
+
+
+    GAME_STATE.turn =
+        1;
+
+
+    GAME_STATE.round =
+        1;
+
+
+    if (
+        typeof MAP !== "undefined"
+    ) {
+
+        MAP.reset();
+
+    }
+
+
+    updateInterface();
 
 }
 
@@ -2046,42 +1064,64 @@ function setZoom(
    EVENTS
    ========================================================= */
 
-DOM.btnSelect.addEventListener(
-    "click",
-    selectAction
-);
+if (
+    DOM.btnReset
+) {
+
+    DOM.btnReset.addEventListener(
+        "click",
+        resetGame
+    );
+
+}
 
 
-DOM.btnConfirm.addEventListener(
-    "click",
-    confirmAction
-);
+if (
+    DOM.btnMenu
+) {
+
+    DOM.btnMenu.addEventListener(
+        "click",
+        toggleMenu
+    );
+
+}
 
 
-DOM.btnCancel.addEventListener(
-    "click",
-    cancelAction
-);
+if (
+    DOM.btnSelect
+) {
+
+    DOM.btnSelect.addEventListener(
+        "click",
+        selectAction
+    );
+
+}
 
 
-DOM.btnZoomIn.addEventListener(
-    "click",
-    () =>
-        setZoom(
-            GAME_STATE.zoom +
-            10
-        )
-);
+if (
+    DOM.btnConfirm
+) {
+
+    DOM.btnConfirm.addEventListener(
+        "click",
+        confirmAction
+    );
+
+}
 
 
-DOM.btnZoomOut.addEventListener(
-    "click",
-    () =>
-        setZoom(
-            GAME_STATE.zoom -
-            10
-        )
-);
+if (
+    DOM.btnCancel
+) {
+
+    DOM.btnCancel.addEventListener(
+        "click",
+        cancelAction
+    );
+
+}
 
 
 /* =========================================================
@@ -2103,7 +1143,7 @@ window.addEventListener(
 
         resizeTimer =
             setTimeout(
-                buildRadialInterface,
+                drawRadialInterface,
                 50
             );
 
@@ -2117,13 +1157,11 @@ window.addEventListener(
 
 function init() {
 
-    generateOctagonGrid();
+    MAP.init();
 
-    generateSquareGrid();
+    updateInterface();
 
-    updateContent();
-
-    buildRadialInterface();
+    drawRadialInterface();
 
 }
 
