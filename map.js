@@ -3,6 +3,17 @@
 
 const MAP = {
 
+    DEBUG: true,
+
+    log(...args) {
+        if (this.DEBUG) {
+            console.log(
+                "[90_G4ME_WiP][MAP]",
+                ...args
+            );
+        }
+    },
+
     /* ========================================================
        STATE
        ======================================================== */
@@ -225,6 +236,10 @@ const MAP = {
 
     createHexagonGrid() {
 
+        this.log(
+            "createHexagonGrid() START"
+        );
+
         const grid =
             this.DOM.octagonGrid;
 
@@ -279,6 +294,17 @@ const MAP = {
 
                 cell.dataset.content =
                     "EMPTY";
+
+                this.log(
+                    "CELL CREATED",
+                    {
+                        id: cell.dataset.id,
+                        x: cell.dataset.x,
+                        y: cell.dataset.y,
+                        type: cell.dataset.type,
+                        content: cell.dataset.content
+                    }
+                );
 
 
                 cell.dataset.id =
@@ -638,6 +664,11 @@ const MAP = {
 
     selectCell(cell) {
 
+        this.log(
+            "selectCell() CALLED",
+            cell
+        );
+
         if (!cell) {
             return;
         }
@@ -719,6 +750,10 @@ const MAP = {
        ======================================================== */
 
     clearSelection() {
+
+        this.log(
+            "clearSelection()"
+        );
 
         this.DOM.octagonGrid
             ?.querySelectorAll(
@@ -1244,6 +1279,17 @@ const MAP = {
 
     updateInterface() {
 
+        this.log(
+            "updateInterface()",
+            {
+                selectedCell: this.state.selectedCell,
+                selectedX: this.state.selectedX,
+                selectedY: this.state.selectedY,
+                selectedType: this.state.selectedType,
+                selectedContent: this.state.selectedContent
+            }
+        );
+
         if (
             this.DOM.selectedCell
         ) {
@@ -1335,6 +1381,31 @@ const MAP = {
             this.DOM.selectedContent.textContent =
                 this.state.selectedContent ||
                 "EMPTY";
+
+            this.log(
+                "DOM CELL UPDATED",
+                {
+                    cell: this.DOM.selectedCell
+                        ? this.DOM.selectedCell.textContent
+                        : null,
+
+                    x: this.DOM.cellX
+                        ? this.DOM.cellX.textContent
+                        : null,
+
+                    y: this.DOM.cellY
+                        ? this.DOM.cellY.textContent
+                        : null,
+
+                    type: this.DOM.selectedType
+                        ? this.DOM.selectedType.textContent
+                        : null,
+
+                    content: this.DOM.selectedContent
+                        ? this.DOM.selectedContent.textContent
+                        : null
+                }
+            );
         }
 
 
