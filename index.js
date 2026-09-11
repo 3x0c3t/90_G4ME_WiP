@@ -1,12 +1,7 @@
-/* =============================================================
+/* ============================================================
    90_G4ME_WiP
-   Main Game Interface
-============================================================= */
-
-
-/* =============================================================
-   CONFIGURATION
-============================================================= */
+   GAME ENGINE
+============================================================ */
 
 const GAME_CONFIG = {
 
@@ -28,9 +23,9 @@ const GAME_CONFIG = {
 };
 
 
-/* =============================================================
+/* ============================================================
    GAME STATE
-============================================================= */
+============================================================ */
 
 const gameState = {
 
@@ -51,17 +46,14 @@ const gameState = {
 };
 
 
-/* =============================================================
+/* ============================================================
    DOM
-============================================================= */
+============================================================ */
 
 const DOM = {
 
     map:
         document.getElementById("map"),
-
-    mapContainer:
-        document.getElementById("map-container"),
 
     octagonGrid:
         document.getElementById("octagon-grid"),
@@ -102,9 +94,6 @@ const DOM = {
     systemMessage:
         document.getElementById("system-message"),
 
-    footerStatus:
-        document.getElementById("footer-status"),
-
     reset:
         document.getElementById("btn-reset"),
 
@@ -129,27 +118,17 @@ const DOM = {
 };
 
 
-/* =============================================================
-   INITIALISATION
-============================================================= */
+/* ============================================================
+   INIT
+============================================================ */
 
 document.addEventListener(
     "DOMContentLoaded",
-    () => {
-
-        initGame();
-
-    }
+    initGame
 );
 
 
-/* =============================================================
-   INIT GAME
-============================================================= */
-
 function initGame() {
-
-    updateInterface();
 
     generateOctagonGrid();
 
@@ -157,9 +136,13 @@ function initGame() {
 
     updateGridCounters();
 
-    setupEvents();
+    updateInterface();
 
     applyZoom();
+
+    setupEvents();
+
+    setupRadialMenus();
 
     setSystemMessage(
         "SYSTEM READY"
@@ -168,9 +151,77 @@ function initGame() {
 }
 
 
-/* =============================================================
+/* ============================================================
+   RADIAL MENU EVENTS
+============================================================ */
+
+function setupRadialMenus() {
+
+    const sectors =
+        document.querySelectorAll(
+            ".menu-sector"
+        );
+
+
+    sectors.forEach(
+        sector => {
+
+            sector.addEventListener(
+                "mouseenter",
+                () => {
+
+                    const name =
+                        sector.dataset.menu;
+
+                    const panel =
+                        document.querySelector(
+                            `.radial-content-${name}`
+                        );
+
+                    if (panel) {
+
+                        panel.classList.add(
+                            "active"
+                        );
+
+                    }
+
+                }
+            );
+
+
+            sector.addEventListener(
+                "mouseleave",
+                () => {
+
+                    const name =
+                        sector.dataset.menu;
+
+                    const panel =
+                        document.querySelector(
+                            `.radial-content-${name}`
+                        );
+
+                    if (panel) {
+
+                        panel.classList.remove(
+                            "active"
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+/* ============================================================
    EVENTS
-============================================================= */
+============================================================ */
 
 function setupEvents() {
 
@@ -178,6 +229,7 @@ function setupEvents() {
         "click",
         resetGame
     );
+
 
     DOM.menu.addEventListener(
         "click",
@@ -229,29 +281,43 @@ function setupEvents() {
 
     DOM.confirm.addEventListener(
         "click",
-        () => {
-
-            confirmSelection();
-
-        }
+        confirmSelection
     );
 
 
     DOM.cancel.addEventListener(
         "click",
-        () => {
+        clearSelection
+    );
 
-            clearSelection();
+
+    DOM.map.addEventListener(
+        "click",
+        event => {
+
+            if (
+                event.target === DOM.map
+            ) {
+
+                clearSelection();
+
+            }
 
         }
+    );
+
+
+    document.addEventListener(
+        "keydown",
+        handleKeyboard
     );
 
 }
 
 
-/* =============================================================
+/* ============================================================
    OCTAGON GRID
-============================================================= */
+============================================================ */
 
 function generateOctagonGrid() {
 
@@ -271,6 +337,7 @@ function generateOctagonGrid() {
 
     const totalHeight =
         rows * size;
+
 
     for (
         let row = 0;
@@ -301,27 +368,25 @@ function generateOctagonGrid() {
             cell.dataset.column =
                 column;
 
-            const offsetX =
-                column * size;
-
-            const offsetY =
-                row * size;
 
             const stagger =
                 row % 2 === 1
                     ? size / 2
                     : 0;
 
+
             cell.style.left =
-                `${offsetX + stagger}px`;
+                `${column * size + stagger}px`;
 
             cell.style.top =
-                `${offsetY}px`;
+                `${row * size}px`;
+
 
             cell.addEventListener(
                 "click",
                 handleCellClick
             );
+
 
             DOM.octagonGrid.appendChild(
                 cell
@@ -330,6 +395,7 @@ function generateOctagonGrid() {
         }
 
     }
+
 
     centerGrid(
         DOM.octagonGrid,
@@ -340,9 +406,9 @@ function generateOctagonGrid() {
 }
 
 
-/* =============================================================
+/* ============================================================
    SQUARE GRID
-============================================================= */
+============================================================ */
 
 function generateSquareGrid() {
 
@@ -365,6 +431,7 @@ function generateSquareGrid() {
 
     const totalHeight =
         rows * spacing;
+
 
     for (
         let row = 0;
@@ -395,27 +462,25 @@ function generateSquareGrid() {
             cell.dataset.column =
                 column;
 
-            const offsetX =
-                column * spacing;
-
-            const offsetY =
-                row * spacing;
 
             const stagger =
                 column % 2 === 1
                     ? spacing / 2
                     : 0;
 
+
             cell.style.left =
-                `${offsetX + stagger}px`;
+                `${column * spacing + stagger}px`;
 
             cell.style.top =
-                `${offsetY}px`;
+                `${row * spacing}px`;
+
 
             cell.addEventListener(
                 "click",
                 handleCellClick
             );
+
 
             DOM.squareGrid.appendChild(
                 cell
@@ -424,6 +489,7 @@ function generateSquareGrid() {
         }
 
     }
+
 
     centerGrid(
         DOM.squareGrid,
@@ -434,9 +500,9 @@ function generateSquareGrid() {
 }
 
 
-/* =============================================================
+/* ============================================================
    CENTER GRID
-============================================================= */
+============================================================ */
 
 function centerGrid(
     grid,
@@ -462,22 +528,27 @@ function centerGrid(
 }
 
 
-/* =============================================================
+/* ============================================================
    CELL CLICK
-============================================================= */
+============================================================ */
 
-function handleCellClick(event) {
+function handleCellClick(
+    event
+) {
 
     event.stopPropagation();
 
     const cell =
         event.currentTarget;
 
+
     clearCellClasses();
+
 
     cell.classList.add(
         "selected"
     );
+
 
     const type =
         cell.dataset.type;
@@ -492,15 +563,26 @@ function handleCellClick(event) {
             cell.dataset.column
         );
 
+
     gameState.selectedCell =
         `${column}:${row}`;
 
     gameState.selectedType =
         type;
 
-    updateSelectedCell(
-        cell
-    );
+
+    DOM.selectedCell.textContent =
+        `${column}:${row}`;
+
+    DOM.selectedType.textContent =
+        type.toUpperCase();
+
+    DOM.positionX.textContent =
+        column;
+
+    DOM.positionY.textContent =
+        row;
+
 
     setSystemMessage(
         `${type.toUpperCase()} CELL SELECTED`
@@ -509,46 +591,14 @@ function handleCellClick(event) {
 }
 
 
-/* =============================================================
-   SELECTED CELL
-============================================================= */
-
-function updateSelectedCell(
-    cell
-) {
-
-    const row =
-        Number(
-            cell.dataset.row
-        );
-
-    const column =
-        Number(
-            cell.dataset.column
-        );
-
-    DOM.selectedCell.textContent =
-        `${column}:${row}`;
-
-    DOM.selectedType.textContent =
-        cell.dataset.type.toUpperCase();
-
-    DOM.positionX.textContent =
-        column;
-
-    DOM.positionY.textContent =
-        row;
-
-}
-
-
-/* =============================================================
+/* ============================================================
    CLEAR SELECTION
-============================================================= */
+============================================================ */
 
 function clearSelection() {
 
     clearCellClasses();
+
 
     gameState.selectedCell =
         null;
@@ -556,6 +606,7 @@ function clearSelection() {
     gameState.selectedType =
         null;
 
+
     DOM.selectedCell.textContent =
         "---";
 
@@ -567,6 +618,7 @@ function clearSelection() {
 
     DOM.positionY.textContent =
         "---";
+
 
     setSystemMessage(
         "SELECTION CLEARED"
@@ -575,33 +627,28 @@ function clearSelection() {
 }
 
 
-/* =============================================================
-   CLEAR CELL CLASSES
-============================================================= */
-
 function clearCellClasses() {
 
-    const selected =
-        document.querySelectorAll(
-            ".selected"
+    document
+        .querySelectorAll(
+            ".octagon-cell.selected, .square-cell.selected"
+        )
+        .forEach(
+            cell => {
+
+                cell.classList.remove(
+                    "selected"
+                );
+
+            }
         );
-
-    selected.forEach(
-        cell => {
-
-            cell.classList.remove(
-                "selected"
-            );
-
-        }
-    );
 
 }
 
 
-/* =============================================================
-   CONFIRM SELECTION
-============================================================= */
+/* ============================================================
+   CONFIRM
+============================================================ */
 
 function confirmSelection() {
 
@@ -617,6 +664,7 @@ function confirmSelection() {
 
     }
 
+
     setSystemMessage(
         `CELL ${gameState.selectedCell} CONFIRMED`
     );
@@ -624,9 +672,9 @@ function confirmSelection() {
 }
 
 
-/* =============================================================
+/* ============================================================
    ZOOM
-============================================================= */
+============================================================ */
 
 function changeZoom(
     amount
@@ -634,45 +682,35 @@ function changeZoom(
 
     gameState.zoom += amount;
 
-    if (
-        gameState.zoom >
-        GAME_CONFIG.zoomMax
-    ) {
 
-        gameState.zoom =
-            GAME_CONFIG.zoomMax;
+    gameState.zoom =
+        Math.max(
+            GAME_CONFIG.zoomMin,
+            Math.min(
+                GAME_CONFIG.zoomMax,
+                gameState.zoom
+            )
+        );
 
-    }
-
-    if (
-        gameState.zoom <
-        GAME_CONFIG.zoomMin
-    ) {
-
-        gameState.zoom =
-            GAME_CONFIG.zoomMin;
-
-    }
 
     applyZoom();
 
 }
 
 
-/* =============================================================
-   APPLY ZOOM
-============================================================= */
-
 function applyZoom() {
 
     const scale =
         gameState.zoom / 100;
 
+
     DOM.octagonGrid.style.transform =
         `translate(-50%, -50%) scale(${scale})`;
 
+
     DOM.squareGrid.style.transform =
         `translate(-50%, -50%) scale(${scale})`;
+
 
     DOM.zoomValue.textContent =
         gameState.zoom;
@@ -680,9 +718,9 @@ function applyZoom() {
 }
 
 
-/* =============================================================
+/* ============================================================
    RESET
-============================================================= */
+============================================================ */
 
 function resetGame() {
 
@@ -704,11 +742,26 @@ function resetGame() {
     gameState.zoom =
         GAME_CONFIG.initialZoom;
 
-    clearSelection();
+
+    clearCellClasses();
 
     updateInterface();
 
     applyZoom();
+
+
+    DOM.selectedCell.textContent =
+        "---";
+
+    DOM.selectedType.textContent =
+        "---";
+
+    DOM.positionX.textContent =
+        "---";
+
+    DOM.positionY.textContent =
+        "---";
+
 
     setSystemMessage(
         "GAME RESET"
@@ -717,9 +770,9 @@ function resetGame() {
 }
 
 
-/* =============================================================
-   UPDATE INTERFACE
-============================================================= */
+/* ============================================================
+   INTERFACE
+============================================================ */
 
 function updateInterface() {
 
@@ -731,6 +784,7 @@ function updateInterface() {
             "0"
         );
 
+
     DOM.roundValue.textContent =
         String(
             gameState.round
@@ -738,6 +792,7 @@ function updateInterface() {
             2,
             "0"
         );
+
 
     DOM.playersValue.textContent =
         String(
@@ -750,34 +805,29 @@ function updateInterface() {
 }
 
 
-/* =============================================================
+/* ============================================================
    GRID COUNTERS
-============================================================= */
+============================================================ */
 
 function updateGridCounters() {
 
-    const octagons =
+    DOM.octagonCount.textContent =
         document.querySelectorAll(
             ".octagon-cell"
-        );
+        ).length;
 
-    const squares =
-        document.querySelectorAll(
-            ".square-cell"
-        );
-
-    DOM.octagonCount.textContent =
-        octagons.length;
 
     DOM.squareCount.textContent =
-        squares.length;
+        document.querySelectorAll(
+            ".square-cell"
+        ).length;
 
 }
 
 
-/* =============================================================
+/* ============================================================
    SYSTEM MESSAGE
-============================================================= */
+============================================================ */
 
 function setSystemMessage(
     message
@@ -789,88 +839,57 @@ function setSystemMessage(
 }
 
 
-/* =============================================================
-   MAP CLICK
-============================================================= */
-
-DOM.map.addEventListener(
-    "click",
-    event => {
-
-        if (
-            event.target === DOM.map
-        ) {
-
-            clearSelection();
-
-        }
-
-    }
-);
-
-
-/* =============================================================
+/* ============================================================
    KEYBOARD
-============================================================= */
+============================================================ */
 
-document.addEventListener(
-    "keydown",
-    event => {
+function handleKeyboard(
+    event
+) {
 
-        if (
-            event.key === "+"
-            ||
-            event.key === "="
-        ) {
+    if (
+        event.key === "+" ||
+        event.key === "="
+    ) {
 
-            changeZoom(
-                GAME_CONFIG.zoomStep
-            );
-
-        }
-
-
-        if (
-            event.key === "-"
-        ) {
-
-            changeZoom(
-                -GAME_CONFIG.zoomStep
-            );
-
-        }
-
-
-        if (
-            event.key === "Escape"
-        ) {
-
-            clearSelection();
-
-        }
-
-
-        if (
-            event.key === "Enter"
-        ) {
-
-            confirmSelection();
-
-        }
+        changeZoom(
+            GAME_CONFIG.zoomStep
+        );
 
     }
-);
 
 
-/* =============================================================
-   DEBUG
-============================================================= */
+    if (
+        event.key === "-"
+    ) {
+
+        changeZoom(
+            -GAME_CONFIG.zoomStep
+        );
+
+    }
+
+
+    if (
+        event.key === "Escape"
+    ) {
+
+        clearSelection();
+
+    }
+
+
+    if (
+        event.key === "Enter"
+    ) {
+
+        confirmSelection();
+
+    }
+
+}
+
 
 console.log(
     "90_G4ME_WiP initialized"
-);
-
-console.log(
-    "Game state:",
-    gameState
 );

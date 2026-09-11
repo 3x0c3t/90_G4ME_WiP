@@ -1,6 +1,7 @@
-/* =============================================================
-   RESET
-============================================================= */
+/* ============================================================
+   90_G4ME_WiP
+   RADIAL INTERFACE
+============================================================ */
 
 * {
     box-sizing: border-box;
@@ -20,9 +21,9 @@ body {
     background:
         radial-gradient(
             circle at center,
-            #111820 0%,
-            #090d12 55%,
-            #05070a 100%
+            #111b23 0%,
+            #080d12 55%,
+            #030508 100%
         );
 
     color: #d9e2e8;
@@ -34,21 +35,22 @@ body {
 }
 
 
-/* =============================================================
+/* ============================================================
    VARIABLES
-============================================================= */
+============================================================ */
 
 :root {
 
     --header-height: 76px;
     --footer-height: 34px;
 
-    --panel-bg: rgba(10, 16, 22, 0.88);
-    --panel-border: rgba(0, 234, 255, 0.28);
+    --map-size:
+        min(
+            62vh,
+            62vw
+        );
 
     --cyan: #00eaff;
-    --cyan-soft: rgba(0, 234, 255, 0.18);
-
     --green: #00ff99;
     --orange: #ff9f43;
     --red: #ff4058;
@@ -56,13 +58,13 @@ body {
     --text-main: #d9e2e8;
     --text-dim: #73818c;
 
-    --map-size: min(68vh, 68vw);
+    --panel-bg: #071016;
 }
 
 
-/* =============================================================
+/* ============================================================
    HEADER
-============================================================= */
+============================================================ */
 
 #main-header {
 
@@ -84,28 +86,22 @@ body {
     align-items: center;
 
     padding:
-        0
-        24px;
-
-    z-index: 1000;
+        0 24px;
 
     background:
-        linear-gradient(
-            180deg,
-            rgba(4, 8, 12, 0.98),
-            rgba(4, 8, 12, 0.90)
-        );
+        rgba(3, 7, 10, 0.97);
 
     border-bottom:
         1px solid
-        rgba(0, 234, 255, 0.22);
+        rgba(0, 234, 255, 0.20);
 
-    box-shadow:
-        0 5px 25px rgba(0, 0, 0, 0.35);
+    z-index: 1000;
 }
 
 
-/* HEADER LEFT */
+/* ============================================================
+   HEADER LEFT
+============================================================ */
 
 .header-left {
     display: flex;
@@ -135,18 +131,20 @@ body {
     font-size: 9px;
 
     letter-spacing: 2px;
-    text-transform: uppercase;
 }
 
 
-/* HEADER CENTER */
+/* ============================================================
+   HEADER CENTER
+============================================================ */
 
 .header-center {
 
     display: flex;
 
     align-items: center;
-    gap: 20px;
+
+    gap: 22px;
 }
 
 .game-title {
@@ -164,8 +162,6 @@ body {
 
     font-size: 25px;
     font-weight: 700;
-
-    letter-spacing: 2px;
 }
 
 .game-name {
@@ -173,7 +169,6 @@ body {
     color: var(--text-main);
 
     font-size: 18px;
-    font-weight: 600;
 
     letter-spacing: 3px;
 }
@@ -203,12 +198,14 @@ body {
     background: var(--green);
 
     box-shadow:
-        0 0 8px
+        0 0 10px
         var(--green);
 }
 
 
-/* HEADER RIGHT */
+/* ============================================================
+   HEADER RIGHT
+============================================================ */
 
 .header-right {
 
@@ -223,7 +220,8 @@ body {
 
     min-width: 72px;
 
-    padding: 8px 13px;
+    padding:
+        8px 13px;
 
     background: transparent;
 
@@ -238,249 +236,284 @@ body {
     letter-spacing: 1.5px;
 
     cursor: pointer;
-
-    transition:
-        color 0.2s,
-        border-color 0.2s,
-        background 0.2s;
 }
 
 .header-button:hover {
 
     color: var(--cyan);
 
-    border-color: var(--cyan);
+    border-color:
+        var(--cyan);
 
     background:
         rgba(0, 234, 255, 0.06);
 }
 
 
-/* =============================================================
-   GAME AREA
-============================================================= */
+/* ============================================================
+   GAME
+============================================================ */
 
 #game {
 
     position: fixed;
 
     top: var(--header-height);
-    bottom: var(--footer-height);
-
-    left: 0;
     right: 0;
+    bottom: var(--footer-height);
+    left: 0;
 
     overflow: hidden;
 }
 
 
-/* =============================================================
-   PANELS
-============================================================= */
+/* ============================================================
+   RADIAL INTERFACE
+============================================================ */
 
-.game-panel {
+#radial-interface {
 
     position: absolute;
 
-    background:
-        linear-gradient(
-            145deg,
-            rgba(14, 22, 29, 0.92),
-            rgba(7, 12, 17, 0.88)
+    left: 50%;
+    top: 50%;
+
+    width:
+        calc(
+            var(--map-size) + 260px
         );
 
-    border:
-        1px solid
-        var(--panel-border);
+    height:
+        calc(
+            var(--map-size) + 260px
+        );
 
-    box-shadow:
-        0 8px 25px rgba(0, 0, 0, 0.30);
-
-    backdrop-filter: blur(7px);
-
-    z-index: 20;
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
 }
+
+
+/* ============================================================
+   SVG RADIAL MENUS
+============================================================ */
+
+#radial-menus {
+
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    z-index: 10;
+
+    overflow: visible;
+}
+
+
+/* ============================================================
+   SECTORS
+============================================================ */
+
+.menu-sector {
+
+    fill:
+        url(#sector-background);
+
+    stroke:
+        rgba(0, 234, 255, 0.28);
+
+    stroke-width: 2;
+
+    vector-effect:
+        non-scaling-stroke;
+
+    transition:
+        fill 0.18s ease,
+        stroke 0.18s ease;
+}
+
+.menu-sector:hover {
+
+    fill:
+        #0b2029;
+
+    stroke:
+        rgba(0, 234, 255, 0.75);
+
+    filter:
+        url(#sector-glow);
+}
+
+
+/* ============================================================
+   CONTENT LAYER
+============================================================ */
+
+.radial-content {
+
+    position: absolute;
+
+    z-index: 30;
+
+    width: 210px;
+
+    padding: 18px;
+
+    pointer-events: auto;
+}
+
+
+/* ============================================================
+   NORTH
+============================================================ */
+
+.radial-content-north {
+
+    left: 50%;
+    top: 2%;
+
+    transform:
+        translateX(-50%);
+
+    text-align: center;
+}
+
+
+/* ============================================================
+   NORTH EAST
+============================================================ */
+
+.radial-content-north-east {
+
+    right: 3%;
+    top: 20%;
+
+    transform:
+        rotate(0deg);
+
+    text-align: left;
+}
+
+
+/* ============================================================
+   EAST
+============================================================ */
+
+.radial-content-east {
+
+    right: 1%;
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    text-align: center;
+}
+
+
+/* ============================================================
+   SOUTH EAST
+============================================================ */
+
+.radial-content-south-east {
+
+    right: 3%;
+    bottom: 19%;
+
+    text-align: left;
+}
+
+
+/* ============================================================
+   SOUTH
+============================================================ */
+
+.radial-content-south {
+
+    left: 50%;
+    bottom: 2%;
+
+    transform:
+        translateX(-50%);
+
+    text-align: center;
+}
+
+
+/* ============================================================
+   SOUTH WEST
+============================================================ */
+
+.radial-content-south-west {
+
+    left: 3%;
+    bottom: 19%;
+
+    text-align: right;
+}
+
+
+/* ============================================================
+   WEST
+============================================================ */
+
+.radial-content-west {
+
+    left: 1%;
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    text-align: center;
+}
+
+
+/* ============================================================
+   NORTH WEST
+============================================================ */
+
+.radial-content-north-west {
+
+    left: 3%;
+    top: 20%;
+
+    text-align: right;
+}
+
+
+/* ============================================================
+   PANEL TITLES
+============================================================ */
 
 .panel-title {
 
-    height: 27px;
+    margin-bottom: 12px;
 
-    display: flex;
-
-    align-items: center;
-
-    padding:
-        0
-        11px;
-
-    color: var(--cyan);
-
-    background:
-        rgba(0, 234, 255, 0.055);
+    padding-bottom: 7px;
 
     border-bottom:
         1px solid
-        rgba(0, 234, 255, 0.15);
+        rgba(0, 234, 255, 0.18);
+
+    color: var(--cyan);
 
     font-size: 9px;
 
     font-weight: 700;
 
-    letter-spacing: 1.8px;
-}
-
-.panel-content {
-
-    padding: 10px;
+    letter-spacing: 2px;
 }
 
 
-/* =============================================================
-   TOP PANELS
-============================================================= */
-
-.panel-top-left {
-
-    top: 24px;
-    left: 4%;
-
-    width: 190px;
-}
-
-.panel-top {
-
-    top: 18px;
-    left: 50%;
-
-    width: 310px;
-
-    transform:
-        translateX(-50%);
-}
-
-.panel-top-right {
-
-    top: 24px;
-    right: 4%;
-
-    width: 210px;
-}
-
-
-/* =============================================================
-   SIDE PANELS
-============================================================= */
-
-.panel-left {
-
-    left: 3%;
-    top: 50%;
-
-    width: 145px;
-
-    transform:
-        translateY(-50%);
-}
-
-.panel-right {
-
-    right: 3%;
-    top: 50%;
-
-    width: 145px;
-
-    transform:
-        translateY(-50%);
-}
-
-
-/* =============================================================
-   BOTTOM PANELS
-============================================================= */
-
-.panel-bottom-left {
-
-    bottom: 22px;
-    left: 4%;
-
-    width: 205px;
-}
-
-.panel-bottom {
-
-    bottom: 16px;
-    left: 50%;
-
-    width: 310px;
-
-    transform:
-        translateX(-50%);
-}
-
-.panel-bottom-right {
-
-    bottom: 22px;
-    right: 4%;
-
-    width: 205px;
-}
-
-
-/* =============================================================
-   PLAYER
-============================================================= */
-
-.player-indicator {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 10px;
-}
-
-.player-color {
-
-    width: 11px;
-    height: 11px;
-
-    border-radius: 50%;
-
-    background: var(--cyan);
-
-    box-shadow:
-        0 0 10px
-        var(--cyan);
-}
-
-.player-indicator strong {
-
-    display: block;
-
-    color: var(--text-main);
-
-    font-size: 11px;
-
-    letter-spacing: 1px;
-}
-
-.player-indicator small {
-
-    display: block;
-
-    margin-top: 3px;
-
-    color: var(--green);
-
-    font-size: 8px;
-
-    letter-spacing: 1px;
-}
-
-
-/* =============================================================
-   INFO
-============================================================= */
+/* ============================================================
+   INFORMATION
+============================================================ */
 
 .game-info,
 .cell-info,
@@ -488,9 +521,11 @@ body {
 
     display: flex;
 
-    justify-content: space-between;
+    align-items: flex-start;
 
-    gap: 15px;
+    justify-content: center;
+
+    gap: 18px;
 }
 
 .game-info > div,
@@ -501,7 +536,7 @@ body {
 
     flex-direction: column;
 
-    gap: 3px;
+    gap: 4px;
 }
 
 .info-label {
@@ -510,7 +545,7 @@ body {
 
     font-size: 7px;
 
-    letter-spacing: 1.4px;
+    letter-spacing: 1.3px;
 }
 
 .game-info strong,
@@ -527,9 +562,210 @@ body {
 }
 
 
-/* =============================================================
-   MAP CONTAINER
-============================================================= */
+/* ============================================================
+   PLAYER
+============================================================ */
+
+.player-indicator {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.radial-content-north-west
+.player-indicator {
+
+    justify-content: flex-end;
+}
+
+.player-color {
+
+    width: 13px;
+    height: 13px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background:
+        var(--cyan);
+
+    box-shadow:
+        0 0 12px
+        var(--cyan);
+}
+
+.player-indicator strong {
+
+    display: block;
+
+    color: var(--text-main);
+
+    font-size: 10px;
+
+    letter-spacing: 1px;
+}
+
+.player-indicator small {
+
+    display: block;
+
+    margin-top: 4px;
+
+    color: var(--green);
+
+    font-size: 7px;
+
+    letter-spacing: 1.5px;
+}
+
+
+/* ============================================================
+   ACTIONS
+============================================================ */
+
+.actions {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.action-button {
+
+    width: 100%;
+
+    padding:
+        7px 10px;
+
+    background:
+        rgba(0, 234, 255, 0.025);
+
+    border:
+        1px solid
+        rgba(0, 234, 255, 0.20);
+
+    color: var(--text-dim);
+
+    font-size: 8px;
+
+    letter-spacing: 1.4px;
+
+    cursor: pointer;
+}
+
+.action-button:hover {
+
+    color: var(--cyan);
+
+    border-color:
+        var(--cyan);
+
+    background:
+        rgba(0, 234, 255, 0.08);
+}
+
+
+/* ============================================================
+   MAP CONTROLS
+============================================================ */
+
+.map-controls {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 12px;
+}
+
+.control-button {
+
+    width: 38px;
+    height: 34px;
+
+    background:
+        rgba(0, 234, 255, 0.025);
+
+    border:
+        1px solid
+        rgba(0, 234, 255, 0.22);
+
+    color: var(--cyan);
+
+    font-size: 18px;
+
+    cursor: pointer;
+}
+
+.control-button:hover {
+
+    border-color:
+        var(--cyan);
+
+    background:
+        rgba(0, 234, 255, 0.08);
+}
+
+.zoom-value {
+
+    color: var(--text-dim);
+
+    font-size: 9px;
+
+    letter-spacing: 1px;
+}
+
+
+/* ============================================================
+   POSITION
+============================================================ */
+
+.position-info {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 20px;
+
+    color: var(--text-dim);
+
+    font-size: 9px;
+
+    letter-spacing: 1px;
+}
+
+.position-info strong {
+
+    color: var(--text-main);
+}
+
+
+/* ============================================================
+   SYSTEM
+============================================================ */
+
+.system-message {
+
+    color: var(--green);
+
+    font-size: 8px;
+
+    letter-spacing: 1.5px;
+}
+
+
+/* ============================================================
+   MAP
+============================================================ */
 
 #map-container {
 
@@ -541,27 +777,16 @@ body {
     width: var(--map-size);
     height: var(--map-size);
 
-    min-width: 420px;
-    min-height: 420px;
-
-    max-width: 760px;
-    max-height: 760px;
-
     transform:
-        translate(-50%, -50%);
+        translate(
+            -50%,
+            -50%
+        );
 
-    z-index: 5;
+    z-index: 50;
 
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
+    pointer-events: none;
 }
-
-
-/* =============================================================
-   MAP
-============================================================= */
 
 #map {
 
@@ -575,36 +800,81 @@ body {
     background:
         radial-gradient(
             circle,
-            rgba(15, 27, 36, 0.96) 0%,
-            rgba(8, 15, 21, 0.98) 68%,
-            rgba(4, 8, 12, 1) 100%
+            #13232d 0%,
+            #0b151c 55%,
+            #050a0e 100%
         );
 
     border:
-        1px solid
-        rgba(0, 234, 255, 0.30);
+        2px solid
+        rgba(0, 234, 255, 0.50);
 
     box-shadow:
 
-        0 0 0 8px
-        rgba(0, 234, 255, 0.025),
+        0 0 0 7px
+        rgba(0, 234, 255, 0.035),
 
         0 0 0 9px
-        rgba(0, 234, 255, 0.09),
+        rgba(0, 234, 255, 0.12),
 
-        0 0 55px
-        rgba(0, 234, 255, 0.08),
+        0 0 45px
+        rgba(0, 234, 255, 0.18),
 
-        inset 0 0 70px
-        rgba(0, 0, 0, 0.65);
+        inset 0 0 80px
+        rgba(0, 0, 0, 0.75);
 
     overflow: hidden;
+
+    pointer-events: auto;
 }
 
 
-/* =============================================================
-   MAP GRID CONTAINERS
-============================================================= */
+/* ============================================================
+   MAP DECORATION
+============================================================ */
+
+#map::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 20px;
+
+    border:
+        1px solid
+        rgba(0, 234, 255, 0.10);
+
+    border-radius: 50%;
+
+    pointer-events: none;
+
+    z-index: 1;
+}
+
+#map::after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 8%;
+
+    border:
+        1px dashed
+        rgba(0, 234, 255, 0.07);
+
+    border-radius: 50%;
+
+    pointer-events: none;
+
+    z-index: 1;
+}
+
+
+/* ============================================================
+   GRIDS
+============================================================ */
 
 #octagon-grid,
 #square-grid {
@@ -614,22 +884,22 @@ body {
     left: 50%;
     top: 50%;
 
-    width: 82%;
-    height: 82%;
-
     transform:
-        translate(-50%, -50%);
+        translate(
+            -50%,
+            -50%
+        );
 
-    transform-origin: center;
+    transform-origin:
+        center;
 
-    transition:
-        transform 0.25s ease;
+    z-index: 5;
 }
 
 
-/* =============================================================
+/* ============================================================
    OCTAGON CELLS
-============================================================= */
+============================================================ */
 
 .octagon-cell {
 
@@ -639,11 +909,11 @@ body {
     height: 52px;
 
     background:
-        rgba(12, 25, 32, 0.86);
+        rgba(12, 25, 32, 0.88);
 
     border:
         1px solid
-        rgba(0, 234, 255, 0.40);
+        rgba(0, 234, 255, 0.42);
 
     clip-path:
         polygon(
@@ -656,44 +926,21 @@ body {
             0% 70%,
             0% 30%
         );
+
+    cursor: pointer;
 
     transition:
         background 0.15s,
-        border-color 0.15s,
-        transform 0.15s;
+        transform 0.15s,
+        border-color 0.15s;
 
-    cursor: pointer;
-}
-
-.octagon-cell::after {
-
-    content: "";
-
-    position: absolute;
-
-    inset: 5px;
-
-    border:
-        1px solid
-        rgba(0, 234, 255, 0.08);
-
-    clip-path:
-        polygon(
-            30% 0%,
-            70% 0%,
-            100% 30%,
-            100% 70%,
-            70% 100%,
-            30% 100%,
-            0% 70%,
-            0% 30%
-        );
+    z-index: 5;
 }
 
 .octagon-cell:hover {
 
     background:
-        rgba(0, 234, 255, 0.15);
+        rgba(0, 234, 255, 0.16);
 
     border-color:
         var(--cyan);
@@ -720,9 +967,9 @@ body {
 }
 
 
-/* =============================================================
+/* ============================================================
    SQUARE CELLS
-============================================================= */
+============================================================ */
 
 .square-cell {
 
@@ -736,14 +983,14 @@ body {
 
     border:
         1px solid
-        rgba(255, 159, 67, 0.23);
+        rgba(255, 159, 67, 0.25);
 
     cursor: pointer;
 
     transition:
         background 0.15s,
-        border-color 0.15s,
-        transform 0.15s;
+        transform 0.15s,
+        border-color 0.15s;
 
     z-index: 10;
 }
@@ -778,9 +1025,9 @@ body {
 }
 
 
-/* =============================================================
+/* ============================================================
    MAP CENTER
-============================================================= */
+============================================================ */
 
 #map-center {
 
@@ -789,35 +1036,39 @@ body {
     left: 50%;
     top: 50%;
 
-    width: 82px;
-    height: 82px;
+    width: 92px;
+    height: 92px;
 
     transform:
-        translate(-50%, -50%);
-
-    border-radius: 50%;
+        translate(
+            -50%,
+            -50%
+        );
 
     display: flex;
 
     flex-direction: column;
 
     align-items: center;
+
     justify-content: center;
+
+    border-radius: 50%;
 
     background:
         radial-gradient(
             circle,
-            rgba(0, 234, 255, 0.10),
-            rgba(5, 10, 14, 0.95) 70%
+            rgba(0, 234, 255, 0.12),
+            rgba(5, 10, 14, 0.98) 72%
         );
 
     border:
         1px solid
-        rgba(0, 234, 255, 0.38);
+        rgba(0, 234, 255, 0.45);
 
     box-shadow:
         0 0 25px
-        rgba(0, 234, 255, 0.12);
+        rgba(0, 234, 255, 0.14);
 
     z-index: 100;
 }
@@ -826,7 +1077,7 @@ body {
 
     color: var(--cyan);
 
-    font-size: 22px;
+    font-size: 25px;
 
     font-weight: 700;
 
@@ -835,7 +1086,7 @@ body {
 
 .center-label {
 
-    margin-top: 3px;
+    margin-top: 4px;
 
     color: var(--text-dim);
 
@@ -845,153 +1096,9 @@ body {
 }
 
 
-/* =============================================================
-   MAP CONTROLS
-============================================================= */
-
-.map-controls {
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    gap: 8px;
-}
-
-.control-button {
-
-    width: 42px;
-    height: 32px;
-
-    background:
-        rgba(0, 234, 255, 0.035);
-
-    border:
-        1px solid
-        rgba(0, 234, 255, 0.22);
-
-    color: var(--cyan);
-
-    font-size: 18px;
-
-    cursor: pointer;
-}
-
-.control-button:hover {
-
-    background:
-        rgba(0, 234, 255, 0.12);
-
-    border-color:
-        var(--cyan);
-}
-
-.zoom-value {
-
-    color: var(--text-dim);
-
-    font-size: 9px;
-
-    letter-spacing: 1px;
-}
-
-
-/* =============================================================
-   ACTIONS
-============================================================= */
-
-.actions {
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 7px;
-}
-
-.action-button {
-
-    width: 100%;
-
-    padding: 9px 5px;
-
-    background:
-        rgba(0, 234, 255, 0.025);
-
-    border:
-        1px solid
-        rgba(0, 234, 255, 0.18);
-
-    color: var(--text-dim);
-
-    font-size: 8px;
-
-    letter-spacing: 1.4px;
-
-    cursor: pointer;
-
-    transition:
-        0.2s;
-}
-
-.action-button:hover {
-
-    color: var(--cyan);
-
-    border-color:
-        var(--cyan);
-
-    background:
-        rgba(0, 234, 255, 0.08);
-}
-
-
-/* =============================================================
-   SYSTEM MESSAGE
-============================================================= */
-
-.system-message {
-
-    padding: 9px;
-
-    color: var(--green);
-
-    text-align: center;
-
-    font-size: 8px;
-
-    letter-spacing: 1.5px;
-}
-
-
-/* =============================================================
-   POSITION
-============================================================= */
-
-.position-info {
-
-    display: flex;
-
-    justify-content: space-around;
-
-    color: var(--text-dim);
-
-    font-size: 9px;
-
-    letter-spacing: 1px;
-}
-
-.position-info strong {
-
-    color: var(--text-main);
-}
-
-
-/* =============================================================
+/* ============================================================
    FOOTER
-============================================================= */
+============================================================ */
 
 #main-footer {
 
@@ -1013,11 +1120,10 @@ body {
     align-items: center;
 
     padding:
-        0
-        16px;
+        0 16px;
 
     background:
-        rgba(4, 8, 12, 0.96);
+        rgba(3, 7, 10, 0.97);
 
     border-top:
         1px solid
@@ -1040,11 +1146,7 @@ body {
 
     display: flex;
 
-    align-items: center;
-
     gap: 8px;
-
-    text-align: center;
 }
 
 .footer-right {
@@ -1060,34 +1162,48 @@ body {
 }
 
 
-/* =============================================================
+/* ============================================================
    RESPONSIVE
-============================================================= */
+============================================================ */
 
 @media (max-width: 1100px) {
 
     :root {
-        --map-size: min(62vh, 62vw);
+
+        --map-size:
+            min(
+                55vh,
+                55vw
+            );
     }
 
-    .panel-left,
-    .panel-right {
-        width: 120px;
+    .radial-content {
+
+        width: 180px;
+
+        padding: 14px;
     }
 
-    .panel-top-left,
-    .panel-top-right {
-        width: 170px;
+    .action-button {
+
+        padding:
+            5px 8px;
     }
 }
 
 
-@media (max-width: 850px) {
+@media (max-width: 800px) {
 
     :root {
+
         --header-height: 62px;
         --footer-height: 28px;
-        --map-size: min(58vh, 88vw);
+
+        --map-size:
+            min(
+                52vh,
+                78vw
+            );
     }
 
     #main-header {
@@ -1097,8 +1213,7 @@ body {
             auto;
 
         padding:
-            0
-            12px;
+            0 12px;
     }
 
     .header-center {
@@ -1113,56 +1228,21 @@ body {
         font-size: 7px;
     }
 
-    .panel-top-left,
-    .panel-top-right,
-    .panel-left,
-    .panel-right,
-    .panel-bottom-left,
-    .panel-bottom-right {
+    #radial-interface {
+
+        width:
+            calc(
+                var(--map-size) + 120px
+            );
+
+        height:
+            calc(
+                var(--map-size) + 120px
+            );
+    }
+
+    .radial-content {
+
         display: none;
-    }
-
-    .panel-top {
-
-        top: 8px;
-
-        width: 260px;
-    }
-
-    .panel-bottom {
-
-        bottom: 7px;
-
-        width: 260px;
-    }
-
-    #map-container {
-
-        min-width: 320px;
-        min-height: 320px;
-    }
-}
-
-
-@media (max-height: 700px) {
-
-    :root {
-        --map-size: min(60vh, 62vw);
-    }
-
-    .panel-top-left,
-    .panel-top-right,
-    .panel-left,
-    .panel-right,
-    .panel-bottom-left,
-    .panel-bottom-right {
-        transform: scale(0.88);
-    }
-
-    .panel-left,
-    .panel-right {
-        transform:
-            translateY(-50%)
-            scale(0.88);
     }
 }
