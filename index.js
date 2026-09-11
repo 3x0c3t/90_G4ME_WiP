@@ -237,28 +237,16 @@ const TITLE_RING_GAP =
 
 
 /*
-   Rotation globale de la couronne
-   des titres.
+   Rotation de la roue des titres.
 
-   Les menus restent fixes.
+   Les menus restent sur leurs rayons respectifs.
+   Seule la roue qui contient les titres est tournée.
 
-   La couronne des titres est ainsi
-   alignée avec les axes des menus.
+   22.5° = moitié de l'écart entre deux menus.
 */
 
-const TITLE_ROTATION =
-    45;
-
-
-/*
-   Orientation des textes.
-
-   Le texte est placé tangentiellement
-   au cercle.
-*/
-
-const TITLE_TEXT_ROTATION_OFFSET =
-    90;
+const TITLE_WHEEL_ROTATION =
+    22.5;
 
 
 /* =========================================================
@@ -480,7 +468,7 @@ function drawCircles(
 
 
     /*
-       Anneau secondaire
+       ANNEAU SECONDAIRE
     */
 
     const secondaryRing =
@@ -511,7 +499,7 @@ function drawCircles(
 
     /*
        CERCLE 2
-       cercle extérieur des titres
+       cercle de la roue des titres
     */
 
     const titleRadius =
@@ -534,10 +522,7 @@ function drawCircles(
                     cy,
 
                 r:
-                    titleRadius,
-
-                transform:
-                    `rotate(${TITLE_ROTATION} ${cx} ${cy})`
+                    titleRadius
 
             }
         );
@@ -568,6 +553,14 @@ function drawSectorLines(
     DOM.sectorLines.innerHTML =
         "";
 
+
+    /*
+       Les rayons des menus NE SONT PAS
+       concernés par la rotation de 22.5°.
+
+       Ils constituent les axes fixes
+       des différents contenus.
+    */
 
     const startRadius =
         mapRadius +
@@ -645,7 +638,7 @@ function drawTitles(
 
 
     /*
-       Rayon du cercle intérieur
+       Rayon du premier cercle.
     */
 
     const innerRadius =
@@ -654,8 +647,8 @@ function drawTitles(
 
 
     /*
-       Les titres sont exactement
-       au milieu des deux cercles.
+       Les titres sont placés exactement
+       entre les deux cercles.
     */
 
     const titleTextRadius =
@@ -667,90 +660,108 @@ function drawTitles(
 
 
     /*
-       Groupe global.
+       Groupe global de la roue des titres.
 
-       C'est lui qui fait tourner
-       toute la couronne des titres.
+       IMPORTANT :
+
+       Les menus restent fixes.
+
+       La roue contenant les titres est
+       tournée de 22.5° autour du centre.
     */
 
-    const titleGroup =
+    const wheel =
         svgElement(
             "g",
             {
 
                 class:
-                    "menu-title-system",
+                    "menu-title-wheel",
 
                 transform:
                     [
-                        `rotate(${TITLE_ROTATION}`,
+                        "rotate(",
+                        TITLE_WHEEL_ROTATION,
+                        " ",
                         cx,
+                        " ",
                         cy,
                         ")"
-                    ].join(" ")
+                    ].join("")
 
             }
         );
+
+
+    DOM.titleLayer.appendChild(
+        wheel
+    );
 
 
     MENUS.forEach(
         menu => {
 
             /*
-               Angle réel du titre
+               Position du titre sur la roue.
+
+               On utilise l'angle du menu,
+               puis le groupe parent effectue
+               automatiquement la rotation de 22.5°.
             */
 
-            const titleAngle =
+            const angle =
                 menu.angle;
 
-
-            /*
-               Position du titre
-            */
 
             const position =
                 polarPoint(
                     cx,
                     cy,
                     titleTextRadius,
-                    titleAngle
+                    angle
                 );
 
 
             /*
-               Orientation tangentielle.
+               Orientation du texte.
 
-               On part de l'axe du menu,
-               puis on applique +90°.
+               Le texte suit la tangente au cercle.
+
+               On ne rajoute PAS les 22.5° ici :
+               le groupe parent s'en charge déjà.
             */
 
             let rotation =
-                titleAngle +
-                TITLE_TEXT_ROTATION_OFFSET;
+                angle + 90;
 
 
             /*
-               Toujours garder le texte
-               lisible depuis l'écran.
+               Maintien de la lisibilité.
 
-               Les secteurs gauche/bas
-               nécessitent une inversion.
+               Les textes de la moitié basse
+               sont retournés de 180°.
             */
 
             if (
-                titleAngle > 90 &&
-                titleAngle <= 270
+                rotation > 90 &&
+                rotation < 270
             ) {
 
-                rotation +=
-                    180;
+                rotation += 180;
 
             }
 
 
             /*
-               Groupe individuel
+               Normalisation.
             */
+
+            rotation =
+                (
+                    rotation % 360 +
+                    360
+                ) % 360;
+
 
             const group =
                 svgElement(
@@ -774,10 +785,6 @@ function drawTitles(
                     }
                 );
 
-
-            /*
-               Texte
-            */
 
             const text =
                 svgElement(
@@ -803,6 +810,15 @@ function drawTitles(
                 );
 
 
+            /*
+               Le nom apparaît UNIQUEMENT
+               dans la roue des titres.
+
+               Les panneaux de contenu doivent
+               maintenant contenir uniquement
+               leurs informations.
+            */
+
             text.textContent =
                 menu.label;
 
@@ -812,16 +828,11 @@ function drawTitles(
             );
 
 
-            titleGroup.appendChild(
+            wheel.appendChild(
                 group
             );
 
         }
-    );
-
-
-    DOM.titleLayer.appendChild(
-        titleGroup
     );
 
 }
@@ -915,7 +926,7 @@ function drawRadialInterface() {
 
 
     /*
-       TITRES
+       ROUE DES TITRES
     */
 
     drawTitles(
@@ -1013,9 +1024,9 @@ function createSquareGrid() {
 
         for (
             let x = 0;
-        x < 8;
-        x++
-    ) {
+            x < 8;
+            x++
+        ) {
 
             const cell =
                 document.createElement(
