@@ -16,6 +16,7 @@
     z-index: 20;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -69,6 +70,19 @@
     pointer-events: auto;
 
     z-index: 10;
+
+    transform-origin: center center;
+
+    cursor: grab;
+
+    touch-action: none;
+
+    user-select: none;
+}
+
+
+#octagon-grid.is-dragging {
+    cursor: grabbing;
 }
 
 
@@ -102,7 +116,7 @@
     background:
         rgba(0, 234, 255, 0.72);
 
-    cursor: pointer;
+    cursor: grab;
 
     pointer-events: auto;
 
@@ -111,6 +125,12 @@
     transition:
         background 0.12s ease,
         filter 0.12s ease;
+}
+
+
+#octagon-grid.is-dragging
+.octagon-cell {
+    cursor: grabbing;
 }
 
 
@@ -282,11 +302,16 @@
 
     border-radius: 50%;
 
-    border: 1px solid rgba(0, 234, 255, 0.25);
+    border:
+        1px solid
+        rgba(0, 234, 255, 0.25);
 
     box-shadow:
-        0 0 15px rgba(0, 234, 255, 0.08),
-        inset 0 0 25px rgba(0, 234, 255, 0.05);
+        0 0 15px
+        rgba(0, 234, 255, 0.08),
+
+        inset 0 0 25px
+        rgba(0, 234, 255, 0.05);
 
     pointer-events: none;
 
@@ -301,7 +326,16 @@
 @media (max-width: 700px) {
 
     #map-container {
-        width: min(72vw, 58vh);
-        height: min(72vw, 58vh);
+        width:
+            min(
+                72vw,
+                58vh
+            );
+
+        height:
+            min(
+                72vw,
+                58vh
+            );
     }
 }

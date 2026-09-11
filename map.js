@@ -8,11 +8,24 @@ const MAP = {
        ======================================================== */
 
     state: {
-        selectedCell: null,
-        selectedType: null,
-        selectedX: null,
-        selectedY: null,
-        zoom: 100
+
+        selectedCell:
+            null,
+
+        selectedType:
+            null,
+
+        selectedX:
+            null,
+
+        selectedY:
+            null,
+
+        zoom:
+            100,
+
+        rotation:
+            0
     },
 
 
@@ -21,44 +34,71 @@ const MAP = {
        ======================================================== */
 
     DOM: {
+
         map:
-            document.getElementById("map"),
+            document.getElementById(
+                "map"
+            ),
 
         octagonGrid:
-            document.getElementById("octagon-grid"),
+            document.getElementById(
+                "octagon-grid"
+            ),
 
         squareGrid:
-            document.getElementById("square-grid"),
+            document.getElementById(
+                "square-grid"
+            ),
 
         selectedCell:
-            document.getElementById("selected-cell"),
+            document.getElementById(
+                "selected-cell"
+            ),
 
         selectedType:
-            document.getElementById("selected-type"),
+            document.getElementById(
+                "selected-type"
+            ),
 
         positionX:
-            document.getElementById("position-x"),
+            document.getElementById(
+                "position-x"
+            ),
 
         positionY:
-            document.getElementById("position-y"),
+            document.getElementById(
+                "position-y"
+            ),
 
         zoomValue:
-            document.getElementById("zoom-value"),
+            document.getElementById(
+                "zoom-value"
+            ),
 
         systemMessage:
-            document.getElementById("system-message"),
+            document.getElementById(
+                "system-message"
+            ),
 
         btnZoomIn:
-            document.getElementById("btn-zoom-in"),
+            document.getElementById(
+                "btn-zoom-in"
+            ),
 
         btnZoomOut:
-            document.getElementById("btn-zoom-out"),
+            document.getElementById(
+                "btn-zoom-out"
+            ),
 
         octagonCount:
-            document.getElementById("octagon-count"),
+            document.getElementById(
+                "octagon-count"
+            ),
 
         squareCount:
-            document.getElementById("square-count")
+            document.getElementById(
+                "square-count"
+            )
     },
 
 
@@ -68,11 +108,46 @@ const MAP = {
 
     config: {
 
-        rows: 11,
+        rows:
+            11,
 
-        columns: 11,
+        columns:
+            11,
 
-        cellType: "HEXAGON"
+        cellType:
+            "HEXAGON",
+
+        rotationSensitivity:
+            0.5,
+
+        dragThreshold:
+            4
+    },
+
+
+    /* ========================================================
+       INTERACTION
+       ======================================================== */
+
+    interaction: {
+
+        dragging:
+            false,
+
+        moved:
+            false,
+
+        pointerId:
+            null,
+
+        startX:
+            0,
+
+        startY:
+            0,
+
+        startRotation:
+            0
     },
 
 
@@ -88,6 +163,10 @@ const MAP = {
 
         this.observeResize();
 
+        this.applyZoom();
+
+        this.applyRotation();
+
         this.updateInterface();
     },
 
@@ -99,6 +178,7 @@ const MAP = {
     getState() {
 
         return {
+
             selectedCell:
                 this.state.selectedCell,
 
@@ -112,7 +192,10 @@ const MAP = {
                 this.state.selectedY,
 
             zoom:
-                this.state.zoom
+                this.state.zoom,
+
+            rotation:
+                this.state.rotation
         };
     },
 
@@ -126,12 +209,14 @@ const MAP = {
         const grid =
             this.DOM.octagonGrid;
 
+
         if (!grid) {
             return;
         }
 
 
-        grid.innerHTML = "";
+        grid.innerHTML =
+            "";
 
 
         const total =
@@ -164,11 +249,14 @@ const MAP = {
                 cell.dataset.x =
                     String(x);
 
+
                 cell.dataset.y =
                     String(y);
 
+
                 cell.dataset.type =
                     this.config.cellType;
+
 
                 cell.dataset.id =
                     `X${x}-Y${y}`;
@@ -188,7 +276,17 @@ const MAP = {
 
                 cell.addEventListener(
                     "click",
-                    () => {
+                    event => {
+
+                        if (
+                            this.interaction.moved
+                        ) {
+
+                            event.preventDefault();
+
+                            return;
+                        }
+
 
                         this.selectCell(
                             cell
@@ -204,14 +302,18 @@ const MAP = {
         }
 
 
-        if (this.DOM.octagonCount) {
+        if (
+            this.DOM.octagonCount
+        ) {
 
             this.DOM.octagonCount.textContent =
                 String(total);
         }
 
 
-        if (this.DOM.squareCount) {
+        if (
+            this.DOM.squareCount
+        ) {
 
             this.DOM.squareCount.textContent =
                 "0";
@@ -236,11 +338,16 @@ const MAP = {
         const map =
             this.DOM.map;
 
+
         const grid =
             this.DOM.octagonGrid;
 
 
-        if (!map || !grid) {
+        if (
+            !map ||
+            !grid
+        ) {
+
             return;
         }
 
@@ -252,6 +359,7 @@ const MAP = {
         const width =
             rect.width;
 
+
         const height =
             rect.height;
 
@@ -260,6 +368,7 @@ const MAP = {
             width <= 0 ||
             height <= 0
         ) {
+
             return;
         }
 
@@ -279,6 +388,7 @@ const MAP = {
 
         const rows =
             this.config.rows;
+
 
         const columns =
             this.config.columns;
@@ -306,9 +416,7 @@ const MAP = {
 
 
         /*
-         * IMPORTANT :
-         *
-         * La largeur est maintenant prioritaire.
+         * La largeur est prioritaire.
          *
          * 11 colonnes :
          *
@@ -316,13 +424,6 @@ const MAP = {
          * + 1 largeur W
          *
          * = 8.5W
-         *
-         * Donc :
-         *
-         * W = diamètre / 8.5
-         *
-         * Les cellules remplissent réellement
-         * toute la largeur disponible.
          */
 
         const cellWidth =
@@ -354,7 +455,7 @@ const MAP = {
 
         /*
          * Distance verticale entre
-         * deux centres dans une même colonne.
+         * deux centres.
          */
 
         const verticalStep =
@@ -362,10 +463,7 @@ const MAP = {
 
 
         /*
-         * Hauteur totale réelle de la grille.
-         *
-         * Une colonne sur deux est décalée
-         * de H/2.
+         * Hauteur totale réelle.
          */
 
         const gridHeight =
@@ -405,14 +503,6 @@ const MAP = {
 
         /*
          * Centrage vertical.
-         *
-         * La grille peut dépasser légèrement
-         * du cercle en haut et en bas.
-         *
-         * #map possède overflow:hidden,
-         * donc les cellules périphériques
-         * sont naturellement découpées par
-         * le cercle.
          */
 
         const startY =
@@ -513,7 +603,10 @@ const MAP = {
 
     observeResize() {
 
-        if (!this.DOM.map) {
+        if (
+            !this.DOM.map
+        ) {
+
             return;
         }
 
@@ -561,14 +654,18 @@ const MAP = {
 
     createSquareGrid() {
 
-        if (this.DOM.squareGrid) {
+        if (
+            this.DOM.squareGrid
+        ) {
 
             this.DOM.squareGrid.innerHTML =
                 "";
         }
 
 
-        if (this.DOM.squareCount) {
+        if (
+            this.DOM.squareCount
+        ) {
 
             this.DOM.squareCount.textContent =
                 "0";
@@ -631,11 +728,14 @@ const MAP = {
         this.state.selectedCell =
             id;
 
+
         this.state.selectedType =
             type;
 
+
         this.state.selectedX =
             x;
+
 
         this.state.selectedY =
             y;
@@ -673,11 +773,14 @@ const MAP = {
         this.state.selectedCell =
             null;
 
+
         this.state.selectedType =
             null;
 
+
         this.state.selectedX =
             null;
+
 
         this.state.selectedY =
             null;
@@ -702,6 +805,7 @@ const MAP = {
                 numeric
             )
         ) {
+
             return;
         }
 
@@ -717,6 +821,7 @@ const MAP = {
 
 
         this.applyZoom();
+
 
         this.updateInterface();
     },
@@ -738,9 +843,16 @@ const MAP = {
     },
 
 
+    /* ========================================================
+       APPLY ZOOM
+       ======================================================== */
+
     applyZoom() {
 
-        if (!this.DOM.map) {
+        if (
+            !this.DOM.map
+        ) {
+
             return;
         }
 
@@ -752,6 +864,293 @@ const MAP = {
 
         this.DOM.map.style.transform =
             `scale(${scale})`;
+    },
+
+
+    /* ========================================================
+       ROTATION
+       ======================================================== */
+
+    setRotation(value) {
+
+        const numeric =
+            Number(value);
+
+
+        if (
+            !Number.isFinite(
+                numeric
+            )
+        ) {
+
+            return;
+        }
+
+
+        this.state.rotation =
+            numeric;
+
+
+        this.applyRotation();
+
+
+        this.updateInterface();
+    },
+
+
+    rotateBy(delta) {
+
+        if (
+            !Number.isFinite(
+                delta
+            )
+        ) {
+
+            return;
+        }
+
+
+        this.state.rotation +=
+            delta;
+
+
+        this.applyRotation();
+    },
+
+
+    applyRotation() {
+
+        const grid =
+            this.DOM.octagonGrid;
+
+
+        if (!grid) {
+            return;
+        }
+
+
+        grid.style.transform =
+            `rotate(${this.state.rotation}deg)`;
+    },
+
+
+    /* ========================================================
+       POINTER ROTATION
+       ======================================================== */
+
+    startRotation(event) {
+
+        if (
+            event.button !== 0
+        ) {
+
+            return;
+        }
+
+
+        if (
+            !this.DOM.octagonGrid
+        ) {
+
+            return;
+        }
+
+
+        this.interaction.dragging =
+            true;
+
+
+        this.interaction.moved =
+            false;
+
+
+        this.interaction.pointerId =
+            event.pointerId;
+
+
+        this.interaction.startX =
+            event.clientX;
+
+
+        this.interaction.startY =
+            event.clientY;
+
+
+        this.interaction.startRotation =
+            this.state.rotation;
+
+
+        this.DOM.octagonGrid.classList.add(
+            "is-dragging"
+        );
+
+
+        try {
+
+            this.DOM.octagonGrid.setPointerCapture(
+                event.pointerId
+            );
+
+        } catch (
+            error
+        ) {
+        }
+
+
+        event.preventDefault();
+    },
+
+
+    moveRotation(event) {
+
+        if (
+            !this.interaction.dragging
+        ) {
+
+            return;
+        }
+
+
+        if (
+            event.pointerId !==
+            this.interaction.pointerId
+        ) {
+
+            return;
+        }
+
+
+        const deltaX =
+            event.clientX -
+            this.interaction.startX;
+
+
+        const deltaY =
+            event.clientY -
+            this.interaction.startY;
+
+
+        const distance =
+            Math.sqrt(
+                (
+                    deltaX *
+                    deltaX
+                ) +
+                (
+                    deltaY *
+                    deltaY
+                )
+            );
+
+
+        if (
+            distance >=
+            this.config.dragThreshold
+        ) {
+
+            this.interaction.moved =
+                true;
+        }
+
+
+        if (
+            !this.interaction.moved
+        ) {
+
+            return;
+        }
+
+
+        const rotation =
+    this.interaction.startRotation -
+    (
+        deltaX *
+        this.config.rotationSensitivity
+    );
+
+
+        this.state.rotation =
+            rotation;
+
+
+        this.applyRotation();
+    },
+
+
+    endRotation(event) {
+
+        if (
+            !this.interaction.dragging
+        ) {
+
+            return;
+        }
+
+
+        if (
+            event &&
+            event.pointerId !==
+            this.interaction.pointerId
+        ) {
+
+            return;
+        }
+
+
+        this.interaction.dragging =
+            false;
+
+
+        this.DOM.octagonGrid?.classList.remove(
+            "is-dragging"
+        );
+
+
+        try {
+
+            if (
+                event &&
+                this.DOM.octagonGrid.hasPointerCapture(
+                    event.pointerId
+                )
+            ) {
+
+                this.DOM.octagonGrid.releasePointerCapture(
+                    event.pointerId
+                );
+            }
+
+        } catch (
+            error
+        ) {
+        }
+
+
+        this.interaction.pointerId =
+            null;
+
+
+        /*
+         * Le flag est conservé brièvement
+         * pour empêcher le click généré
+         * après un drag de sélectionner
+         * une cellule.
+         */
+
+        if (
+            this.interaction.moved
+        ) {
+
+            window.setTimeout(
+                () => {
+
+                    this.interaction.moved =
+                        false;
+
+                },
+                0
+            );
+        }
     },
 
 
@@ -768,7 +1167,27 @@ const MAP = {
             100;
 
 
+        this.state.rotation =
+            0;
+
+
+        this.interaction.dragging =
+            false;
+
+
+        this.interaction.moved =
+            false;
+
+
         this.applyZoom();
+
+
+        this.applyRotation();
+
+
+        this.DOM.octagonGrid?.classList.remove(
+            "is-dragging"
+        );
 
 
         this.setSystemMessage(
@@ -895,6 +1314,74 @@ const MAP = {
                 () => {
 
                     this.zoomOut();
+                }
+            );
+        }
+
+
+        if (
+            this.DOM.octagonGrid
+        ) {
+
+            this.DOM.octagonGrid.addEventListener(
+                "pointerdown",
+                event => {
+
+                    this.startRotation(
+                        event
+                    );
+                }
+            );
+
+
+            this.DOM.octagonGrid.addEventListener(
+                "pointermove",
+                event => {
+
+                    this.moveRotation(
+                        event
+                    );
+                }
+            );
+
+
+            this.DOM.octagonGrid.addEventListener(
+                "pointerup",
+                event => {
+
+                    this.endRotation(
+                        event
+                    );
+                }
+            );
+
+
+            this.DOM.octagonGrid.addEventListener(
+                "pointercancel",
+                event => {
+
+                    this.endRotation(
+                        event
+                    );
+                }
+            );
+
+
+            this.DOM.octagonGrid.addEventListener(
+                "lostpointercapture",
+                () => {
+
+                    if (
+                        this.interaction.dragging
+                    ) {
+
+                        this.interaction.dragging =
+                            false;
+
+                        this.DOM.octagonGrid.classList.remove(
+                            "is-dragging"
+                        );
+                    }
                 }
             );
         }
