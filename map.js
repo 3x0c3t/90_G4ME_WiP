@@ -117,9 +117,6 @@ const MAP = {
         cellType:
             "HEXAGON",
 
-        rotationSensitivity:
-            0.5,
-
         dragThreshold:
             4
     },
@@ -146,6 +143,9 @@ const MAP = {
         startY:
             0,
 
+        startPointerAngle:
+            0,
+
         startRotation:
             0
     },
@@ -163,9 +163,7 @@ const MAP = {
 
         this.observeResize();
 
-        this.applyZoom();
-
-        this.applyRotation();
+        this.applyTransform();
 
         this.updateInterface();
     },
@@ -276,13 +274,11 @@ const MAP = {
 
                 cell.addEventListener(
                     "click",
-                    event => {
+                    () => {
 
                         if (
                             this.interaction.moved
                         ) {
-
-                            event.preventDefault();
 
                             return;
                         }
@@ -373,12 +369,6 @@ const MAP = {
         }
 
 
-        /*
-         * La map est circulaire.
-         *
-         * On utilise son diamètre réel.
-         */
-
         const diameter =
             Math.min(
                 width,
@@ -394,30 +384,11 @@ const MAP = {
             this.config.columns;
 
 
-        /*
-         * ====================================================
-         * HEXAGONE FLAT-TOP
-         * ====================================================
-         *
-         * largeur hexagone = W
-         *
-         * hauteur hexagone = W * sqrt(3) / 2
-         *
-         * pas horizontal = 3/4 W
-         *
-         * décalage vertical = H/2
-         *
-         * ====================================================
-         */
-
-
         const sqrt3 =
             Math.sqrt(3);
 
 
         /*
-         * La largeur est prioritaire.
-         *
          * 11 colonnes :
          *
          * 10 intervalles * 0.75W
@@ -443,28 +414,14 @@ const MAP = {
             2;
 
 
-        /*
-         * Distance horizontale entre
-         * deux centres.
-         */
-
         const horizontalStep =
             cellWidth *
             0.75;
 
 
-        /*
-         * Distance verticale entre
-         * deux centres.
-         */
-
         const verticalStep =
             cellHeight;
 
-
-        /*
-         * Hauteur totale réelle.
-         */
 
         const gridHeight =
             (
@@ -477,10 +434,6 @@ const MAP = {
             cellHeight / 2;
 
 
-        /*
-         * Largeur totale exacte.
-         */
-
         const gridWidth =
             (
                 columns - 1
@@ -490,10 +443,6 @@ const MAP = {
             cellWidth;
 
 
-        /*
-         * Centrage horizontal.
-         */
-
         const startX =
             (
                 width -
@@ -501,22 +450,12 @@ const MAP = {
             ) / 2;
 
 
-        /*
-         * Centrage vertical.
-         */
-
         const startY =
             (
                 height -
                 gridHeight
             ) / 2;
 
-
-        /*
-         * ====================================================
-         * POSITIONNEMENT DES CELLULES
-         * ====================================================
-         */
 
         const cells =
             grid.querySelectorAll(
@@ -538,11 +477,6 @@ const MAP = {
                         cell.dataset.y
                     ) - 1;
 
-
-                /*
-                 * Une colonne sur deux
-                 * est décalée de H/2.
-                 */
 
                 const verticalOffset =
                     (
@@ -820,7 +754,7 @@ const MAP = {
             );
 
 
-        this.applyZoom();
+        this.applyTransform();
 
 
         this.updateInterface();
@@ -840,30 +774,6 @@ const MAP = {
         this.setZoom(
             this.state.zoom - 10
         );
-    },
-
-
-    /* ========================================================
-       APPLY ZOOM
-       ======================================================== */
-
-    applyZoom() {
-
-        if (
-            !this.DOM.map
-        ) {
-
-            return;
-        }
-
-
-        const scale =
-            this.state.zoom /
-            100;
-
-
-        this.DOM.map.style.transform =
-            `scale(${scale})`;
     },
 
 
@@ -891,51 +801,112 @@ const MAP = {
             numeric;
 
 
-        this.applyRotation();
-
-
-        this.updateInterface();
+        this.applyTransform();
     },
 
 
-    rotateBy(delta) {
+    /* ========================================================
+       COMBINED TRANSFORM
+       ======================================================== */
+
+    applyTransform() {
 
         if (
-            !Number.isFinite(
-                delta
-            )
+            !this.DOM.octagonGrid
         ) {
 
             return;
         }
 
 
-        this.state.rotation +=
-            delta;
+        const rotation =
+            this.state.rotation;
 
 
-        this.applyRotation();
-    },
-
-
-    applyRotation() {
-
-        const grid =
-            this.DOM.octagonGrid;
-
-
-        if (!grid) {
-            return;
-        }
-
-
-        grid.style.transform =
-            `rotate(${this.state.rotation}deg)`;
+        this.DOM.octagonGrid.style.transform =
+            `rotate(${rotation}deg)`;
     },
 
 
     /* ========================================================
-       POINTER ROTATION
+       POINTER ANGLE
+       ======================================================== */
+
+    getPointerAngle(event) {
+
+        if (
+            !this.DOM.map
+        ) {
+
+            return 0;
+        }
+
+
+        const rect =
+            this.DOM.map.getBoundingClientRect();
+
+
+        const centerX =
+            rect.left +
+            rect.width / 2;
+
+
+        const centerY =
+            rect.top +
+            rect.height / 2;
+
+
+        const x =
+            event.clientX -
+            centerX;
+
+
+        const y =
+            event.clientY -
+            centerY;
+
+
+        return (
+            Math.atan2(
+                y,
+                x
+            ) *
+            180 /
+            Math.PI
+        );
+    },
+
+
+    /* ========================================================
+       NORMALIZE ANGLE
+       ======================================================== */
+
+    normalizeAngle(
+        angle
+    ) {
+
+        while (
+            angle > 180
+        ) {
+
+            angle -= 360;
+        }
+
+
+        while (
+            angle < -180
+        ) {
+
+            angle += 360;
+        }
+
+
+        return angle;
+    },
+
+
+    /* ========================================================
+       START ROTATION
        ======================================================== */
 
     startRotation(event) {
@@ -976,6 +947,12 @@ const MAP = {
             event.clientY;
 
 
+        this.interaction.startPointerAngle =
+            this.getPointerAngle(
+                event
+            );
+
+
         this.interaction.startRotation =
             this.state.rotation;
 
@@ -1000,6 +977,10 @@ const MAP = {
         event.preventDefault();
     },
 
+
+    /* ========================================================
+       MOVE ROTATION
+       ======================================================== */
 
     moveRotation(event) {
 
@@ -1061,21 +1042,42 @@ const MAP = {
         }
 
 
-        const rotation =
-    this.interaction.startRotation -
-    (
-        deltaX *
-        this.config.rotationSensitivity
-    );
+        /*
+         * Rotation naturelle :
+         *
+         * on compare l'angle du curseur
+         * autour du centre de la map
+         * avec l'angle initial.
+         *
+         * Cela permet de véritablement
+         * "attraper" la map avec la souris.
+         */
+
+        const currentPointerAngle =
+            this.getPointerAngle(
+                event
+            );
+
+
+        const deltaAngle =
+            this.normalizeAngle(
+                currentPointerAngle -
+                this.interaction.startPointerAngle
+            );
 
 
         this.state.rotation =
-            rotation;
+            this.interaction.startRotation +
+            deltaAngle;
 
 
-        this.applyRotation();
+        this.applyTransform();
     },
 
+
+    /* ========================================================
+       END ROTATION
+       ======================================================== */
 
     endRotation(event) {
 
@@ -1131,10 +1133,9 @@ const MAP = {
 
 
         /*
-         * Le flag est conservé brièvement
-         * pour empêcher le click généré
-         * après un drag de sélectionner
-         * une cellule.
+         * Empêche le click généré par
+         * le relâchement de sélectionner
+         * une cellule après un drag.
          */
 
         if (
@@ -1179,15 +1180,7 @@ const MAP = {
             false;
 
 
-        this.applyZoom();
-
-
-        this.applyRotation();
-
-
-        this.DOM.octagonGrid?.classList.remove(
-            "is-dragging"
-        );
+        this.applyTransform();
 
 
         this.setSystemMessage(
