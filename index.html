@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>90_G4ME_WiP | -3xØc3t- L4B</title>
+
+    <meta
+        name="description"
+        content="-3xØc3t- L4B | 90_G4ME_WiP"
+    >
+
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+
+    <!-- =========================================================
+         HEADER
+    ========================================================== -->
+
+    <header id="main-header">
+
+        <div class="header-left">
+            <div class="brand">
+                <span class="brand-main">-3xØc3t- L4B</span>
+                <span class="brand-sub">DIGITAL L4B &amp; EXPERIMENTATION</span>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="game-title">
+                <span class="game-number">90</span>
+                <span class="game-name">G4ME_WiP</span>
+            </div>
+
+            <div class="game-status">
+                <span class="status-dot"></span>
+                <span>WORK IN PROGRESS</span>
+            </div>
+        </div>
+
+        <div class="header-right">
+
+            <button
+                class="header-button"
+                id="btn-reset"
+                type="button"
+            >
+                RESET
+            </button>
+
+            <button
+                class="header-button"
+                id="btn-menu"
+                type="button"
+            >
+                MENU
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================================================
+         BODY / GAME
+    ========================================================== -->
+
+    <main id="game">
+
+        <!-- =====================================================
+             MENU HAUT GAUCHE
+        ====================================================== -->
+
+        <section
+            class="game-panel panel-top-left"
+            id="panel-top-left"
+        >
+            <div class="panel-title">
+                PLAYER
+            </div>
+
+            <div class="panel-content">
+                <div class="player-indicator">
+                    <span class="player-color"></span>
+
+                    <div>
+                        <strong id="player-name">
+                            PLAYER 01
+                        </strong>
+
+                        <small id="player-state">
+                            READY
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- =====================================================
+             MENU HAUT CENTRE
+        ====================================================== -->
+
+        <section
+            class="game-panel panel-top"
+            id="panel-top"
+        >
+            <div class="panel-title">
+                GAME
+            </div>
+
+            <div class="panel-content game-info">
+
+                <div>
+                    <span class="info-label">TURN</span>
+                    <strong id="turn-value">01</strong>
+                </div>
+
+                <div>
+                    <span class="info-label">ROUND</span>
+                    <strong id="round-value">01</strong>
+                </div>
+
+                <div>
+                    <span class="info-label">PLAYERS</span>
+                    <strong id="players-value">02</strong>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- =====================================================
+             MENU HAUT DROITE
+        ====================================================== -->
+
+        <section
+            class="game-panel panel-top-right"
+            id="panel-top-right"
+        >
+            <div class="panel-title">
+                CELL
+            </div>
+
+            <div class="panel-content cell-info">
+
+                <div>
+                    <span class="info-label">SELECTED</span>
+                    <strong id="selected-cell">---</strong>
+                </div>
+
+                <div>
+                    <span class="info-label">TYPE</span>
+                    <strong id="selected-type">---</strong>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- =====================================================
+             MENU GAUCHE
+        ====================================================== -->
+
+        <aside
+            class="game-panel panel-left"
+            id="panel-left"
+        >
+
+            <div class="panel-title">
+                MAP
+            </div>
+
+            <div class="panel-content map-controls">
+
+                <button
+                    class="control-button"
+                    id="btn-zoom-in"
+                    type="button"
+                >
+                    +
+                </button>
+
+                <div class="zoom-value">
+                    <span id="zoom-value">100</span>%
+                </div>
+
+                <button
+                    class="control-button"
+                    id="btn-zoom-out"
+                    type="button"
+                >
+                    −
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =====================================================
+             MAP CENTRALE
+        ====================================================== -->
+
+        <section
+            id="map-container"
+            aria-label="Carte de jeu"
+        >
+
+            <div id="map">
+
+                <!-- =================================================
+                     GRILLE OCTOGONALE
+                ================================================== -->
+
+                <div
+                    id="octagon-grid"
+                    aria-label="Grille octogonale"
+                ></div>
+
+
+                <!-- =================================================
+                     GRILLE CARRÉE
+                ================================================== -->
+
+                <div
+                    id="square-grid"
+                    aria-label="Grille carrée"
+                ></div>
+
+
+                <!-- =================================================
+                     CENTRE
+                ================================================== -->
+
+                <div id="map-center">
+
+                    <span class="center-number">
+                        90
+                    </span>
+
+                    <span class="center-label">
+                        G4ME
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             MENU DROITE
+        ====================================================== -->
+
+        <aside
+            class="game-panel panel-right"
+            id="panel-right"
+        >
+
+            <div class="panel-title">
+                ACTION
+            </div>
+
+            <div class="panel-content actions">
+
+                <button
+                    class="action-button"
+                    id="btn-select"
+                    type="button"
+                >
+                    SELECT
+                </button>
+
+                <button
+                    class="action-button"
+                    id="btn-confirm"
+                    type="button"
+                >
+                    CONFIRM
+                </button>
+
+                <button
+                    class="action-button"
+                    id="btn-cancel"
+                    type="button"
+                >
+                    CANCEL
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =====================================================
+             MENU BAS GAUCHE
+        ====================================================== -->
+
+        <section
+            class="game-panel panel-bottom-left"
+            id="panel-bottom-left"
+        >
+            <div class="panel-title">
+                GRID
+            </div>
+
+            <div class="panel-content grid-info">
+
+                <div>
+                    <span class="info-label">OCTOGONS</span>
+                    <strong id="octagon-count">0</strong>
+                </div>
+
+                <div>
+                    <span class="info-label">SQUARES</span>
+                    <strong id="square-count">0</strong>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- =====================================================
+             MENU BAS CENTRE
+        ====================================================== -->
+
+        <section
+            class="game-panel panel-bottom"
+            id="panel-bottom"
+        >
+
+            <div class="panel-title">
+                SYSTEM
+            </div>
+
+            <div class="system-message" id="system-message">
+                SYSTEM READY
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             MENU BAS DROITE
+        ====================================================== -->
+
+        <section
+            class="game-panel panel-bottom-right"
+            id="panel-bottom-right"
+        >
+
+            <div class="panel-title">
+                POSITION
+            </div>
+
+            <div class="panel-content position-info">
+
+                <span>
+                    X:
+                    <strong id="position-x">---</strong>
+                </span>
+
+                <span>
+                    Y:
+                    <strong id="position-y">---</strong>
+                </span>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================== -->
+
+    <footer id="main-footer">
+
+        <div class="footer-left">
+            <span>-3xØc3t- L4B</span>
+        </div>
+
+        <div class="footer-center">
+            <span>90_G4ME_WiP</span>
+            <span class="footer-separator">•</span>
+            <span>EXPERIMENTAL GAME INTERFACE</span>
+        </div>
+
+        <div class="footer-right">
+            <span id="footer-status">
+                ONLINE
+            </span>
+        </div>
+
+    </footer>
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
+    <script src="index.js"></script>
+
+</body>
+</html>
