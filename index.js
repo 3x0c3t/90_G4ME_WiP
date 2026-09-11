@@ -490,7 +490,7 @@ function drawCircles(
 
     /*
        CERCLE 2
-       cercle exact des titres
+       cercle extérieur des titres
     */
 
     const titleRadius =
@@ -612,7 +612,7 @@ function drawSectorLines(
 
 
 /* =========================================================
-   TITRES SUR LE CERCLE
+   TITRES ENTRE LES DEUX CERCLES
    ========================================================= */
 
 function drawTitles(
@@ -625,6 +625,38 @@ function drawTitles(
         "";
 
 
+    /*
+       RAYON DU CERCLE INTERIEUR
+    */
+
+    const innerRadius =
+        titleRadius -
+        TITLE_RING_GAP;
+
+
+    /*
+       RAYON DU CERCLE EXTERIEUR
+    */
+
+    const outerRadius =
+        titleRadius;
+
+
+    /*
+       RAYON EXACT DU TEXTE
+
+       Le texte est placé au milieu
+       des deux cercles.
+    */
+
+    const titleTextRadius =
+        innerRadius +
+        (
+            outerRadius -
+            innerRadius
+        ) / 2;
+
+
     MENUS.forEach(
         (
             menu,
@@ -635,45 +667,79 @@ function drawTitles(
                 menu.angle;
 
 
-            let startAngle =
+            /*
+               Arc du titre
+            */
+
+            const startAngle =
                 center -
                 TITLE_ARC_HALF;
 
 
-            let endAngle =
+            const endAngle =
                 center +
                 TITLE_ARC_HALF;
 
 
             /*
-               Pour la moitié inférieure,
-               le chemin est inversé afin
-               que le texte reste lisible.
+               Normalisation
             */
 
             const normalized =
                 (
-                    center + 360
+                    center +
+                    360
                 ) % 360;
+
+
+            /*
+               Détermination du sens
+               de lecture.
+
+               HAUT
+               270° -> 360°
+               texte lisible
+
+               DROITE
+               0° -> 90°
+               texte orienté avec le menu
+
+               BAS
+               90° -> 270°
+               inversion du chemin pour
+               empêcher le texte d'être
+               retourné
+
+               GAUCHE
+               180° -> 270°
+               texte orienté avec le menu
+            */
+
+            let pathStart =
+                startAngle;
+
+
+            let pathEnd =
+                endAngle;
 
 
             let sweep =
                 1;
 
 
+            /*
+               HAUT
+            */
+
             if (
-                normalized >= 0 &&
-                normalized < 180
+                normalized >= 270
             ) {
 
-                const temp =
-                    startAngle;
-
-                startAngle =
+                pathStart =
                     endAngle;
 
-                endAngle =
-                    temp;
+                pathEnd =
+                    startAngle;
 
                 sweep =
                     0;
@@ -681,27 +747,85 @@ function drawTitles(
             }
 
 
+            /*
+               DROITE
+            */
+
+            else if (
+                normalized >= 0 &&
+                normalized < 90
+            ) {
+
+                pathStart =
+                    startAngle;
+
+                pathEnd =
+                    endAngle;
+
+                sweep =
+                    1;
+
+            }
+
+
+            /*
+               BAS
+            */
+
+            else if (
+                normalized >= 90 &&
+                normalized < 270
+            ) {
+
+                pathStart =
+                    endAngle;
+
+                pathEnd =
+                    startAngle;
+
+                sweep =
+                    0;
+
+            }
+
+
+            /*
+               POINT DE DEPART
+            */
+
             const start =
                 polarPoint(
                     cx,
                     cy,
-                    titleRadius,
-                    startAngle
+                    titleTextRadius,
+                    pathStart
                 );
 
+
+            /*
+               POINT D'ARRIVEE
+            */
 
             const end =
                 polarPoint(
                     cx,
                     cy,
-                    titleRadius,
-                    endAngle
+                    titleTextRadius,
+                    pathEnd
                 );
 
+
+            /*
+               ID UNIQUE
+            */
 
             const pathId =
                 `titleArc${index}`;
 
+
+            /*
+               ARC SVG
+            */
 
             const path =
                 svgElement(
@@ -721,8 +845,8 @@ function drawTitles(
                                 start.y,
 
                                 "A",
-                                titleRadius,
-                                titleRadius,
+                                titleTextRadius,
+                                titleTextRadius,
 
                                 0,
                                 0,
@@ -742,6 +866,10 @@ function drawTitles(
             );
 
 
+            /*
+               CONTENEUR TEXTE
+            */
+
             const text =
                 svgElement(
                     "text",
@@ -751,11 +879,18 @@ function drawTitles(
                             "menu-title",
 
                         "text-anchor":
+                            "middle",
+
+                        "dominant-baseline":
                             "middle"
 
                     }
                 );
 
+
+            /*
+               TEXTE SUR L'ARC
+            */
 
             const textPath =
                 svgElement(
@@ -841,7 +976,7 @@ function drawRadialInterface() {
 
 
     /*
-       Rayon MAP
+       RAYON MAP
     */
 
     const mapRadius =
@@ -853,8 +988,8 @@ function drawRadialInterface() {
 
 
     /*
-       Le SVG possède exactement
-       les dimensions du conteneur.
+       LE SVG PREND EXACTEMENT
+       LA TAILLE DU CONTENEUR
     */
 
     DOM.svg.setAttribute(
@@ -866,9 +1001,11 @@ function drawRadialInterface() {
     /*
        MAP
        ↓
-       cercle MAP
+       CERCLE 1
        ↓
-       cercle titres
+       TITRES
+       ↓
+       CERCLE 2
     */
 
     const titleRadius =
@@ -880,7 +1017,7 @@ function drawRadialInterface() {
 
 
     /*
-       Séparations
+       SEPARATIONS
     */
 
     drawSectorLines(
@@ -893,7 +1030,7 @@ function drawRadialInterface() {
 
 
     /*
-       Titres
+       TITRES
     */
 
     drawTitles(
