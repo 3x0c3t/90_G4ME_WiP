@@ -236,8 +236,29 @@ const TITLE_RING_GAP =
     32;
 
 
-const TITLE_ARC_HALF =
-    13;
+/*
+   Rotation globale de la couronne
+   des titres.
+
+   Les menus restent fixes.
+
+   La couronne des titres est ainsi
+   alignée avec les axes des menus.
+*/
+
+const TITLE_ROTATION =
+    45;
+
+
+/*
+   Orientation des textes.
+
+   Le texte est placé tangentiellement
+   au cercle.
+*/
+
+const TITLE_TEXT_ROTATION_OFFSET =
+    90;
 
 
 /* =========================================================
@@ -424,7 +445,7 @@ function drawCircles(
 
     /*
        CERCLE 1
-       juste autour de la MAP
+       autour de la MAP
     */
 
     const mapRingRadius =
@@ -459,7 +480,7 @@ function drawCircles(
 
 
     /*
-       Petit anneau secondaire
+       Anneau secondaire
     */
 
     const secondaryRing =
@@ -513,7 +534,10 @@ function drawCircles(
                     cy,
 
                 r:
-                    titleRadius
+                    titleRadius,
+
+                transform:
+                    `rotate(${TITLE_ROTATION} ${cx} ${cy})`
 
             }
         );
@@ -530,7 +554,7 @@ function drawCircles(
 
 
 /* =========================================================
-   RAYONS
+   RAYONS DES MENUS
    ========================================================= */
 
 function drawSectorLines(
@@ -544,11 +568,6 @@ function drawSectorLines(
     DOM.sectorLines.innerHTML =
         "";
 
-
-    /*
-       Les lignes commencent au cercle
-       autour de la MAP.
-    */
 
     const startRadius =
         mapRadius +
@@ -612,7 +631,7 @@ function drawSectorLines(
 
 
 /* =========================================================
-   TITRES ENTRE LES DEUX CERCLES
+   TITRES
    ========================================================= */
 
 function drawTitles(
@@ -626,7 +645,7 @@ function drawTitles(
 
 
     /*
-       RAYON DU CERCLE INTERIEUR
+       Rayon du cercle intérieur
     */
 
     const innerRadius =
@@ -635,239 +654,129 @@ function drawTitles(
 
 
     /*
-       RAYON DU CERCLE EXTERIEUR
-    */
-
-    const outerRadius =
-        titleRadius;
-
-
-    /*
-       RAYON EXACT DU TEXTE
-
-       Le texte est placé au milieu
-       des deux cercles.
+       Les titres sont exactement
+       au milieu des deux cercles.
     */
 
     const titleTextRadius =
         innerRadius +
         (
-            outerRadius -
+            titleRadius -
             innerRadius
         ) / 2;
 
 
-    MENUS.forEach(
-        (
-            menu,
-            index
-        ) => {
+    /*
+       Groupe global.
 
-            const center =
+       C'est lui qui fait tourner
+       toute la couronne des titres.
+    */
+
+    const titleGroup =
+        svgElement(
+            "g",
+            {
+
+                class:
+                    "menu-title-system",
+
+                transform:
+                    [
+                        `rotate(${TITLE_ROTATION}`,
+                        cx,
+                        cy,
+                        ")"
+                    ].join(" ")
+
+            }
+        );
+
+
+    MENUS.forEach(
+        menu => {
+
+            /*
+               Angle réel du titre
+            */
+
+            const titleAngle =
                 menu.angle;
 
 
             /*
-               Arc du titre
+               Position du titre
             */
 
-            const startAngle =
-                center -
-                TITLE_ARC_HALF;
-
-
-            const endAngle =
-                center +
-                TITLE_ARC_HALF;
+            const position =
+                polarPoint(
+                    cx,
+                    cy,
+                    titleTextRadius,
+                    titleAngle
+                );
 
 
             /*
-               Normalisation
+               Orientation tangentielle.
+
+               On part de l'axe du menu,
+               puis on applique +90°.
             */
 
-            const normalized =
-                (
-                    center +
-                    360
-                ) % 360;
+            let rotation =
+                titleAngle +
+                TITLE_TEXT_ROTATION_OFFSET;
 
 
             /*
-               Détermination du sens
-               de lecture.
+               Toujours garder le texte
+               lisible depuis l'écran.
 
-               HAUT
-               270° -> 360°
-               texte lisible
-
-               DROITE
-               0° -> 90°
-               texte orienté avec le menu
-
-               BAS
-               90° -> 270°
-               inversion du chemin pour
-               empêcher le texte d'être
-               retourné
-
-               GAUCHE
-               180° -> 270°
-               texte orienté avec le menu
-            */
-
-            let pathStart =
-                startAngle;
-
-
-            let pathEnd =
-                endAngle;
-
-
-            let sweep =
-                1;
-
-
-            /*
-               HAUT
+               Les secteurs gauche/bas
+               nécessitent une inversion.
             */
 
             if (
-                normalized >= 270
+                titleAngle > 90 &&
+                titleAngle <= 270
             ) {
 
-                pathStart =
-                    endAngle;
-
-                pathEnd =
-                    startAngle;
-
-                sweep =
-                    0;
+                rotation +=
+                    180;
 
             }
 
 
             /*
-               DROITE
+               Groupe individuel
             */
 
-            else if (
-                normalized >= 0 &&
-                normalized < 90
-            ) {
-
-                pathStart =
-                    startAngle;
-
-                pathEnd =
-                    endAngle;
-
-                sweep =
-                    1;
-
-            }
-
-
-            /*
-               BAS
-            */
-
-            else if (
-                normalized >= 90 &&
-                normalized < 270
-            ) {
-
-                pathStart =
-                    endAngle;
-
-                pathEnd =
-                    startAngle;
-
-                sweep =
-                    0;
-
-            }
-
-
-            /*
-               POINT DE DEPART
-            */
-
-            const start =
-                polarPoint(
-                    cx,
-                    cy,
-                    titleTextRadius,
-                    pathStart
-                );
-
-
-            /*
-               POINT D'ARRIVEE
-            */
-
-            const end =
-                polarPoint(
-                    cx,
-                    cy,
-                    titleTextRadius,
-                    pathEnd
-                );
-
-
-            /*
-               ID UNIQUE
-            */
-
-            const pathId =
-                `titleArc${index}`;
-
-
-            /*
-               ARC SVG
-            */
-
-            const path =
+            const group =
                 svgElement(
-                    "path",
+                    "g",
                     {
 
-                        id:
-                            pathId,
-
                         class:
-                            "menu-title-arc",
+                            "menu-title-group",
 
-                        d:
+                        transform:
                             [
-                                "M",
-                                start.x,
-                                start.y,
-
-                                "A",
-                                titleTextRadius,
-                                titleTextRadius,
-
-                                0,
-                                0,
-                                sweep,
-
-                                end.x,
-                                end.y
-
-                            ].join(" ")
+                                "translate(",
+                                position.x,
+                                ",",
+                                position.y,
+                                ") rotate(",
+                                rotation,
+                                ")"
+                            ].join("")
 
                     }
                 );
 
 
-            DOM.titleLayer.appendChild(
-                path
-            );
-
-
             /*
-               CONTENEUR TEXTE
+               Texte
             */
 
             const text =
@@ -877,6 +786,12 @@ function drawTitles(
 
                         class:
                             "menu-title",
+
+                        x:
+                            0,
+
+                        y:
+                            0,
 
                         "text-anchor":
                             "middle",
@@ -888,39 +803,25 @@ function drawTitles(
                 );
 
 
-            /*
-               TEXTE SUR L'ARC
-            */
-
-            const textPath =
-                svgElement(
-                    "textPath",
-                    {
-
-                        href:
-                            `#${pathId}`,
-
-                        startOffset:
-                            "50%"
-
-                    }
-                );
-
-
-            textPath.textContent =
+            text.textContent =
                 menu.label;
 
 
-            text.appendChild(
-                textPath
-            );
-
-
-            DOM.titleLayer.appendChild(
+            group.appendChild(
                 text
             );
 
+
+            titleGroup.appendChild(
+                group
+            );
+
         }
+    );
+
+
+    DOM.titleLayer.appendChild(
+        titleGroup
     );
 
 }
@@ -931,15 +832,6 @@ function drawTitles(
    ========================================================= */
 
 function drawRadialInterface() {
-
-    /*
-       IMPORTANT :
-       on récupère le rectangle du CONTENEUR COMMUN,
-       pas celui du SVG.
-
-       Ainsi la MAP et les cercles utilisent
-       exactement le même centre.
-    */
 
     const rect =
         DOM.radialInterface.getBoundingClientRect();
@@ -988,8 +880,7 @@ function drawRadialInterface() {
 
 
     /*
-       LE SVG PREND EXACTEMENT
-       LA TAILLE DU CONTENEUR
+       SVG
     */
 
     DOM.svg.setAttribute(
@@ -999,13 +890,7 @@ function drawRadialInterface() {
 
 
     /*
-       MAP
-       ↓
-       CERCLE 1
-       ↓
-       TITRES
-       ↓
-       CERCLE 2
+       CERCLES
     */
 
     const titleRadius =
@@ -1017,7 +902,7 @@ function drawRadialInterface() {
 
 
     /*
-       SEPARATIONS
+       RAYONS
     */
 
     drawSectorLines(
@@ -1128,9 +1013,9 @@ function createSquareGrid() {
 
         for (
             let x = 0;
-            x < 8;
-            x++
-        ) {
+        x < 8;
+        x++
+    ) {
 
             const cell =
                 document.createElement(
