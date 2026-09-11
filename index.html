@@ -3,83 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>90_G4ME_WiP | -3xØc3t- L4B</title>
-
-    <meta
-        name="description"
-        content="-3xØc3t- L4B | 90_G4ME_WiP"
-    >
-
+    <title>90 G4ME_WiP | -3xØc3t- L4B</title>
     <link rel="stylesheet" href="index.css">
 </head>
 
 <body>
 
-<header id="main-header">
+<header id="header">
 
-    <div class="header-left">
-
-        <div class="brand">
-
-            <span class="brand-main">
-                -3xØc3t- L4B
-            </span>
-
-            <span class="brand-sub">
-                DIGITAL L4B &amp; EXPERIMENTATION
-            </span>
-
-        </div>
-
+    <div class="header-brand">
+        <div class="brand-main">-3xØc3t- L4B</div>
+        <div class="brand-sub">DIGITAL L4B & EXPERIMENTATION</div>
     </div>
 
-
-    <div class="header-center">
-
-        <div class="game-title">
-
-            <span class="game-number">
-                90
-            </span>
-
-            <span class="game-name">
-                G4ME_WiP
-            </span>
-
-        </div>
-
-        <div class="game-status">
-
-            <span class="status-dot"></span>
-
-            <span>
-                WORK IN PROGRESS
-            </span>
-
-        </div>
-
+    <div class="header-game">
+        <div class="game-number">90</div>
+        <div class="game-name">G4ME_WiP</div>
     </div>
 
-
-    <div class="header-right">
-
-        <button
-            class="header-button"
-            id="btn-reset"
-            type="button"
-        >
-            RESET
-        </button>
-
-        <button
-            class="header-button"
-            id="btn-menu"
-            type="button"
-        >
-            MENU
-        </button>
-
+    <div class="header-actions">
+        <button id="reset-game" class="header-button">RESET</button>
+        <button id="open-menu" class="header-button">MENU</button>
     </div>
 
 </header>
@@ -89,552 +33,208 @@
 
     <div id="radial-interface">
 
-
-        <!-- =====================================================
-             RADIAL MENUS
-        ====================================================== -->
-
         <svg
             id="radial-menus"
-            viewBox="0 0 1000 1000"
-            preserveAspectRatio="xMidYMid meet"
-            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="none"
         >
-
-            <defs>
-
-                <radialGradient
-                    id="sector-background"
-                    cx="50%"
-                    cy="50%"
-                    r="70%"
-                >
-                    <stop
-                        offset="0%"
-                        stop-color="#0c1820"
-                    />
-
-                    <stop
-                        offset="100%"
-                        stop-color="#050b10"
-                    />
-                </radialGradient>
-
-                <filter
-                    id="sector-glow"
-                    x="-30%"
-                    y="-30%"
-                    width="160%"
-                    height="160%"
-                >
-
-                    <feGaussianBlur
-                        stdDeviation="4"
-                        result="blur"
-                    />
-
-                    <feMerge>
-
-                        <feMergeNode
-                            in="blur"
-                        />
-
-                        <feMergeNode
-                            in="SourceGraphic"
-                        />
-
-                    </feMerge>
-
-                </filter>
-
-            </defs>
-
-
-            <!-- NORD -->
-
-            <path
-                class="menu-sector"
-                data-menu="north"
-                d="M 373.7 195.1
-                   L 308.7 38.1
-                   A 500 500 0 0 1 691.3 38.1
-                   L 626.3 195.1
-                   A 330 330 0 0 0 373.7 195.1 Z"
-            />
-
-
-            <!-- NORD-EST -->
-
-            <path
-                class="menu-sector"
-                data-menu="north-east"
-                d="M 626.3 195.1
-                   L 691.3 38.1
-                   A 500 500 0 0 1 961.9 308.7
-                   L 804.9 373.7
-                   A 330 330 0 0 0 626.3 195.1 Z"
-            />
-
-
-            <!-- EST -->
-
-            <path
-                class="menu-sector"
-                data-menu="east"
-                d="M 804.9 373.7
-                   L 961.9 308.7
-                   A 500 500 0 0 1 961.9 691.3
-                   L 804.9 626.3
-                   A 330 330 0 0 0 804.9 373.7 Z"
-            />
-
-
-            <!-- SUD-EST -->
-
-            <path
-                class="menu-sector"
-                data-menu="south-east"
-                d="M 804.9 626.3
-                   L 961.9 691.3
-                   A 500 500 0 0 1 691.3 961.9
-                   L 626.3 804.9
-                   A 330 330 0 0 0 804.9 626.3 Z"
-            />
-
-
-            <!-- SUD -->
-
-            <path
-                class="menu-sector"
-                data-menu="south"
-                d="M 626.3 804.9
-                   L 691.3 961.9
-                   A 500 500 0 0 1 308.7 961.9
-                   L 373.7 804.9
-                   A 330 330 0 0 0 626.3 804.9 Z"
-            />
-
-
-            <!-- SUD-OUEST -->
-
-            <path
-                class="menu-sector"
-                data-menu="south-west"
-                d="M 373.7 804.9
-                   L 308.7 961.9
-                   A 500 500 0 0 1 38.1 691.3
-                   L 195.1 626.3
-                   A 330 330 0 0 0 373.7 804.9 Z"
-            />
-
-
-            <!-- OUEST -->
-
-            <path
-                class="menu-sector"
-                data-menu="west"
-                d="M 195.1 626.3
-                   L 38.1 691.3
-                   A 500 500 0 0 1 38.1 308.7
-                   L 195.1 373.7
-                   A 330 330 0 0 0 195.1 626.3 Z"
-            />
-
-
-            <!-- NORD-OUEST -->
-
-            <path
-                class="menu-sector"
-                data-menu="north-west"
-                d="M 195.1 373.7
-                   L 38.1 308.7
-                   A 500 500 0 0 1 308.7 38.1
-                   L 373.7 195.1
-                   A 330 330 0 0 0 195.1 373.7 Z"
-            />
-
+            <path class="menu-sector" data-menu="top-left"></path>
+            <path class="menu-sector" data-menu="top"></path>
+            <path class="menu-sector" data-menu="top-right"></path>
+            <path class="menu-sector" data-menu="right"></path>
+            <path class="menu-sector" data-menu="bottom-right"></path>
+            <path class="menu-sector" data-menu="bottom"></path>
+            <path class="menu-sector" data-menu="bottom-left"></path>
+            <path class="menu-sector" data-menu="left"></path>
         </svg>
 
 
-        <!-- =====================================================
-             MENU NORD
-        ====================================================== -->
+        <section class="radial-panel panel-top-left">
+            <div class="panel-label">PLAYER</div>
+            <div class="panel-value" id="player-value">P1</div>
+            <div class="panel-info" id="player-info">PLAYER 01</div>
+        </section>
 
-        <section
-            class="radial-content radial-content-north"
-            id="panel-top"
-        >
 
-            <div class="panel-title">
-                GAME
+        <section class="radial-panel panel-top">
+
+            <div class="panel-label">GAME</div>
+
+            <div class="panel-value" id="turn-value">
+                TURN 01
             </div>
 
-            <div class="game-info">
-
-                <div>
-                    <span class="info-label">
-                        TURN
-                    </span>
-
-                    <strong id="turn-value">
-                        01
-                    </strong>
-                </div>
-
-                <div>
-                    <span class="info-label">
-                        ROUND
-                    </span>
-
-                    <strong id="round-value">
-                        01
-                    </strong>
-                </div>
-
-                <div>
-                    <span class="info-label">
-                        PLAYERS
-                    </span>
-
-                    <strong id="players-value">
-                        02
-                    </strong>
-                </div>
-
+            <div class="panel-info" id="round-value">
+                ROUND 01
             </div>
 
         </section>
 
 
-        <!-- =====================================================
-             MENU NORD-EST
-        ====================================================== -->
+        <section class="radial-panel panel-top-right">
 
-        <section
-            class="radial-content radial-content-north-east"
-            id="panel-top-right"
-        >
+            <div class="panel-label">CELL</div>
 
-            <div class="panel-title">
-                CELL
+            <div class="panel-value" id="cell-value">
+                --
             </div>
 
-            <div class="cell-info">
-
-                <div>
-                    <span class="info-label">
-                        SELECTED
-                    </span>
-
-                    <strong id="selected-cell">
-                        ---
-                    </strong>
-                </div>
-
-                <div>
-                    <span class="info-label">
-                        TYPE
-                    </span>
-
-                    <strong id="selected-type">
-                        ---
-                    </strong>
-                </div>
-
+            <div class="panel-info" id="cell-info">
+                NO SELECTION
             </div>
 
         </section>
 
 
-        <!-- =====================================================
-             MENU EST
-        ====================================================== -->
+        <section class="radial-panel panel-left">
 
-        <section
-            class="radial-content radial-content-east"
-            id="panel-right"
-        >
+            <div class="panel-label">MAP</div>
 
-            <div class="panel-title">
-                ACTION
-            </div>
-
-            <div class="actions">
+            <div class="zoom-controls">
 
                 <button
-                    class="action-button"
-                    id="btn-select"
+                    id="zoom-out"
+                    class="zoom-button"
                     type="button"
                 >
-                    SELECT
+                    −
                 </button>
 
-                <button
-                    class="action-button"
-                    id="btn-confirm"
-                    type="button"
-                >
-                    CONFIRM
-                </button>
+                <div id="zoom-value">
+                    100%
+                </div>
 
                 <button
-                    class="action-button"
-                    id="btn-cancel"
+                    id="zoom-in"
+                    class="zoom-button"
                     type="button"
                 >
-                    CANCEL
+                    +
                 </button>
 
             </div>
 
-        </section>
-
-
-        <!-- =====================================================
-             MENU SUD-EST
-        ====================================================== -->
-
-        <section
-            class="radial-content radial-content-south-east"
-            id="panel-bottom-right"
-        >
-
-            <div class="panel-title">
-                POSITION
-            </div>
-
-            <div class="position-info">
-
-                <span>
-                    X:
-                    <strong id="position-x">
-                        ---
-                    </strong>
-                </span>
-
-                <span>
-                    Y:
-                    <strong id="position-y">
-                        ---
-                    </strong>
-                </span>
-
+            <div class="panel-info">
+                MAP CONTROL
             </div>
 
         </section>
 
 
-        <!-- =====================================================
-             MENU SUD
-        ====================================================== -->
+        <section class="radial-panel panel-right">
 
-        <section
-            class="radial-content radial-content-south"
-            id="panel-bottom"
-        >
+            <div class="panel-label">ACTION</div>
 
-            <div class="panel-title">
-                SYSTEM
-            </div>
-
-            <div
-                class="system-message"
-                id="system-message"
+            <button
+                id="confirm-action"
+                class="panel-button"
+                type="button"
+                disabled
             >
+                CONFIRM
+            </button>
+
+            <button
+                id="cancel-action"
+                class="panel-button"
+                type="button"
+                disabled
+            >
+                CANCEL
+            </button>
+
+        </section>
+
+
+        <section class="radial-panel panel-bottom-left">
+
+            <div class="panel-label">GRID</div>
+
+            <div class="panel-value" id="grid-value">
+                7 × 7
+            </div>
+
+            <div class="panel-info" id="grid-info">
+                OCTAGON / SQUARE
+            </div>
+
+        </section>
+
+
+        <section class="radial-panel panel-bottom">
+
+            <div class="panel-label">SYSTEM</div>
+
+            <div class="panel-value" id="system-status">
+                READY
+            </div>
+
+            <div class="panel-info" id="system-message">
                 SYSTEM READY
             </div>
 
         </section>
 
 
-        <!-- =====================================================
-             MENU SUD-OUEST
-        ====================================================== -->
+        <section class="radial-panel panel-bottom-right">
 
-        <section
-            class="radial-content radial-content-south-west"
-            id="panel-bottom-left"
-        >
+            <div class="panel-label">POSITION</div>
 
-            <div class="panel-title">
-                GRID
+            <div class="panel-value" id="position-value">
+                --
             </div>
 
-            <div class="grid-info">
-
-                <div>
-                    <span class="info-label">
-                        OCTOGONS
-                    </span>
-
-                    <strong id="octagon-count">
-                        0
-                    </strong>
-                </div>
-
-                <div>
-                    <span class="info-label">
-                        SQUARES
-                    </span>
-
-                    <strong id="square-count">
-                        0
-                    </strong>
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =====================================================
-             MENU OUEST
-        ====================================================== -->
-
-        <section
-            class="radial-content radial-content-west"
-            id="panel-left"
-        >
-
-            <div class="panel-title">
-                MAP
-            </div>
-
-            <div class="map-controls">
-
-                <button
-                    class="control-button"
-                    id="btn-zoom-in"
-                    type="button"
-                >
-                    +
-                </button>
-
-                <div class="zoom-value">
-
-                    <span id="zoom-value">
-                        100
-                    </span>%
-
-                </div>
-
-                <button
-                    class="control-button"
-                    id="btn-zoom-out"
-                    type="button"
-                >
-                    −
-                </button>
-
-            </div>
-
-        </section>
-
-
-        <!-- =====================================================
-             MENU NORD-OUEST
-        ====================================================== -->
-
-        <section
-            class="radial-content radial-content-north-west"
-            id="panel-top-left"
-        >
-
-            <div class="panel-title">
-                PLAYER
-            </div>
-
-            <div class="player-indicator">
-
-                <span class="player-color"></span>
-
-                <div>
-
-                    <strong id="player-name">
-                        PLAYER 01
-                    </strong>
-
-                    <small id="player-state">
-                        READY
-                    </small>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =====================================================
-             MAP
-        ====================================================== -->
-
-        <section
-            id="map-container"
-            aria-label="Carte de jeu"
-        >
-
-            <div id="map">
-
-                <div
-                    id="octagon-grid"
-                    aria-label="Grille octogonale"
-                ></div>
-
-                <div
-                    id="square-grid"
-                    aria-label="Grille carrée"
-                ></div>
-
-                <div id="map-center">
-
-                    <span class="center-number">
-                        90
-                    </span>
-
-                    <span class="center-label">
-                        G4ME
-                    </span>
-
-                </div>
-
+            <div class="panel-info" id="position-info">
+                NO POSITION
             </div>
 
         </section>
 
     </div>
+
+
+    <div id="map-container">
+
+        <div id="map">
+
+            <div id="octagon-grid"></div>
+
+            <div id="square-grid"></div>
+
+            <div id="map-center">
+
+                <div class="center-title">
+                    90
+                </div>
+
+                <div class="center-subtitle">
+                    G4ME_WiP
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div id="selection-indicator"></div>
 
 </main>
 
 
-<footer id="main-footer">
+<footer id="footer">
 
-    <div class="footer-left">
-        <span>-3xØc3t- L4B</span>
+    <div>
+        -3xØc3t- L4B
     </div>
 
-    <div class="footer-center">
-
-        <span>
-            90_G4ME_WiP
-        </span>
-
-        <span class="footer-separator">
-            •
-        </span>
-
-        <span>
-            EXPERIMENTAL GAME INTERFACE
-        </span>
-
+    <div>
+        90 G4ME_WiP
     </div>
 
-    <div class="footer-right">
-
-        <span id="footer-status">
-            ONLINE
-        </span>
-
+    <div id="footer-status">
+        SYSTEM READY
     </div>
 
 </footer>
