@@ -1,222 +1,183 @@
 "use strict";
 
+
+/* =========================================================
+   CONFIGURATION
+   ========================================================= */
+
 const GAME_CONFIG = {
+
     octagonRows: 7,
     octagonColumns: 7,
+
     squareRows: 8,
     squareColumns: 8,
+
     octagonSize: 52,
     squareSize: 34,
+
     zoomMin: 70,
     zoomMax: 140,
     zoomStep: 10,
+
     initialZoom: 100
 };
 
+
+/* =========================================================
+   STATE
+   ========================================================= */
+
 const gameState = {
+
     player: 1,
+
     turn: 1,
+
     round: 1,
+
     players: 2,
+
     selectedCell: null,
+
     selectedType: null,
+
+    selectedX: null,
+
+    selectedY: null,
+
     zoom: GAME_CONFIG.initialZoom
 };
 
-const DOM = {};
 
-function getElements() {
-    DOM.game = document.getElementById("game");
-    DOM.radialMenus = document.getElementById("radial-menus");
-    DOM.map = document.getElementById("map");
-    DOM.octagonGrid = document.getElementById("octagon-grid");
-    DOM.squareGrid = document.getElementById("square-grid");
+/* =========================================================
+   DOM
+   ========================================================= */
 
-    DOM.reset = document.getElementById("reset-game");
-    DOM.menu = document.getElementById("open-menu");
+const DOM = {
 
-    DOM.zoomIn = document.getElementById("zoom-in");
-    DOM.zoomOut = document.getElementById("zoom-out");
+    game:
+        document.getElementById("game"),
 
-    DOM.confirm = document.getElementById("confirm-action");
-    DOM.cancel = document.getElementById("cancel-action");
+    map:
+        document.getElementById("map"),
 
-    DOM.playerValue = document.getElementById("player-value");
-    DOM.playerInfo = document.getElementById("player-info");
+    mapContainer:
+        document.getElementById("map-container"),
 
-    DOM.turnValue = document.getElementById("turn-value");
-    DOM.roundValue = document.getElementById("round-value");
+    radialMenus:
+        document.getElementById("radial-menus"),
 
-    DOM.cellValue = document.getElementById("cell-value");
-    DOM.cellInfo = document.getElementById("cell-info");
+    octagonGrid:
+        document.getElementById("octagon-grid"),
 
-    DOM.positionValue = document.getElementById("position-value");
-    DOM.positionInfo = document.getElementById("position-info");
+    squareGrid:
+        document.getElementById("square-grid"),
 
-    DOM.gridValue = document.getElementById("grid-value");
+    playerValue:
+        document.getElementById("player-value"),
 
-    DOM.systemStatus = document.getElementById("system-status");
-    DOM.systemMessage = document.getElementById("system-message");
+    playerNumber:
+        document.getElementById("player-number"),
 
-    DOM.zoomValue = document.getElementById("zoom-value");
-    DOM.footerStatus = document.getElementById("footer-status");
-}
+    turnValue:
+        document.getElementById("turn-value"),
+
+    roundValue:
+        document.getElementById("round-value"),
+
+    playersValue:
+        document.getElementById("players-value"),
+
+    cellId:
+        document.getElementById("cell-id"),
+
+    cellType:
+        document.getElementById("cell-type"),
+
+    cellState:
+        document.getElementById("cell-state"),
+
+    positionX:
+        document.getElementById("position-x"),
+
+    positionY:
+        document.getElementById("position-y"),
+
+    positionPlayer:
+        document.getElementById("position-player"),
+
+    systemStatus:
+        document.getElementById("system-status"),
+
+    gridValue:
+        document.getElementById("grid-value"),
+
+    zoomValue:
+        document.getElementById("zoom-value"),
+
+    zoomIn:
+        document.getElementById("zoom-in"),
+
+    zoomOut:
+        document.getElementById("zoom-out"),
+
+    actionConfirm:
+        document.getElementById("action-confirm"),
+
+    actionCancel:
+        document.getElementById("action-cancel"),
+
+    actionReset:
+        document.getElementById("action-reset")
+};
+
+
+/* =========================================================
+   INITIALISATION
+   ========================================================= */
 
 function initGame() {
-    getElements();
 
     generateOctagonGrid();
+
     generateSquareGrid();
 
     setupEvents();
 
     updateInterface();
+
     applyZoom();
 
-    buildRadialMenus();
-
-    setSystemMessage("SYSTEM READY");
+    requestAnimationFrame(() => {
+        buildRadialMenus();
+    });
 }
 
-function setupEvents() {
 
-    if (DOM.reset) {
-        DOM.reset.addEventListener(
-            "click",
-            resetGame
-        );
-    }
-
-    if (DOM.menu) {
-        DOM.menu.addEventListener(
-            "click",
-            () => {
-                setSystemMessage("MENU SYSTEM");
-            }
-        );
-    }
-
-    if (DOM.zoomIn) {
-        DOM.zoomIn.addEventListener(
-            "click",
-            () => {
-                changeZoom(GAME_CONFIG.zoomStep);
-            }
-        );
-    }
-
-    if (DOM.zoomOut) {
-        DOM.zoomOut.addEventListener(
-            "click",
-            () => {
-                changeZoom(-GAME_CONFIG.zoomStep);
-            }
-        );
-    }
-
-    if (DOM.confirm) {
-        DOM.confirm.addEventListener(
-            "click",
-            confirmSelection
-        );
-    }
-
-    if (DOM.cancel) {
-        DOM.cancel.addEventListener(
-            "click",
-            clearSelection
-        );
-    }
-
-    document.addEventListener(
-        "keydown",
-        handleKeyboard
-    );
-
-    window.addEventListener(
-        "resize",
-        () => {
-            requestAnimationFrame(
-                buildRadialMenus
-            );
-        }
-    );
-
-    document
-        .querySelectorAll(".menu-sector")
-        .forEach(
-            sector => {
-
-                sector.addEventListener(
-                    "click",
-                    event => {
-
-                        event.stopPropagation();
-
-                        activateMenu(
-                            sector.dataset.menu
-                        );
-                    }
-                );
-            }
-        );
-}
-
-function handleKeyboard(event) {
-
-    if (
-        event.key === "+" ||
-        event.key === "="
-    ) {
-        changeZoom(
-            GAME_CONFIG.zoomStep
-        );
-    }
-
-    if (event.key === "-") {
-        changeZoom(
-            -GAME_CONFIG.zoomStep
-        );
-    }
-
-    if (event.key === "Escape") {
-        clearSelection();
-    }
-
-    if (
-        event.key === "Enter" &&
-        gameState.selectedCell
-    ) {
-        confirmSelection();
-    }
-}
+/* =========================================================
+   OCTAGON GRID
+   ========================================================= */
 
 function generateOctagonGrid() {
 
     DOM.octagonGrid.innerHTML = "";
-
-    const size =
-        GAME_CONFIG.octagonSize;
-
-    const totalWidth =
-        GAME_CONFIG.octagonColumns * size;
-
-    const totalHeight =
-        GAME_CONFIG.octagonRows * size;
-
-    const startX =
-        -totalWidth / 2 +
-        size / 2;
-
-    const startY =
-        -totalHeight / 2 +
-        size / 2;
 
     for (
         let row = 0;
         row < GAME_CONFIG.octagonRows;
         row++
     ) {
+
+        const rowElement =
+            document.createElement("div");
+
+        rowElement.className =
+            "octagon-row";
+
+        if (row % 2 === 1) {
+            rowElement.classList.add("offset");
+        }
 
         for (
             let column = 0;
@@ -230,95 +191,33 @@ function generateOctagonGrid() {
             cell.className =
                 "octagon-cell";
 
-            const offsetX =
-                row % 2 === 0
-                    ? 0
-                    : size / 2;
-
-            const x =
-                startX +
-                column * size +
-                offsetX;
-
-            const y =
-                startY +
-                row * size;
-
-            cell.style.left =
-                `calc(50% + ${x}px - ${size / 2}px)`;
-
-            cell.style.top =
-                `calc(50% + ${y}px - ${size / 2}px)`;
-
-            const coordinate =
-                `${String.fromCharCode(65 + column)}${row + 1}`;
-
             cell.dataset.row =
-                row + 1;
+                String(row);
 
             cell.dataset.column =
-                column + 1;
+                String(column);
 
-            cell.dataset.type =
-                "octagon";
+            cell.dataset.id =
+                `O${row + 1}-${column + 1}`;
 
-            cell.dataset.coordinate =
-                coordinate;
+            cell.innerHTML =
+                "";
 
-            const label =
-                document.createElement("span");
-
-            label.className =
-                "cell-coordinate";
-
-            label.textContent =
-                coordinate;
-
-            cell.appendChild(label);
-
-            cell.addEventListener(
-                "click",
-                event => {
-
-                    event.stopPropagation();
-
-                    selectCell(
-                        cell,
-                        "octagon"
-                    );
-                }
-            );
-
-            DOM.octagonGrid.appendChild(
-                cell
-            );
+            rowElement.appendChild(cell);
         }
+
+        DOM.octagonGrid.appendChild(rowElement);
     }
 }
+
+
+/* =========================================================
+   SQUARE GRID
+   ========================================================= */
 
 function generateSquareGrid() {
 
     DOM.squareGrid.innerHTML = "";
-
-    const size =
-        GAME_CONFIG.squareSize;
-
-    const spacing =
-        size + 4;
-
-    const totalWidth =
-        (GAME_CONFIG.squareColumns - 1) *
-        spacing;
-
-    const totalHeight =
-        (GAME_CONFIG.squareRows - 1) *
-        spacing;
-
-    const startX =
-        -totalWidth / 2;
-
-    const startY =
-        -totalHeight / 2;
 
     for (
         let row = 0;
@@ -338,122 +237,198 @@ function generateSquareGrid() {
             cell.className =
                 "square-cell";
 
-            const x =
-                startX +
-                column * spacing;
-
-            const y =
-                startY +
-                row * spacing;
-
-            cell.style.left =
-                `calc(50% + ${x}px - ${size / 2}px)`;
-
-            cell.style.top =
-                `calc(50% + ${y}px - ${size / 2}px)`;
-
-            const coordinate =
-                `${column + 1}:${row + 1}`;
-
             cell.dataset.row =
-                row + 1;
+                String(row);
 
             cell.dataset.column =
-                column + 1;
+                String(column);
 
-            cell.dataset.type =
-                "square";
+            DOM.squareGrid.appendChild(cell);
+        }
+    }
+}
 
-            cell.dataset.coordinate =
-                coordinate;
 
-            const label =
-                document.createElement("span");
+/* =========================================================
+   EVENTS
+   ========================================================= */
 
-            label.className =
-                "cell-coordinate";
+function setupEvents() {
 
-            label.textContent =
-                coordinate;
+    DOM.octagonGrid.addEventListener(
+        "click",
+        handleCellClick
+    );
 
-            cell.appendChild(label);
+    DOM.zoomIn.addEventListener(
+        "click",
+        () => changeZoom(GAME_CONFIG.zoomStep)
+    );
 
-            cell.addEventListener(
+    DOM.zoomOut.addEventListener(
+        "click",
+        () => changeZoom(-GAME_CONFIG.zoomStep)
+    );
+
+    DOM.actionConfirm.addEventListener(
+        "click",
+        confirmAction
+    );
+
+    DOM.actionCancel.addEventListener(
+        "click",
+        cancelAction
+    );
+
+    DOM.actionReset.addEventListener(
+        "click",
+        resetGame
+    );
+
+    window.addEventListener(
+        "resize",
+        handleResize
+    );
+
+    document.querySelectorAll(".menu-sector").forEach(
+        sector => {
+
+            sector.addEventListener(
                 "click",
                 event => {
 
                     event.stopPropagation();
 
-                    selectCell(
-                        cell,
-                        "square"
-                    );
+                    const menu =
+                        sector.dataset.menu;
+
+                    activateMenu(menu);
                 }
             );
-
-            DOM.squareGrid.appendChild(
-                cell
-            );
         }
-    }
+    );
 }
 
-function selectCell(cell, type) {
+
+/* =========================================================
+   CELL SELECTION
+   ========================================================= */
+
+function handleCellClick(event) {
+
+    const cell =
+        event.target.closest(".octagon-cell");
+
+    if (!cell) {
+        return;
+    }
 
     document
-        .querySelectorAll(
-            ".octagon-cell.selected, .square-cell.selected"
-        )
+        .querySelectorAll(".octagon-cell.selected")
         .forEach(
-            selected => {
-                selected.classList.remove(
-                    "selected"
-                );
+            element => {
+                element.classList.remove("selected");
             }
         );
 
     cell.classList.add("selected");
 
     gameState.selectedCell =
-        cell.dataset.coordinate;
+        cell.dataset.id;
 
     gameState.selectedType =
-        type;
+        "OCTAGON";
 
-    DOM.cellValue.textContent =
+    gameState.selectedX =
+        Number(cell.dataset.column) + 1;
+
+    gameState.selectedY =
+        Number(cell.dataset.row) + 1;
+
+    DOM.cellId.textContent =
         gameState.selectedCell;
 
-    DOM.cellInfo.textContent =
-        type.toUpperCase();
+    DOM.cellType.textContent =
+        gameState.selectedType;
 
-    DOM.positionValue.textContent =
-        `R${cell.dataset.row} C${cell.dataset.column}`;
+    DOM.cellState.textContent =
+        "SELECTED";
 
-    DOM.positionInfo.textContent =
-        `${type.toUpperCase()} CELL`;
+    DOM.positionX.textContent =
+        String(gameState.selectedX);
 
-    DOM.confirm.disabled =
-        false;
+    DOM.positionY.textContent =
+        String(gameState.selectedY);
 
-    DOM.cancel.disabled =
-        false;
+    DOM.positionPlayer.textContent =
+        `P${gameState.player}`;
 
-    setSystemMessage(
-        `CELL ${gameState.selectedCell} SELECTED`
-    );
+    DOM.systemStatus.textContent =
+        "CELL SELECTED";
 }
 
-function clearSelection() {
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+function confirmAction() {
+
+    if (!gameState.selectedCell) {
+
+        DOM.systemStatus.textContent =
+            "NO CELL";
+
+        DOM.cellState.textContent =
+            "EMPTY";
+
+        return;
+    }
+
+    DOM.cellState.textContent =
+        "CONFIRMED";
+
+    DOM.systemStatus.textContent =
+        "ACTION CONFIRMED";
+
+    gameState.turn++;
+
+    if (gameState.turn > 9) {
+
+        gameState.turn = 1;
+
+        gameState.round++;
+    }
+
+    updateInterface();
+}
+
+
+function cancelAction() {
+
+    if (!gameState.selectedCell) {
+
+        DOM.systemStatus.textContent =
+            "NOTHING TO CANCEL";
+
+        return;
+    }
+
+    DOM.cellState.textContent =
+        "CANCELLED";
+
+    DOM.systemStatus.textContent =
+        "ACTION CANCELLED";
+}
+
+
+function resetGame() {
 
     document
-        .querySelectorAll(
-            ".octagon-cell.selected, .square-cell.selected"
-        )
+        .querySelectorAll(".octagon-cell.selected")
         .forEach(
-            cell => {
-                cell.classList.remove(
-                    "selected"
-                );
+            element => {
+                element.classList.remove("selected");
             }
         );
 
@@ -463,89 +438,89 @@ function clearSelection() {
     gameState.selectedType =
         null;
 
-    DOM.cellValue.textContent =
+    gameState.selectedX =
+        null;
+
+    gameState.selectedY =
+        null;
+
+    gameState.turn =
+        1;
+
+    gameState.round =
+        1;
+
+    DOM.cellId.textContent =
+        "---";
+
+    DOM.cellType.textContent =
+        "---";
+
+    DOM.cellState.textContent =
+        "READY";
+
+    DOM.positionX.textContent =
         "--";
 
-    DOM.cellInfo.textContent =
-        "NO SELECTION";
-
-    DOM.positionValue.textContent =
+    DOM.positionY.textContent =
         "--";
 
-    DOM.positionInfo.textContent =
-        "NO POSITION";
-
-    DOM.confirm.disabled =
-        true;
-
-    DOM.cancel.disabled =
-        true;
-
-    setSystemMessage(
-        "SELECTION CLEARED"
-    );
-}
-
-function confirmSelection() {
-
-    if (!gameState.selectedCell) {
-        return;
-    }
-
-    setSystemMessage(
-        `ACTION CONFIRMED : ${gameState.selectedCell}`
-    );
-
-    gameState.turn++;
+    DOM.systemStatus.textContent =
+        "READY";
 
     updateInterface();
 }
+
+
+/* =========================================================
+   ZOOM
+   ========================================================= */
 
 function changeZoom(amount) {
 
     gameState.zoom += amount;
 
-    if (
-        gameState.zoom <
-        GAME_CONFIG.zoomMin
-    ) {
-        gameState.zoom =
-            GAME_CONFIG.zoomMin;
-    }
-
-    if (
-        gameState.zoom >
-        GAME_CONFIG.zoomMax
-    ) {
-        gameState.zoom =
-            GAME_CONFIG.zoomMax;
-    }
+    gameState.zoom =
+        Math.max(
+            GAME_CONFIG.zoomMin,
+            Math.min(
+                GAME_CONFIG.zoomMax,
+                gameState.zoom
+            )
+        );
 
     applyZoom();
 }
+
 
 function applyZoom() {
 
     const scale =
         gameState.zoom / 100;
 
-    DOM.octagonGrid.style.transform =
-        `scale(${scale})`;
-
-    DOM.squareGrid.style.transform =
+    DOM.map.style.transform =
         `scale(${scale})`;
 
     DOM.zoomValue.textContent =
-        `${gameState.zoom}%`;
+        String(gameState.zoom);
+
+    requestAnimationFrame(() => {
+        buildRadialMenus();
+    });
 }
+
+
+/* =========================================================
+   INTERFACE
+   ========================================================= */
 
 function updateInterface() {
 
     DOM.playerValue.textContent =
         `P${gameState.player}`;
 
-    DOM.playerInfo.textContent =
-        `PLAYER ${String(gameState.player).padStart(2, "0")}`;
+    DOM.playerNumber.textContent =
+        `P${gameState.player}`;
 
     DOM.turnValue.textContent =
         `TURN ${String(gameState.turn).padStart(2, "0")}`;
@@ -553,104 +528,80 @@ function updateInterface() {
     DOM.roundValue.textContent =
         `ROUND ${String(gameState.round).padStart(2, "0")}`;
 
+    DOM.playersValue.textContent =
+        String(gameState.players).padStart(2, "0");
+
     DOM.gridValue.textContent =
         `${GAME_CONFIG.octagonRows} × ${GAME_CONFIG.octagonColumns}`;
 
-    DOM.systemStatus.textContent =
-        "READY";
+    DOM.positionPlayer.textContent =
+        `P${gameState.player}`;
 }
 
-function setSystemMessage(message) {
 
-    DOM.systemMessage.textContent =
-        message;
+/* =========================================================
+   RADIAL GEOMETRY
+   ========================================================= */
 
-    DOM.footerStatus.textContent =
-        message;
-}
+const MENU_ORDER = [
+    "game",
+    "cell",
+    "action",
+    "position",
+    "system",
+    "grid",
+    "map",
+    "player"
+];
 
-function resetGame() {
 
-    gameState.player = 1;
-    gameState.turn = 1;
-    gameState.round = 1;
+const MENU_ANGLES = {
 
-    gameState.selectedCell = null;
-    gameState.selectedType = null;
+    game: {
+        start: 247.5,
+        end: 292.5
+    },
 
-    gameState.zoom =
-        GAME_CONFIG.initialZoom;
+    cell: {
+        start: 292.5,
+        end: 337.5
+    },
 
-    document
-        .querySelectorAll(
-            ".octagon-cell.selected, .square-cell.selected"
-        )
-        .forEach(
-            cell => {
-                cell.classList.remove(
-                    "selected"
-                );
-            }
-        );
+    action: {
+        start: 337.5,
+        end: 382.5
+    },
 
-    DOM.cellValue.textContent =
-        "--";
+    position: {
+        start: 22.5,
+        end: 67.5
+    },
 
-    DOM.cellInfo.textContent =
-        "NO SELECTION";
+    system: {
+        start: 67.5,
+        end: 112.5
+    },
 
-    DOM.positionValue.textContent =
-        "--";
+    grid: {
+        start: 112.5,
+        end: 157.5
+    },
 
-    DOM.positionInfo.textContent =
-        "NO POSITION";
+    map: {
+        start: 157.5,
+        end: 202.5
+    },
 
-    DOM.confirm.disabled =
-        true;
-
-    DOM.cancel.disabled =
-        true;
-
-    updateInterface();
-    applyZoom();
-
-    setSystemMessage(
-        "GAME RESET"
-    );
-}
-
-function activateMenu(menu) {
-
-    document
-        .querySelectorAll(".menu-sector")
-        .forEach(
-            sector => {
-                sector.classList.remove(
-                    "active"
-                );
-            }
-        );
-
-    const sector =
-        document.querySelector(
-            `.menu-sector[data-menu="${menu}"]`
-        );
-
-    if (sector) {
-        sector.classList.add(
-            "active"
-        );
+    player: {
+        start: 202.5,
+        end: 247.5
     }
-
-    setSystemMessage(
-        `${menu.toUpperCase()} MENU`
-    );
-}
+};
 
 
-/* =====================================================
-   RADIAL MENU GEOMETRY
-   ===================================================== */
+/* =========================================================
+   POLAR POINT
+   ========================================================= */
 
 function polarPoint(
     centerX,
@@ -663,6 +614,7 @@ function polarPoint(
         angle * Math.PI / 180;
 
     return {
+
         x:
             centerX +
             Math.cos(radians) * radius,
@@ -673,6 +625,10 @@ function polarPoint(
     };
 }
 
+
+/* =========================================================
+   RAY / RECTANGLE INTERSECTION
+   ========================================================= */
 
 function rayToRectangle(
     centerX,
@@ -691,176 +647,191 @@ function rayToRectangle(
     const dy =
         Math.sin(radians);
 
-    const distances = [];
+    const candidates = [];
 
     if (dx > 0) {
-        distances.push(
-            (width - centerX) / dx
-        );
-    }
 
-    if (dx < 0) {
-        distances.push(
-            -centerX / dx
-        );
+        candidates.push({
+            t: (width - centerX) / dx,
+            side: "right"
+        });
+
+    } else if (dx < 0) {
+
+        candidates.push({
+            t: -centerX / dx,
+            side: "left"
+        });
     }
 
     if (dy > 0) {
-        distances.push(
-            (height - centerY) / dy
-        );
+
+        candidates.push({
+            t: (height - centerY) / dy,
+            side: "bottom"
+        });
+
+    } else if (dy < 0) {
+
+        candidates.push({
+            t: -centerY / dy,
+            side: "top"
+        });
     }
 
-    if (dy < 0) {
-        distances.push(
-            -centerY / dy
-        );
-    }
+    const valid =
+        candidates
+            .filter(candidate => candidate.t > 0)
+            .sort(
+                (a, b) =>
+                    a.t - b.t
+            );
 
-    const validDistances =
-        distances.filter(
-            value =>
-                Number.isFinite(value) &&
-                value >= 0
-        );
-
-    const distance =
-        Math.min(...validDistances);
+    const result =
+        valid[0];
 
     return {
+
         x:
             centerX +
-            dx * distance,
+            dx * result.t,
 
         y:
             centerY +
-            dy * distance
+            dy * result.t,
+
+        side:
+            result.side
     };
 }
 
 
+/* =========================================================
+   RECTANGLE PERIMETER
+   ========================================================= */
+
+function perimeterDistance(
+    point
+) {
+
+    const width =
+        DOM.game.clientWidth;
+
+    const height =
+        DOM.game.clientHeight;
+
+    const epsilon = 1;
+
+    if (Math.abs(point.y) <= epsilon) {
+        return point.x;
+    }
+
+    if (Math.abs(point.x - width) <= epsilon) {
+        return width + point.y;
+    }
+
+    if (Math.abs(point.y - height) <= epsilon) {
+        return width + height + (width - point.x);
+    }
+
+    return (
+        width +
+        height +
+        width +
+        (height - point.y)
+    );
+}
+
+
+/* =========================================================
+   OUTER PATH
+   ========================================================= */
+
 function getOuterPathPoints(
-    start,
-    end,
+    startPoint,
+    endPoint,
+    startAngle,
+    endAngle,
     width,
     height
 ) {
 
-    const EPSILON = 3;
+    const corners = [
+        {
+            x: 0,
+            y: 0,
+            angle: 225
+        },
+        {
+            x: width,
+            y: 0,
+            angle: 315
+        },
+        {
+            x: width,
+            y: height,
+            angle: 45
+        },
+        {
+            x: 0,
+            y: height,
+            angle: 135
+        }
+    ];
 
-    const startTop =
-        Math.abs(start.y) <= EPSILON;
+    const points = [
+        startPoint
+    ];
 
-    const startRight =
-        Math.abs(start.x - width) <= EPSILON;
+    const normalizedStart =
+        ((startAngle % 360) + 360) % 360;
 
-    const startBottom =
-        Math.abs(start.y - height) <= EPSILON;
+    const normalizedEnd =
+        ((endAngle % 360) + 360) % 360;
 
-    const startLeft =
-        Math.abs(start.x) <= EPSILON;
+    let currentAngle =
+        normalizedStart;
 
-    const endTop =
-        Math.abs(end.y) <= EPSILON;
+    for (const corner of corners) {
 
-    const endRight =
-        Math.abs(end.x - width) <= EPSILON;
+        let cornerAngle =
+            corner.angle;
 
-    const endBottom =
-        Math.abs(end.y - height) <= EPSILON;
+        if (cornerAngle <= currentAngle) {
+            cornerAngle += 360;
+        }
 
-    const endLeft =
-        Math.abs(end.x) <= EPSILON;
+        let targetAngle =
+            normalizedEnd;
 
+        if (targetAngle <= currentAngle) {
+            targetAngle += 360;
+        }
 
-    if (
-        startTop &&
-        endTop
-    ) {
-        return [end];
+        if (
+            cornerAngle > currentAngle &&
+            cornerAngle < targetAngle
+        ) {
+
+            points.push({
+                x: corner.x,
+                y: corner.y
+            });
+
+            currentAngle =
+                cornerAngle;
+        }
     }
 
-    if (
-        startRight &&
-        endRight
-    ) {
-        return [end];
-    }
+    points.push(endPoint);
 
-    if (
-        startBottom &&
-        endBottom
-    ) {
-        return [end];
-    }
-
-    if (
-        startLeft &&
-        endLeft
-    ) {
-        return [end];
-    }
-
-
-    if (
-        startTop &&
-        endRight
-    ) {
-        return [
-            {
-                x: width,
-                y: 0
-            },
-            end
-        ];
-    }
-
-
-    if (
-        startRight &&
-        endBottom
-    ) {
-        return [
-            {
-                x: width,
-                y: height
-            },
-            end
-        ];
-    }
-
-
-    if (
-        startBottom &&
-        endLeft
-    ) {
-        return [
-            {
-                x: 0,
-                y: height
-            },
-            end
-        ];
-    }
-
-
-    if (
-        startLeft &&
-        endTop
-    ) {
-        return [
-            {
-                x: 0,
-                y: 0
-            },
-            end
-        ];
-    }
-
-
-    return [end];
+    return points;
 }
 
+
+/* =========================================================
+   CREATE SECTOR
+   ========================================================= */
 
 function createSectorPath(
     centerX,
@@ -910,6 +881,8 @@ function createSectorPath(
         getOuterPathPoints(
             outerStart,
             outerEnd,
+            startAngle,
+            endAngle,
             width,
             height
         );
@@ -918,20 +891,23 @@ function createSectorPath(
         `M ${innerStart.x} ${innerStart.y}`;
 
     path +=
-        ` L ${outerStart.x} ${outerStart.y}`;
+        ` L ${outerPoints[0].x} ${outerPoints[0].y}`;
 
-    outerPoints.forEach(
-        point => {
-            path +=
-                ` L ${point.x} ${point.y}`;
-        }
-    );
+    for (
+        let i = 1;
+        i < outerPoints.length;
+        i++
+    ) {
+
+        path +=
+            ` L ${outerPoints[i].x} ${outerPoints[i].y}`;
+    }
 
     path +=
         ` L ${innerEnd.x} ${innerEnd.y}`;
 
     path +=
-        ` A ${radius} ${radius} 0 0 1 ${innerStart.x} ${innerStart.y}`;
+        ` A ${radius} ${radius} 0 0 0 ${innerStart.x} ${innerStart.y}`;
 
     path +=
         " Z";
@@ -940,13 +916,13 @@ function createSectorPath(
 }
 
 
+/* =========================================================
+   BUILD RADIAL MENUS
+   ========================================================= */
+
 function buildRadialMenus() {
 
-    if (
-        !DOM.game ||
-        !DOM.map ||
-        !DOM.radialMenus
-    ) {
+    if (!DOM.game || !DOM.map) {
         return;
     }
 
@@ -961,6 +937,13 @@ function buildRadialMenus() {
 
     const height =
         gameRect.height;
+
+    if (
+        width <= 0 ||
+        height <= 0
+    ) {
+        return;
+    }
 
     const centerX =
         width / 2;
@@ -989,105 +972,93 @@ function buildRadialMenus() {
         height
     );
 
+    MENU_ORDER.forEach(
+        menuName => {
 
-    /*
-    8 secteurs de 45°.
-
-    Les angles sont centrés sur :
-
-    RIGHT        0°
-    BOTTOM       90°
-    LEFT         180°
-    TOP          270°
-
-    Les diagonales sont à 45°.
-    */
-
-    const sectors = [
-
-        {
-            name: "right",
-            start: -22.5,
-            end: 22.5
-        },
-
-        {
-            name: "bottom-right",
-            start: 22.5,
-            end: 67.5
-        },
-
-        {
-            name: "bottom",
-            start: 67.5,
-            end: 112.5
-        },
-
-        {
-            name: "bottom-left",
-            start: 112.5,
-            end: 157.5
-        },
-
-        {
-            name: "left",
-            start: 157.5,
-            end: 202.5
-        },
-
-        {
-            name: "top-left",
-            start: 202.5,
-            end: 247.5
-        },
-
-        {
-            name: "top",
-            start: 247.5,
-            end: 292.5
-        },
-
-        {
-            name: "top-right",
-            start: 292.5,
-            end: 337.5
-        }
-    ];
-
-
-    sectors.forEach(
-        sector => {
-
-            const path =
-                document.querySelector(
-                    `.menu-sector[data-menu="${sector.name}"]`
+            const sector =
+                DOM.radialMenus.querySelector(
+                    `.menu-sector[data-menu="${menuName}"]`
                 );
 
-            if (!path) {
+            if (!sector) {
                 return;
             }
 
-            const d =
+            const angles =
+                MENU_ANGLES[menuName];
+
+            sector.setAttribute(
+                "d",
                 createSectorPath(
                     centerX,
                     centerY,
                     radius,
-                    sector.start,
-                    sector.end,
+                    angles.start,
+                    angles.end,
                     width,
                     height
-                );
-
-            path.setAttribute(
-                "d",
-                d
+                )
             );
         }
     );
 }
 
 
-document.addEventListener(
-    "DOMContentLoaded",
+/* =========================================================
+   MENU ACTIVATION
+   ========================================================= */
+
+function activateMenu(menuName) {
+
+    document
+        .querySelectorAll(".radial-content")
+        .forEach(
+            element => {
+                element.classList.remove("active");
+            }
+        );
+
+    const content =
+        document.querySelector(
+            `.radial-content[data-menu="${menuName}"]`
+        );
+
+    if (content) {
+        content.classList.add("active");
+    }
+}
+
+
+/* =========================================================
+   RESIZE
+   ========================================================= */
+
+function handleResize() {
+
+    requestAnimationFrame(() => {
+
+        buildRadialMenus();
+
+        applyZoom();
+    });
+}
+
+
+/* =========================================================
+   START
+   ========================================================= */
+
+if (
+    document.readyState === "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        initGame
+    );
+
+} else {
+
     initGame
-);
+        ();
+}

@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>90 G4ME_WiP | -3xØc3t- L4B</title>
+
+    <title>90_G4ME_WiP</title>
+
     <link rel="stylesheet" href="index.css">
 </head>
 
@@ -12,18 +14,17 @@
 <header id="header">
 
     <div class="header-brand">
-        <div class="brand-main">-3xØc3t- L4B</div>
-        <div class="brand-sub">DIGITAL L4B & EXPERIMENTATION</div>
+        <div class="header-title">-3xØc3t- L4B</div>
+        <div class="header-subtitle">DIGITAL L4B & EXPERIMENTATION</div>
     </div>
 
     <div class="header-game">
-        <div class="game-number">90</div>
-        <div class="game-name">G4ME_WiP</div>
+        <span id="player-value">P1</span>
     </div>
 
-    <div class="header-actions">
-        <button id="reset-game" class="header-button">RESET</button>
-        <button id="open-menu" class="header-button">MENU</button>
+    <div class="header-status">
+        <span class="status-dot"></span>
+        <span>ONLINE</span>
     </div>
 
 </header>
@@ -37,178 +38,243 @@
             id="radial-menus"
             xmlns="http://www.w3.org/2000/svg"
             preserveAspectRatio="none"
+            aria-hidden="true"
         >
-            <path class="menu-sector" data-menu="top-left"></path>
-            <path class="menu-sector" data-menu="top"></path>
-            <path class="menu-sector" data-menu="top-right"></path>
-            <path class="menu-sector" data-menu="right"></path>
-            <path class="menu-sector" data-menu="bottom-right"></path>
-            <path class="menu-sector" data-menu="bottom"></path>
-            <path class="menu-sector" data-menu="bottom-left"></path>
-            <path class="menu-sector" data-menu="left"></path>
+            <path class="menu-sector" data-menu="game"></path>
+            <path class="menu-sector" data-menu="cell"></path>
+            <path class="menu-sector" data-menu="action"></path>
+            <path class="menu-sector" data-menu="position"></path>
+            <path class="menu-sector" data-menu="system"></path>
+            <path class="menu-sector" data-menu="grid"></path>
+            <path class="menu-sector" data-menu="map"></path>
+            <path class="menu-sector" data-menu="player"></path>
         </svg>
 
 
-        <section class="radial-panel panel-top-left">
-            <div class="panel-label">PLAYER</div>
-            <div class="panel-value" id="player-value">P1</div>
-            <div class="panel-info" id="player-info">PLAYER 01</div>
+        <!-- GAME -->
+
+        <section
+            class="radial-content radial-game"
+            data-menu="game"
+        >
+            <div class="menu-title">GAME</div>
+
+            <div class="menu-line">
+                <span>TURN</span>
+                <strong id="turn-value">01</strong>
+            </div>
+
+            <div class="menu-line">
+                <span>ROUND</span>
+                <strong id="round-value">01</strong>
+            </div>
+
+            <div class="menu-line">
+                <span>PLAYERS</span>
+                <strong id="players-value">02</strong>
+            </div>
         </section>
 
 
-        <section class="radial-panel panel-top">
+        <!-- CELL -->
 
-            <div class="panel-label">GAME</div>
+        <section
+            class="radial-content radial-cell"
+            data-menu="cell"
+        >
+            <div class="menu-title">CELL</div>
 
-            <div class="panel-value" id="turn-value">
-                TURN 01
+            <div class="menu-line">
+                <span>ID</span>
+                <strong id="cell-id">---</strong>
             </div>
 
-            <div class="panel-info" id="round-value">
-                ROUND 01
+            <div class="menu-line">
+                <span>TYPE</span>
+                <strong id="cell-type">---</strong>
             </div>
 
+            <div class="menu-line">
+                <span>STATE</span>
+                <strong id="cell-state">READY</strong>
+            </div>
         </section>
 
 
-        <section class="radial-panel panel-top-right">
+        <!-- ACTION -->
 
-            <div class="panel-label">CELL</div>
-
-            <div class="panel-value" id="cell-value">
-                --
-            </div>
-
-            <div class="panel-info" id="cell-info">
-                NO SELECTION
-            </div>
-
-        </section>
-
-
-        <section class="radial-panel panel-left">
-
-            <div class="panel-label">MAP</div>
-
-            <div class="zoom-controls">
-
-                <button
-                    id="zoom-out"
-                    class="zoom-button"
-                    type="button"
-                >
-                    −
-                </button>
-
-                <div id="zoom-value">
-                    100%
-                </div>
-
-                <button
-                    id="zoom-in"
-                    class="zoom-button"
-                    type="button"
-                >
-                    +
-                </button>
-
-            </div>
-
-            <div class="panel-info">
-                MAP CONTROL
-            </div>
-
-        </section>
-
-
-        <section class="radial-panel panel-right">
-
-            <div class="panel-label">ACTION</div>
+        <section
+            class="radial-content radial-action"
+            data-menu="action"
+        >
+            <div class="menu-title">ACTION</div>
 
             <button
-                id="confirm-action"
-                class="panel-button"
+                id="action-confirm"
+                class="menu-button"
                 type="button"
-                disabled
             >
                 CONFIRM
             </button>
 
             <button
-                id="cancel-action"
-                class="panel-button"
+                id="action-cancel"
+                class="menu-button"
                 type="button"
-                disabled
             >
                 CANCEL
             </button>
 
+            <button
+                id="action-reset"
+                class="menu-button"
+                type="button"
+            >
+                RESET
+            </button>
         </section>
 
 
-        <section class="radial-panel panel-bottom-left">
+        <!-- POSITION -->
 
-            <div class="panel-label">GRID</div>
+        <section
+            class="radial-content radial-position"
+            data-menu="position"
+        >
+            <div class="menu-title">POSITION</div>
 
-            <div class="panel-value" id="grid-value">
-                7 × 7
+            <div class="menu-line">
+                <span>X</span>
+                <strong id="position-x">--</strong>
             </div>
 
-            <div class="panel-info" id="grid-info">
-                OCTAGON / SQUARE
+            <div class="menu-line">
+                <span>Y</span>
+                <strong id="position-y">--</strong>
             </div>
 
+            <div class="menu-line">
+                <span>PLAYER</span>
+                <strong id="position-player">P1</strong>
+            </div>
         </section>
 
 
-        <section class="radial-panel panel-bottom">
+        <!-- SYSTEM -->
 
-            <div class="panel-label">SYSTEM</div>
+        <section
+            class="radial-content radial-system"
+            data-menu="system"
+        >
+            <div class="menu-title">SYSTEM</div>
 
-            <div class="panel-value" id="system-status">
-                READY
+            <div class="menu-line">
+                <span>STATUS</span>
+                <strong id="system-status">READY</strong>
             </div>
 
-            <div class="panel-info" id="system-message">
-                SYSTEM READY
+            <div class="menu-line">
+                <span>VERSION</span>
+                <strong>1.0</strong>
             </div>
 
+            <div class="menu-line">
+                <span>MODE</span>
+                <strong>GAME</strong>
+            </div>
         </section>
 
 
-        <section class="radial-panel panel-bottom-right">
+        <!-- GRID -->
 
-            <div class="panel-label">POSITION</div>
+        <section
+            class="radial-content radial-grid"
+            data-menu="grid"
+        >
+            <div class="menu-title">GRID</div>
 
-            <div class="panel-value" id="position-value">
-                --
+            <div class="menu-line">
+                <span>OCTAGON</span>
+                <strong id="grid-value">7 × 7</strong>
             </div>
 
-            <div class="panel-info" id="position-info">
-                NO POSITION
+            <div class="menu-line">
+                <span>SQUARE</span>
+                <strong>8 × 8</strong>
             </div>
 
+            <div class="menu-line">
+                <span>MODE</span>
+                <strong>HYBRID</strong>
+            </div>
         </section>
 
-    </div>
+
+        <!-- MAP -->
+
+        <section
+            class="radial-content radial-map"
+            data-menu="map"
+        >
+            <div class="menu-title">MAP</div>
+
+            <button
+                id="zoom-out"
+                class="menu-button"
+                type="button"
+            >
+                ZOOM -
+            </button>
+
+            <div class="zoom-value">
+                <span id="zoom-value">100</span>
+                <small>%</small>
+            </div>
+
+            <button
+                id="zoom-in"
+                class="menu-button"
+                type="button"
+            >
+                ZOOM +
+            </button>
+        </section>
 
 
-    <div id="map-container">
+        <!-- PLAYER -->
 
-        <div id="map">
+        <section
+            class="radial-content radial-player"
+            data-menu="player"
+        >
+            <div class="menu-title">PLAYER</div>
 
-            <div id="octagon-grid"></div>
+            <div class="player-number" id="player-number">
+                P1
+            </div>
 
-            <div id="square-grid"></div>
+            <div class="menu-line">
+                <span>STATUS</span>
+                <strong>ACTIVE</strong>
+            </div>
 
-            <div id="map-center">
+            <div class="player-indicator"></div>
+        </section>
 
-                <div class="center-title">
-                    90
-                </div>
 
-                <div class="center-subtitle">
-                    G4ME_WiP
+        <!-- MAP -->
+
+        <div id="map-container">
+
+            <div id="map">
+
+                <div id="octagon-grid"></div>
+
+                <div id="square-grid"></div>
+
+                <div id="map-center">
+                    <div class="map-center-title">MAP</div>
+                    <div class="map-center-subtitle">90_G4ME</div>
                 </div>
 
             </div>
@@ -217,24 +283,22 @@
 
     </div>
 
-
-    <div id="selection-indicator"></div>
-
 </main>
 
 
 <footer id="footer">
 
-    <div>
-        -3xØc3t- L4B
+    <div class="footer-left">
+        90_G4ME_WiP
     </div>
 
-    <div>
-        90 G4ME_WiP
+    <div class="footer-center">
+        DIGITAL GAME EXPERIMENT
     </div>
 
-    <div id="footer-status">
-        SYSTEM READY
+    <div class="footer-right">
+        <span class="status-dot"></span>
+        ONLINE
     </div>
 
 </footer>
