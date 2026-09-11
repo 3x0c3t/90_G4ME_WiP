@@ -1,9 +1,12 @@
-"use strict";
+/* =========================================================
+   90_G4ME_WiP
+   3xØc3t L4B
+   ========================================================= */
 
 
 /* =========================================================
    DOM
-========================================================= */
+   ========================================================= */
 
 const DOM = {
 
@@ -31,9 +34,6 @@ const DOM = {
     menuTitles:
         document.getElementById("menu-titles"),
 
-    menuContent:
-        document.getElementById("menu-content"),
-
     octagonGrid:
         document.getElementById("octagon-grid"),
 
@@ -46,129 +46,133 @@ const DOM = {
 
 
 /* =========================================================
-   STATE
-========================================================= */
+   GAME STATE
+   ========================================================= */
 
 const GAME_STATE = {
 
-    player: 1,
+    player:
+        1,
 
-    turn: 1,
+    turn:
+        1,
 
-    round: 1,
+    round:
+        1,
 
-    selectedCell: null,
+    selectedCell:
+        null,
 
-    selectedX: null,
+    selectedX:
+        null,
 
-    selectedY: null
+    selectedY:
+        null
 };
 
 
 /* =========================================================
    MENUS
-========================================================= */
+   ========================================================= */
 
 const MENUS = [
 
     {
-        id: "game",
-        title: "GAME",
-        center: -112.5,
-        content: [
-            "NEW GAME",
-            "LOAD GAME",
-            "SAVE GAME"
-        ]
+        id:
+            "game",
+
+        title:
+            "GAME",
+
+        center:
+            -112.5
     },
 
     {
-        id: "cell",
-        title: "CELL",
-        center: -67.5,
-        content: [
-            "SELECTED",
-            "TYPE",
-            "STATUS"
-        ]
+        id:
+            "cell",
+
+        title:
+            "CELL",
+
+        center:
+            -67.5
     },
 
     {
-        id: "action",
-        title: "ACTION",
-        center: -22.5,
-        content: [
-            "SELECT",
-            "MOVE",
-            "CONFIRM"
-        ]
+        id:
+            "action",
+
+        title:
+            "ACTION",
+
+        center:
+            -22.5
     },
 
     {
-        id: "position",
-        title: "POSITION",
-        center: 22.5,
-        content: [
-            "X --",
-            "Y --",
-            "ZONE --"
-        ]
+        id:
+            "position",
+
+        title:
+            "POSITION",
+
+        center:
+            22.5
     },
 
     {
-        id: "system",
-        title: "SYSTEM",
-        center: 67.5,
-        content: [
-            "STATUS",
-            "SETTINGS",
-            "DEBUG"
-        ]
+        id:
+            "system",
+
+        title:
+            "SYSTEM",
+
+        center:
+            67.5
     },
 
     {
-        id: "grid",
-        title: "GRID",
-        center: 112.5,
-        content: [
-            "7 × 7",
-            "OCTAGON",
-            "CELLS"
-        ]
+        id:
+            "grid",
+
+        title:
+            "GRID",
+
+        center:
+            112.5
     },
 
     {
-        id: "map",
-        title: "MAP",
-        center: 157.5,
-        content: [
-            "ZOOM 100%",
-            "CENTER",
-            "LAYERS"
-        ]
+        id:
+            "map",
+
+        title:
+            "MAP",
+
+        center:
+            157.5
     },
 
     {
-        id: "player",
-        title: "PLAYER",
-        center: 202.5,
-        content: [
-            "PLAYER 1",
-            "TURN",
-            "ROUND"
-        ]
+        id:
+            "player",
+
+        title:
+            "PLAYER",
+
+        center:
+            202.5
     }
 
 ];
 
 
 /* =========================================================
-   SVG
-========================================================= */
+   SVG ELEMENT
+   ========================================================= */
 
-function svgElement(
-    name
-) {
+function svgElement(name) {
 
     return document.createElementNS(
         "http://www.w3.org/2000/svg",
@@ -178,8 +182,8 @@ function svgElement(
 
 
 /* =========================================================
-   POLAR
-========================================================= */
+   POLAR POINT
+   ========================================================= */
 
 function polarPoint(
     cx,
@@ -193,25 +197,25 @@ function polarPoint(
         Math.PI /
         180;
 
-
     return {
 
         x:
             cx +
-            Math.cos(radians) *
-            radius,
+            radius *
+            Math.cos(radians),
 
         y:
             cy +
-            Math.sin(radians) *
-            radius
+            radius *
+            Math.sin(radians)
+
     };
 }
 
 
 /* =========================================================
-   RECTANGLE RAY
-========================================================= */
+   RAY TO RECTANGLE
+   ========================================================= */
 
 function rayToRectangle(
     cx,
@@ -226,76 +230,56 @@ function rayToRectangle(
         Math.PI /
         180;
 
-
     const dx =
         Math.cos(radians);
-
 
     const dy =
         Math.sin(radians);
 
-
-    const distances = [];
+    const candidates = [];
 
 
     if (dx > 0) {
 
-        distances.push(
-            (width - cx) /
-            dx
+        candidates.push(
+            (width - cx) / dx
         );
-    }
 
+    } else if (dx < 0) {
 
-    if (dx < 0) {
-
-        distances.push(
-            -cx /
-            dx
+        candidates.push(
+            -cx / dx
         );
+
     }
 
 
     if (dy > 0) {
 
-        distances.push(
-            (height - cy) /
-            dy
+        candidates.push(
+            (height - cy) / dy
         );
+
+    } else if (dy < 0) {
+
+        candidates.push(
+            -cy / dy
+        );
+
     }
 
 
-    if (dy < 0) {
-
-        distances.push(
-            -cy /
-            dy
-        );
-    }
-
-
-    const valid =
-        distances.filter(
+    const positive =
+        candidates.filter(
             value =>
                 Number.isFinite(value) &&
                 value > 0
         );
 
 
-    if (
-        !valid.length
-    ) {
-
-        return {
-            x: cx,
-            y: cy
-        };
-    }
-
-
     const distance =
         Math.min(
-            ...valid
+            ...positive
         );
 
 
@@ -310,13 +294,14 @@ function rayToRectangle(
             cy +
             dy *
             distance
+
     };
 }
 
 
 /* =========================================================
-   ARC
-========================================================= */
+   ARC PATH
+   ========================================================= */
 
 function arcPath(
     cx,
@@ -335,7 +320,6 @@ function arcPath(
             startAngle
         );
 
-
     const end =
         polarPoint(
             cx,
@@ -343,6 +327,29 @@ function arcPath(
             radius,
             endAngle
         );
+
+
+    let delta =
+        Math.abs(
+            endAngle -
+            startAngle
+        );
+
+
+    delta %= 360;
+
+
+    if (delta === 0) {
+
+        delta =
+            360;
+    }
+
+
+    const largeArc =
+        delta > 180
+            ? 1
+            : 0;
 
 
     return [
@@ -354,9 +361,8 @@ function arcPath(
         "A",
         radius,
         radius,
-
         0,
-        0,
+        largeArc,
         sweep,
 
         end.x,
@@ -367,8 +373,31 @@ function arcPath(
 
 
 /* =========================================================
-   TITLE PATH
-========================================================= */
+   RING WIDTH
+   ========================================================= */
+
+function getRingWidth() {
+
+    const areaRect =
+        DOM.gameArea.getBoundingClientRect();
+
+
+    const mapSize =
+        Math.min(
+            areaRect.width,
+            areaRect.height
+        ) *
+        0.52;
+
+
+    return mapSize * 0.17;
+}
+
+
+/* =========================================================
+   TITLE ARC
+   NE PAS MODIFIER LA GÉOMÉTRIE
+   ========================================================= */
 
 function createTitle(
     menu,
@@ -377,35 +406,33 @@ function createTitle(
     radius
 ) {
 
-    const pathId =
-        `title-path-${menu.id}`;
+    const ringWidth =
+        getRingWidth();
 
-
-    /*
-        Le titre est centré dans
-        l'anneau.
-    */
 
     const titleRadius =
         radius +
+        ringWidth * 0.52;
+
+
+    const arcSize =
+        30;
+
+
+    const halfArc =
+        arcSize / 2;
+
+
+    const center =
         (
-            getRingWidth()
-            / 2
-        );
+            menu.center % 360 +
+            360
+        ) % 360;
 
 
-    /*
-        Partie haute :
-        sens normal.
-
-        Partie basse :
-        sens inversé pour garder
-        le texte lisible.
-    */
-
-    const lowerHalf =
-        menu.center > 0 &&
-        menu.center < 180;
+    const upperHalf =
+        center >= 180 ||
+        center <= 0;
 
 
     let startAngle;
@@ -413,29 +440,31 @@ function createTitle(
     let sweep;
 
 
-    if (lowerHalf) {
+    if (upperHalf) {
 
         startAngle =
-            menu.center + 15;
-
+            menu.center -
+            halfArc;
 
         endAngle =
-            menu.center - 15;
+            menu.center +
+            halfArc;
 
-
-        sweep = 0;
+        sweep =
+            1;
 
     } else {
 
         startAngle =
-            menu.center - 15;
-
+            menu.center +
+            halfArc;
 
         endAngle =
-            menu.center + 15;
+            menu.center -
+            halfArc;
 
-
-        sweep = 1;
+        sweep =
+            0;
     }
 
 
@@ -443,6 +472,10 @@ function createTitle(
         svgElement(
             "path"
         );
+
+
+    const pathId =
+        `title-path-${menu.id}`;
 
 
     path.setAttribute(
@@ -497,13 +530,6 @@ function createTitle(
     );
 
 
-    textPath.setAttributeNS(
-        "http://www.w3.org/1999/xlink",
-        "xlink:href",
-        `#${pathId}`
-    );
-
-
     textPath.setAttribute(
         "startOffset",
         "50%"
@@ -532,345 +558,229 @@ function createTitle(
 
 
 /* =========================================================
-   RING WIDTH
-========================================================= */
+   CREATE RING
+   ========================================================= */
 
-function getRingWidth() {
+function createRing(
+    cx,
+    cy,
+    mapRadius,
+    outerRadius
+) {
 
-    const gameRect =
-        DOM.gameArea.getBoundingClientRect();
-
-
-    const width =
-        gameRect.width;
-
-
-    const height =
-        gameRect.height;
-
-
-    const mapSize =
-        Math.min(
-            width,
-            height
-        ) * 0.52;
+    const path =
+        svgElement(
+            "path"
+        );
 
 
-    return (
-        mapSize *
-        0.17
+    const outer = [
+
+        `M ${cx - outerRadius} ${cy}`,
+
+        `A ${outerRadius} ${outerRadius} 0 1 1 ${cx + outerRadius} ${cy}`,
+
+        `A ${outerRadius} ${outerRadius} 0 1 1 ${cx - outerRadius} ${cy}`,
+
+        "Z"
+
+    ].join(" ");
+
+
+    const inner = [
+
+        `M ${cx - mapRadius} ${cy}`,
+
+        `A ${mapRadius} ${mapRadius} 0 1 0 ${cx + mapRadius} ${cy}`,
+
+        `A ${mapRadius} ${mapRadius} 0 1 0 ${cx - mapRadius} ${cy}`,
+
+        "Z"
+
+    ].join(" ");
+
+
+    path.setAttribute(
+        "d",
+        `${outer} ${inner}`
+    );
+
+
+    path.setAttribute(
+        "fill-rule",
+        "evenodd"
+    );
+
+
+    path.classList.add(
+        "menu-ring"
+    );
+
+
+    DOM.menuRing.appendChild(
+        path
     );
 }
 
 
 /* =========================================================
-   CONTENT
-========================================================= */
+   GUIDE CIRCLES
+   ========================================================= */
 
-function createMenuContent(
-    menu,
+function createGuides(
     cx,
     cy,
-    innerRadius,
-    outerRadius,
+    mapRadius,
+    outerRadius
+) {
+
+    const inner =
+        svgElement(
+            "circle"
+        );
+
+
+    inner.setAttribute(
+        "cx",
+        cx
+    );
+
+    inner.setAttribute(
+        "cy",
+        cy
+    );
+
+    inner.setAttribute(
+        "r",
+        mapRadius
+    );
+
+
+    inner.classList.add(
+        "map-ring-guide"
+    );
+
+
+    DOM.menuGuides.appendChild(
+        inner
+    );
+
+
+    const outer =
+        svgElement(
+            "circle"
+        );
+
+
+    outer.setAttribute(
+        "cx",
+        cx
+    );
+
+    outer.setAttribute(
+        "cy",
+        cy
+    );
+
+    outer.setAttribute(
+        "r",
+        outerRadius
+    );
+
+
+    outer.classList.add(
+        "menu-outer-guide"
+    );
+
+
+    DOM.menuGuides.appendChild(
+        outer
+    );
+}
+
+
+/* =========================================================
+   SEPARATORS
+   ========================================================= */
+
+function createSeparators(
+    cx,
+    cy,
+    mapRadius,
     width,
     height
 ) {
 
-    const middleRadius =
-        outerRadius +
-        (
-            Math.min(
-                width,
-                height
-            ) *
-            0.13
-        );
+    MENUS.forEach(
+        menu => {
 
-
-    const point =
-        polarPoint(
-            cx,
-            cy,
-            middleRadius,
-            menu.center
-        );
-
-
-    const content =
-        document.createElement(
-            "div"
-        );
-
-
-    content.className =
-        "menu-content";
-
-
-    content.dataset.menu =
-        menu.id;
-
-
-    const title =
-        document.createElement(
-            "div"
-        );
-
-
-    title.className =
-        "menu-content-title";
-
-
-    title.textContent =
-        menu.title;
-
-
-    content.appendChild(
-        title
-    );
-
-
-    menu.content.forEach(
-        line => {
-
-            const element =
-                document.createElement(
-                    "div"
+            const start =
+                polarPoint(
+                    cx,
+                    cy,
+                    mapRadius,
+                    menu.center - 22.5
                 );
 
 
-            element.className =
-                "menu-content-line";
+            const end =
+                rayToRectangle(
+                    cx,
+                    cy,
+                    menu.center - 22.5,
+                    width,
+                    height
+                );
 
 
-            element.textContent =
-                line;
+            const line =
+                svgElement(
+                    "line"
+                );
 
 
-            content.appendChild(
-                element
+            line.setAttribute(
+                "x1",
+                start.x
+            );
+
+            line.setAttribute(
+                "y1",
+                start.y
+            );
+
+            line.setAttribute(
+                "x2",
+                end.x
+            );
+
+            line.setAttribute(
+                "y2",
+                end.y
+            );
+
+
+            line.classList.add(
+                "menu-separator"
+            );
+
+
+            DOM.menuGuides.appendChild(
+                line
             );
         }
     );
-
-
-    DOM.menuContent.appendChild(
-        content
-    );
-
-
-    /*
-        Position initiale.
-    */
-
-    const rect =
-        content.getBoundingClientRect();
-
-
-    let x =
-        point.x -
-        rect.width / 2;
-
-
-    let y =
-        point.y -
-        rect.height / 2;
-
-
-    /*
-        Ajustement selon le secteur.
-
-        Le contenu reste dans sa zone
-        extérieure sans se retrouver
-        complètement hors écran.
-    */
-
-    if (
-        menu.center ===
-        -112.5
-    ) {
-
-        x =
-            Math.max(
-                20,
-                x
-            );
-
-        y =
-            Math.max(
-                20,
-                y
-            );
-    }
-
-
-    if (
-        menu.center ===
-        -67.5
-    ) {
-
-        x =
-            Math.max(
-                20,
-                x
-            );
-
-        y =
-            Math.max(
-                20,
-                y
-            );
-    }
-
-
-    if (
-        menu.center ===
-        -22.5
-    ) {
-
-        x =
-            Math.min(
-                width -
-                rect.width -
-                20,
-                x
-            );
-    }
-
-
-    if (
-        menu.center ===
-        22.5
-    ) {
-
-        x =
-            Math.min(
-                width -
-                rect.width -
-                20,
-                x
-            );
-    }
-
-
-    if (
-        menu.center ===
-        67.5
-    ) {
-
-        x =
-            Math.min(
-                width -
-                rect.width -
-                20,
-                x
-            );
-
-        y =
-            Math.min(
-                height -
-                rect.height -
-                20,
-                y
-            );
-    }
-
-
-    if (
-        menu.center ===
-        112.5
-    ) {
-
-        x =
-            Math.min(
-                width -
-                rect.width -
-                20,
-                x
-            );
-
-        y =
-            Math.min(
-                height -
-                rect.height -
-                20,
-                y
-            );
-    }
-
-
-    if (
-        menu.center ===
-        157.5
-    ) {
-
-        x =
-            Math.max(
-                20,
-                x
-            );
-
-        y =
-            Math.min(
-                height -
-                rect.height -
-                20,
-                y
-            );
-    }
-
-
-    if (
-        menu.center ===
-        202.5
-    ) {
-
-        x =
-            Math.max(
-                20,
-                x
-            );
-
-        y =
-            Math.min(
-                height -
-                rect.height -
-                20,
-                y
-            );
-    }
-
-
-    content.style.left =
-        `${x}px`;
-
-
-    content.style.top =
-        `${y}px`;
 }
 
 
 /* =========================================================
-   BUILD RADIAL
-========================================================= */
+   RADIAL INTERFACE
+   ========================================================= */
 
 function buildRadialInterface() {
 
-    if (
-        !DOM.gameArea ||
-        !DOM.map
-    ) {
-
-        return;
-    }
-
-
     const areaRect =
         DOM.gameArea.getBoundingClientRect();
-
-
-    const mapRect =
-        DOM.map.getBoundingClientRect();
 
 
     const width =
@@ -881,44 +791,24 @@ function buildRadialInterface() {
         areaRect.height;
 
 
-    if (
-        width <= 0 ||
-        height <= 0
-    ) {
-
-        return;
-    }
-
-
-    /*
-        Centre exact.
-    */
-
     const cx =
-        width /
-        2;
+        width / 2;
 
 
     const cy =
-        height /
-        2;
+        height / 2;
 
 
-    /*
-        Rayon MAP.
-    */
+    const mapRect =
+        DOM.map.getBoundingClientRect();
+
 
     const mapRadius =
         Math.min(
             mapRect.width,
             mapRect.height
-        ) /
-        2;
+        ) / 2;
 
-
-    /*
-        Largeur de l'anneau.
-    */
 
     const ringWidth =
         getRingWidth();
@@ -929,19 +819,11 @@ function buildRadialInterface() {
         ringWidth;
 
 
-    /*
-        SVG.
-    */
-
     DOM.radial.setAttribute(
         "viewBox",
         `0 0 ${width} ${height}`
     );
 
-
-    /*
-        Nettoyage.
-    */
 
     DOM.menuRing.innerHTML =
         "";
@@ -955,243 +837,31 @@ function buildRadialInterface() {
     DOM.menuTitles.innerHTML =
         "";
 
-    DOM.menuContent.innerHTML =
-        "";
 
-
-    /*
-        =====================================================
-        ANNEAU
-        =====================================================
-    */
-
-    const ring =
-        svgElement(
-            "path"
-        );
-
-
-    const outerStart =
-        polarPoint(
-            cx,
-            cy,
-            outerRadius,
-            -180
-        );
-
-
-    const innerStart =
-        polarPoint(
-            cx,
-            cy,
-            mapRadius,
-            -180
-        );
-
-
-    ring.setAttribute(
-        "d",
-        [
-            "M",
-            outerStart.x,
-            outerStart.y,
-
-            "A",
-            outerRadius,
-            outerRadius,
-            0,
-            1,
-            1,
-            outerStart.x,
-            outerStart.y,
-
-            "M",
-            innerStart.x,
-            innerStart.y,
-
-            "A",
-            mapRadius,
-            mapRadius,
-            0,
-            1,
-            0,
-            innerStart.x,
-            innerStart.y
-        ].join(" ")
-    );
-
-
-    ring.setAttribute(
-        "fill-rule",
-        "evenodd"
-    );
-
-
-    ring.classList.add(
-        "menu-ring"
-    );
-
-
-    DOM.menuRing.appendChild(
-        ring
-    );
-
-
-    /*
-        Cercle intérieur.
-    */
-
-    const innerGuide =
-        svgElement(
-            "circle"
-        );
-
-
-    innerGuide.classList.add(
-        "map-ring-guide"
-    );
-
-
-    innerGuide.setAttribute(
-        "cx",
-        cx
-    );
-
-
-    innerGuide.setAttribute(
-        "cy",
-        cy
-    );
-
-
-    innerGuide.setAttribute(
-        "r",
-        mapRadius
-    );
-
-
-    DOM.menuGuides.appendChild(
-        innerGuide
-    );
-
-
-    /*
-        Cercle extérieur.
-    */
-
-    const outerGuide =
-        svgElement(
-            "circle"
-        );
-
-
-    outerGuide.classList.add(
-        "menu-outer-guide"
-    );
-
-
-    outerGuide.setAttribute(
-        "cx",
-        cx
-    );
-
-
-    outerGuide.setAttribute(
-        "cy",
-        cy
-    );
-
-
-    outerGuide.setAttribute(
-        "r",
+    createRing(
+        cx,
+        cy,
+        mapRadius,
         outerRadius
     );
 
 
-    DOM.menuGuides.appendChild(
-        outerGuide
+    createGuides(
+        cx,
+        cy,
+        mapRadius,
+        outerRadius
     );
 
 
-    /*
-        =====================================================
-        8 SÉPARATEURS
-        =====================================================
-    */
-
-    MENUS.forEach(
-        menu => {
-
-            const angle =
-                menu.center;
-
-
-            const inner =
-                polarPoint(
-                    cx,
-                    cy,
-                    mapRadius,
-                    angle
-                );
-
-
-            const outer =
-                rayToRectangle(
-                    cx,
-                    cy,
-                    angle,
-                    width,
-                    height
-                );
-
-
-            const line =
-                svgElement(
-                    "line"
-                );
-
-
-            line.classList.add(
-                "menu-separator"
-            );
-
-
-            line.setAttribute(
-                "x1",
-                inner.x
-            );
-
-
-            line.setAttribute(
-                "y1",
-                inner.y
-            );
-
-
-            line.setAttribute(
-                "x2",
-                outer.x
-            );
-
-
-            line.setAttribute(
-                "y2",
-                outer.y
-            );
-
-
-            DOM.menuGuides.appendChild(
-                line
-            );
-        }
+    createSeparators(
+        cx,
+        cy,
+        mapRadius,
+        width,
+        height
     );
 
-
-    /*
-        =====================================================
-        TITRES
-        =====================================================
-    */
 
     MENUS.forEach(
         menu => {
@@ -1202,28 +872,7 @@ function buildRadialInterface() {
                 cy,
                 mapRadius
             );
-        }
-    );
 
-
-    /*
-        =====================================================
-        CONTENU
-        =====================================================
-    */
-
-    MENUS.forEach(
-        menu => {
-
-            createMenuContent(
-                menu,
-                cx,
-                cy,
-                mapRadius,
-                outerRadius,
-                width,
-                height
-            );
         }
     );
 }
@@ -1231,61 +880,28 @@ function buildRadialInterface() {
 
 /* =========================================================
    OCTAGON GRID
-========================================================= */
+   ========================================================= */
 
 function generateOctagonGrid() {
-
-    if (
-        !DOM.octagonGrid
-    ) {
-
-        return;
-    }
-
 
     DOM.octagonGrid.innerHTML =
         "";
 
 
-    const rows =
-        7;
-
-
-    const columns =
+    const size =
         7;
 
 
     for (
-        let row = 0;
-        row < rows;
-        row++
+        let y = 0;
+        y < size;
+        y++
     ) {
 
-        const rowElement =
-            document.createElement(
-                "div"
-            );
-
-
-        rowElement.className =
-            "octagon-row";
-
-
-        if (
-            row % 2 ===
-            1
-        ) {
-
-            rowElement.classList.add(
-                "offset"
-            );
-        }
-
-
         for (
-            let column = 0;
-            column < columns;
-            column++
+            let x = 0;
+            x < size;
+            x++
         ) {
 
             const cell =
@@ -1298,51 +914,50 @@ function generateOctagonGrid() {
                 "octagon-cell";
 
 
+            cell.dataset.x =
+                x + 1;
+
+
+            cell.dataset.y =
+                y + 1;
+
+
             cell.dataset.id =
-                `O${row + 1}-${column + 1}`;
+                `${x + 1}-${y + 1}`;
 
 
-            rowElement.appendChild(
+            DOM.octagonGrid.appendChild(
                 cell
             );
         }
-
-
-        DOM.octagonGrid.appendChild(
-            rowElement
-        );
     }
 }
 
 
 /* =========================================================
    SQUARE GRID
-========================================================= */
+   ========================================================= */
 
 function generateSquareGrid() {
-
-    if (
-        !DOM.squareGrid
-    ) {
-
-        return;
-    }
-
 
     DOM.squareGrid.innerHTML =
         "";
 
 
+    const size =
+        8;
+
+
     for (
-        let row = 0;
-        row < 8;
-        row++
+        let y = 0;
+        y < size;
+        y++
     ) {
 
         for (
-            let column = 0;
-            column < 8;
-            column++
+            let x = 0;
+            x < size;
+            x++
         ) {
 
             const cell =
@@ -1364,179 +979,61 @@ function generateSquareGrid() {
 
 
 /* =========================================================
-   CELL SELECTION
-========================================================= */
+   GRID EVENTS
+   ========================================================= */
 
 function setupGridEvents() {
 
-    if (
-        !DOM.octagonGrid
-    ) {
-
-        return;
-    }
+    const cells =
+        DOM.octagonGrid.querySelectorAll(
+            ".octagon-cell"
+        );
 
 
-    DOM.octagonGrid.addEventListener(
-        "click",
-        event => {
+    cells.forEach(
+        cell => {
 
-            const cell =
-                event.target.closest(
-                    ".octagon-cell"
-                );
+            cell.addEventListener(
+                "click",
+                () => {
 
+                    cells.forEach(
+                        other => {
 
-            if (
-                !cell
-            ) {
+                            other.classList.remove(
+                                "selected"
+                            );
 
-                return;
-            }
-
-
-            document
-                .querySelectorAll(
-                    ".octagon-cell.selected"
-                )
-                .forEach(
-                    selected => {
-
-                        selected.classList.remove(
-                            "selected"
-                        );
-                    }
-                );
+                        }
+                    );
 
 
-            cell.classList.add(
-                "selected"
+                    cell.classList.add(
+                        "selected"
+                    );
+
+
+                    GAME_STATE.selectedCell =
+                        cell.dataset.id;
+
+
+                    GAME_STATE.selectedX =
+                        cell.dataset.x;
+
+
+                    GAME_STATE.selectedY =
+                        cell.dataset.y;
+
+                }
             );
-
-
-            GAME_STATE.selectedCell =
-                cell.dataset.id;
-
-
-            updateMenuContent();
         }
     );
 }
 
 
 /* =========================================================
-   UPDATE CONTENT
-========================================================= */
-
-function updateMenuContent() {
-
-    document
-        .querySelectorAll(
-            ".menu-content"
-        )
-        .forEach(
-            content => {
-
-                const menu =
-                    content.dataset.menu;
-
-
-                const lines =
-                    content.querySelectorAll(
-                        ".menu-content-line"
-                    );
-
-
-                if (
-                    menu ===
-                    "cell"
-                ) {
-
-                    lines[0].textContent =
-                        GAME_STATE.selectedCell ||
-                        "NONE";
-
-                    lines[1].textContent =
-                        GAME_STATE.selectedCell
-                            ? "OCTAGON"
-                            : "---";
-
-                    lines[2].textContent =
-                        GAME_STATE.selectedCell
-                            ? "SELECTED"
-                            : "EMPTY";
-                }
-
-
-                if (
-                    menu ===
-                    "position"
-                ) {
-
-                    if (
-                        GAME_STATE.selectedCell
-                    ) {
-
-                        const parts =
-                            GAME_STATE
-                                .selectedCell
-                                .replace(
-                                    "O",
-                                    ""
-                                )
-                                .split(
-                                    "-"
-                                );
-
-
-                        lines[0].textContent =
-                            `X ${parts[1]}`;
-
-
-                        lines[1].textContent =
-                            `Y ${parts[0]}`;
-
-
-                        lines[2].textContent =
-                            "MAP";
-                    }
-                }
-
-
-                if (
-                    menu ===
-                    "player"
-                ) {
-
-                    lines[0].textContent =
-                        `PLAYER ${GAME_STATE.player}`;
-
-
-                    lines[1].textContent =
-                        `TURN ${String(
-                            GAME_STATE.turn
-                        ).padStart(
-                            2,
-                            "0"
-                        )}`;
-
-
-                    lines[2].textContent =
-                        `ROUND ${String(
-                            GAME_STATE.round
-                        ).padStart(
-                            2,
-                            "0"
-                        )}`;
-                }
-            }
-        );
-}
-
-
-/* =========================================================
    RESIZE
-========================================================= */
+   ========================================================= */
 
 let resizeTimer =
     null;
@@ -1560,13 +1057,14 @@ window.addEventListener(
                 },
                 50
             );
+
     }
 );
 
 
 /* =========================================================
    INIT
-========================================================= */
+   ========================================================= */
 
 function initGame() {
 
@@ -1578,21 +1076,10 @@ function initGame() {
 
     buildRadialInterface();
 
-    updateMenuContent();
 }
 
 
-if (
-    document.readyState ===
-    "loading"
-) {
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        initGame
-    );
-
-} else {
-
-    initGame();
-}
+document.addEventListener(
+    "DOMContentLoaded",
+    initGame
+);

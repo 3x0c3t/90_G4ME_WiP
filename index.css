@@ -1,6 +1,12 @@
 /* =========================================================
-   ROOT
-========================================================= */
+   90_G4ME_WiP
+   3xØc3t L4B
+   ========================================================= */
+
+
+/* =========================================================
+   VARIABLES
+   ========================================================= */
 
 :root {
 
@@ -46,7 +52,7 @@
 
 /* =========================================================
    RESET
-========================================================= */
+   ========================================================= */
 
 * {
 
@@ -72,28 +78,21 @@ body {
 
     overflow:
         hidden;
-}
-
-
-body {
 
     background:
         var(--bg);
 
     color:
-        var(--text);
+        var(--white);
 
     font-family:
         var(--font);
-
-    font-size:
-        12px;
 }
 
 
 /* =========================================================
    GAME
-========================================================= */
+   ========================================================= */
 
 #game {
 
@@ -106,60 +105,28 @@ body {
     height:
         100vh;
 
+    min-width:
+        320px;
+
+    min-height:
+        480px;
+
     overflow:
         hidden;
 
     background:
-
         radial-gradient(
             circle at center,
-            rgba(0, 234, 255, 0.025),
-            transparent 48%
+            rgba(0, 234, 255, 0.035),
+            transparent 45%
         ),
-
-        #02070c;
-}
-
-
-/* =========================================================
-   BACKGROUND
-========================================================= */
-
-#game::before {
-
-    content:
-        "";
-
-    position:
-        absolute;
-
-    inset:
-        0;
-
-    pointer-events:
-        none;
-
-    background-image:
-
-        linear-gradient(
-            rgba(0, 234, 255, 0.018) 1px,
-            transparent 1px
-        ),
-
-        linear-gradient(
-            90deg,
-            rgba(0, 234, 255, 0.018) 1px,
-            transparent 1px
-        );
-
-    background-size:
-        32px 32px;
+        var(--bg);
 }
 
 
 /* =========================================================
    HEADER
-========================================================= */
+   ========================================================= */
 
 #header {
 
@@ -172,8 +139,8 @@ body {
     left:
         0;
 
-    right:
-        0;
+    width:
+        100%;
 
     height:
         64px;
@@ -194,14 +161,16 @@ body {
         0 22px;
 
     border-bottom:
-        1px solid
-        rgba(0, 234, 255, 0.20);
+        1px solid var(--cyan-faint);
 
     background:
         rgba(2, 7, 12, 0.94);
 
-    pointer-events:
-        none;
+    font-size:
+        11px;
+
+    letter-spacing:
+        1px;
 }
 
 
@@ -214,7 +183,7 @@ body {
         column;
 
     gap:
-        3px;
+        4px;
 }
 
 
@@ -230,20 +199,20 @@ body {
         700;
 
     letter-spacing:
-        3px;
+        2px;
 }
 
 
 .header-subtitle {
 
     color:
-        #58717b;
+        var(--text);
 
     font-size:
         9px;
 
     letter-spacing:
-        2px;
+        1.5px;
 }
 
 
@@ -266,39 +235,29 @@ body {
 
     gap:
         12px;
-
-    color:
-        var(--white);
-
-    letter-spacing:
-        2px;
 }
 
 
 .project-name {
 
     color:
-        var(--cyan);
+        var(--white);
 
     font-weight:
         700;
+
+    letter-spacing:
+        2px;
 }
 
 
 .project-version {
 
-    padding:
-        3px 7px;
-
-    border:
-        1px solid
-        rgba(0, 234, 255, 0.30);
-
     color:
         var(--green);
 
     font-size:
-        9px;
+        10px;
 }
 
 
@@ -311,23 +270,17 @@ body {
         center;
 
     gap:
-        9px;
+        10px;
 
     color:
-        #58717b;
-
-    font-size:
-        9px;
-
-    letter-spacing:
-        2px;
+        var(--text);
 }
 
 
 .header-player strong {
 
     color:
-        var(--green);
+        var(--cyan);
 
     font-size:
         13px;
@@ -336,7 +289,7 @@ body {
 
 /* =========================================================
    GAME AREA
-========================================================= */
+   ========================================================= */
 
 #game-area {
 
@@ -362,14 +315,17 @@ body {
 
 /* =========================================================
    RADIAL SVG
-========================================================= */
+   ========================================================= */
 
 #radial-interface {
 
     position:
         absolute;
 
-    inset:
+    top:
+        0;
+
+    left:
         0;
 
     width:
@@ -390,16 +346,16 @@ body {
 
 
 /* =========================================================
-   MENU RING
-========================================================= */
+   ANNEAU
+   ========================================================= */
 
 .menu-ring {
 
     fill:
-        var(--ring);
+        rgba(50, 65, 79, 0.32);
 
     stroke:
-        rgba(0, 234, 255, 0.18);
+        var(--cyan-soft);
 
     stroke-width:
         1;
@@ -408,10 +364,6 @@ body {
         non-scaling-stroke;
 }
 
-
-/* =========================================================
-   INNER MAP GUIDE
-========================================================= */
 
 .map-ring-guide {
 
@@ -419,7 +371,7 @@ body {
         none;
 
     stroke:
-        rgba(0, 234, 255, 0.28);
+        var(--cyan-soft);
 
     stroke-width:
         1;
@@ -428,10 +380,6 @@ body {
         non-scaling-stroke;
 }
 
-
-/* =========================================================
-   OUTER RING GUIDE
-========================================================= */
 
 .menu-outer-guide {
 
@@ -439,7 +387,7 @@ body {
         none;
 
     stroke:
-        rgba(0, 234, 255, 0.18);
+        var(--cyan-faint);
 
     stroke-width:
         1;
@@ -450,34 +398,28 @@ body {
 
 
 /* =========================================================
-   RADIAL SEPARATORS
-========================================================= */
+   SÉPARATEURS
+   ========================================================= */
 
 .menu-separator {
+
+    fill:
+        none;
 
     stroke:
         var(--line);
 
     stroke-width:
-        2;
-
-    stroke-linecap:
-        round;
+        1;
 
     vector-effect:
         non-scaling-stroke;
-
-    filter:
-        drop-shadow(
-            0 0 3px
-            rgba(0, 234, 255, 0.22)
-        );
 }
 
 
 /* =========================================================
-   TITLE PATH
-========================================================= */
+   CHEMINS DES TITRES
+   ========================================================= */
 
 .menu-title-path {
 
@@ -486,17 +428,20 @@ body {
 
     stroke:
         none;
+
+    pointer-events:
+        none;
 }
 
 
 /* =========================================================
-   TITLE
-========================================================= */
+   TITRES
+   ========================================================= */
 
 .menu-title {
 
     fill:
-        #061017;
+        var(--cyan);
 
     font-family:
         var(--font);
@@ -508,7 +453,7 @@ body {
         700;
 
     letter-spacing:
-        1.5px;
+        2px;
 
     text-anchor:
         middle;
@@ -518,35 +463,35 @@ body {
 
     pointer-events:
         none;
+
+    filter:
+        drop-shadow(
+            0 0 4px
+            rgba(0, 234, 255, 0.35)
+        );
 }
 
 
 /* =========================================================
    MAP
-========================================================= */
+   ========================================================= */
 
 #map {
 
     position:
         absolute;
 
-    left:
-        50%;
-
     top:
         50%;
 
-    width:
-        min(
-            52vh,
-            52vw
-        );
+    left:
+        50%;
 
-    height:
-        min(
-            52vh,
-            52vw
-        );
+    width:
+        min(52vh, 52vw);
+
+    aspect-ratio:
+        1 / 1;
 
     transform:
         translate(
@@ -556,38 +501,44 @@ body {
 
     z-index:
         20;
-
-    pointer-events:
-        none;
 }
 
 
 #map-inner {
 
     position:
-        absolute;
+        relative;
 
-    inset:
-        0;
+    width:
+        100%;
 
-    border-radius:
-        50%;
+    height:
+        100%;
 
     overflow:
         hidden;
 
+    border-radius:
+        50%;
+
     background:
         var(--map);
 
+    border:
+        1px solid
+        rgba(0, 234, 255, 0.55);
+
     box-shadow:
-        0 0 35px
-        rgba(0, 0, 0, 0.30);
+        0 0 0 1px
+        rgba(0, 234, 255, 0.08),
+        0 0 30px
+        rgba(0, 234, 255, 0.08);
 }
 
 
 /* =========================================================
    MAP LABEL
-========================================================= */
+   ========================================================= */
 
 #map-label {
 
@@ -595,37 +546,189 @@ body {
         absolute;
 
     top:
-        50%;
+        14px;
 
     left:
         50%;
 
     transform:
-        translate(
-            -50%,
-            -50%
-        );
+        translateX(-50%);
 
     z-index:
-        20;
+        50;
 
     color:
-        #071017;
+        var(--cyan);
 
     font-size:
-        15px;
+        11px;
 
     font-weight:
         700;
 
     letter-spacing:
+        3px;
+
+    text-shadow:
+        0 0 6px
+        rgba(0, 234, 255, 0.45);
+}
+
+
+/* =========================================================
+   MAP GRID
+   ========================================================= */
+
+#map-grid {
+
+    position:
+        absolute;
+
+    top:
+        10%;
+
+    right:
+        10%;
+
+    bottom:
+        10%;
+
+    left:
+        10%;
+
+    overflow:
+        hidden;
+}
+
+
+/* =========================================================
+   OCTAGON GRID
+   ========================================================= */
+
+#octagon-grid {
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(7, 1fr);
+
+    grid-template-rows:
+        repeat(7, 1fr);
+
+    gap:
         2px;
+
+    opacity:
+        0.65;
+}
+
+
+.octagon-cell {
+
+    position:
+        relative;
+
+    min-width:
+        0;
+
+    min-height:
+        0;
+
+    cursor:
+        pointer;
+
+    background:
+        rgba(5, 15, 22, 0.18);
+
+    border:
+        1px solid
+        rgba(0, 234, 255, 0.28);
+
+    clip-path:
+        polygon(
+            22% 0%,
+            78% 0%,
+            100% 22%,
+            100% 78%,
+            78% 100%,
+            22% 100%,
+            0% 78%,
+            0% 22%
+        );
+
+    transition:
+        background 120ms ease,
+        border-color 120ms ease;
+}
+
+
+.octagon-cell:hover {
+
+    background:
+        rgba(0, 234, 255, 0.12);
+
+    border-color:
+        var(--cyan);
+}
+
+
+.octagon-cell.selected {
+
+    background:
+        rgba(0, 255, 153, 0.18);
+
+    border-color:
+        var(--green);
+}
+
+
+/* =========================================================
+   SQUARE GRID
+   ========================================================= */
+
+#square-grid {
+
+    position:
+        absolute;
+
+    inset:
+        7%;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(8, 1fr);
+
+    grid-template-rows:
+        repeat(8, 1fr);
+
+    pointer-events:
+        none;
+
+    opacity:
+        0.16;
+}
+
+
+.square-cell {
+
+    border:
+        1px solid
+        rgba(0, 234, 255, 0.5);
 }
 
 
 /* =========================================================
    MAP CENTER
-========================================================= */
+   ========================================================= */
 
 #map-center {
 
@@ -636,171 +739,31 @@ body {
         50%;
 
     bottom:
-        14%;
+        15px;
 
     transform:
-        translateX(
-            -50%
-        );
+        translateX(-50%);
 
     z-index:
-        20;
+        50;
 
     color:
-        rgba(0, 234, 255, 0.22);
+        var(--white);
 
     font-size:
-        8px;
+        10px;
 
     letter-spacing:
         2px;
-}
-
-
-/* =========================================================
-   MAP GRID
-========================================================= */
-
-#map-grid {
-
-    position:
-        absolute;
-
-    inset:
-        15%;
 
     opacity:
-        0.28;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-}
-
-
-#octagon-grid {
-
-    position:
-        absolute;
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
-
-    gap:
-        2px;
-
-    transform:
-        scale(
-            0.8
-        );
-}
-
-
-.octagon-row {
-
-    display:
-        flex;
-
-    gap:
-        2px;
-
-    justify-content:
-        center;
-}
-
-
-.octagon-row.offset {
-
-    transform:
-        translateX(
-            7px
-        );
-}
-
-
-.octagon-cell {
-
-    width:
-        17px;
-
-    height:
-        17px;
-
-    border:
-        1px solid
-        rgba(0, 234, 255, 0.25);
-
-    background:
-        rgba(0, 234, 255, 0.025);
-
-    clip-path:
-        polygon(
-            25% 0%,
-            75% 0%,
-            100% 25%,
-            100% 75%,
-            75% 100%,
-            25% 100%,
-            0% 75%,
-            0% 25%
-        );
-}
-
-
-/* =========================================================
-   SQUARE GRID
-========================================================= */
-
-#square-grid {
-
-    position:
-        absolute;
-
-    width:
-        75%;
-
-    height:
-        75%;
-
-    display:
-        grid;
-
-    grid-template-columns:
-        repeat(
-            8,
-            1fr
-        );
-
-    grid-template-rows:
-        repeat(
-            8,
-            1fr
-        );
-
-    opacity:
-        0.12;
-}
-
-
-.square-cell {
-
-    border:
-        1px solid
-        rgba(0, 234, 255, 0.25);
+        0.7;
 }
 
 
 /* =========================================================
    MENU CONTENT
-========================================================= */
+   ========================================================= */
 
 #menu-content {
 
@@ -811,14 +774,14 @@ body {
         0;
 
     z-index:
-        40;
+        30;
 
     pointer-events:
         none;
 }
 
 
-.menu-content {
+.menu-panel {
 
     position:
         absolute;
@@ -826,32 +789,29 @@ body {
     width:
         180px;
 
-    min-height:
-        50px;
+    padding:
+        10px;
 
-    color:
-        var(--text);
+    border:
+        1px solid
+        var(--cyan-faint);
+
+    background:
+        var(--bg-panel);
+
+    box-shadow:
+        0 0 15px
+        rgba(0, 0, 0, 0.35);
 
     pointer-events:
         auto;
-
-    transition:
-        opacity 0.15s,
-        color 0.15s;
 }
 
 
-.menu-content:hover {
-
-    color:
-        var(--white);
-}
-
-
-.menu-content-title {
+.menu-panel-title {
 
     margin-bottom:
-        7px;
+        8px;
 
     color:
         var(--cyan);
@@ -867,38 +827,49 @@ body {
 }
 
 
-.menu-content-line {
+.menu-panel-item {
+
+    padding:
+        4px 0;
 
     color:
-        #718891;
+        var(--text);
 
     font-size:
-        10px;
-
-    line-height:
-        1.6;
+        9px;
 
     letter-spacing:
-        0.5px;
+        1px;
+
+    border-bottom:
+        1px solid
+        rgba(0, 234, 255, 0.05);
+}
+
+
+.menu-panel-item:last-child {
+
+    border-bottom:
+        none;
 }
 
 
 /* =========================================================
    FOOTER
-========================================================= */
+   ========================================================= */
 
 #footer {
 
     position:
         absolute;
 
-    left:
-        0;
-
     right:
         0;
 
     bottom:
+        0;
+
+    left:
         0;
 
     height:
@@ -917,77 +888,77 @@ body {
         space-between;
 
     padding:
-        0 18px;
+        0 22px;
 
     border-top:
         1px solid
-        rgba(0, 234, 255, 0.15);
+        var(--cyan-faint);
+
+    color:
+        var(--text);
 
     background:
         rgba(2, 7, 12, 0.94);
-
-    color:
-        #405861;
 
     font-size:
         8px;
 
     letter-spacing:
-        2px;
-
-    pointer-events:
-        none;
+        1px;
 }
 
 
 /* =========================================================
    RESPONSIVE
-========================================================= */
+   ========================================================= */
 
-@media (
-    max-width: 800px
-) {
+@media (max-width: 900px) {
 
-    .header-subtitle,
-    .header-project {
+    #header {
+
+        padding:
+            0 14px;
+    }
+
+    .header-subtitle {
 
         display:
             none;
     }
 
+    .header-project {
 
-    .header-title {
+        position:
+            static;
 
-        font-size:
-            13px;
+        transform:
+            none;
+
+        margin-left:
+            auto;
+
+        margin-right:
+            20px;
     }
 
-
-    .menu-content {
+    .menu-panel {
 
         width:
-            140px;
+            145px;
     }
-
-
-    .menu-content-line {
-
-        font-size:
-            8px;
-    }
-
 
     .menu-title {
 
         font-size:
             10px;
+
+        letter-spacing:
+            1.5px;
     }
 }
 
 
-@media (
-    max-height: 650px
-) {
+@media (max-width: 600px) {
 
     #header {
 
@@ -995,26 +966,69 @@ body {
             54px;
     }
 
-
     #game-area {
 
         top:
             54px;
     }
 
+    .header-brand {
+
+        gap:
+            0;
+    }
+
+    .header-title {
+
+        font-size:
+            12px;
+    }
+
+    .header-project {
+
+        display:
+            none;
+    }
+
+    .header-player {
+
+        font-size:
+            9px;
+    }
 
     #map {
 
         width:
-            min(
-                48vh,
-                48vw
-            );
+            min(58vh, 70vw);
+    }
 
-        height:
-            min(
-                48vh,
-                48vw
-            );
+    .menu-panel {
+
+        width:
+            110px;
+
+        padding:
+            7px;
+    }
+
+    .menu-panel-title {
+
+        font-size:
+            8px;
+    }
+
+    .menu-panel-item {
+
+        font-size:
+            7px;
+    }
+
+    .menu-title {
+
+        font-size:
+            8px;
+
+        letter-spacing:
+            1px;
     }
 }

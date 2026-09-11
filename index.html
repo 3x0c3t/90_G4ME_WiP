@@ -1,231 +1,153 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <meta
-        name="theme-color"
-        content="#02070c"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#02070c">
     <title>90_G4ME_WiP | 3xØc3t L4B</title>
-
-    <link
-        rel="stylesheet"
-        href="index.css"
-    >
-
+    <link rel="stylesheet" href="index.css">
 </head>
-
 
 <body>
 
-    <div id="game">
+<div id="game">
 
+    <header id="header">
 
-        <!-- =================================================
-             HEADER
-        ================================================== -->
+        <div class="header-brand">
 
-        <header id="header">
-
-            <div class="header-brand">
-
-                <div class="header-title">
-                    -3xØc3t- L4B
-                </div>
-
-                <div class="header-subtitle">
-                    DIGITAL L4B &amp; EXPERIMENTATION
-                </div>
-
+            <div class="header-title">
+                -3xØc3t- L4B
             </div>
 
-
-            <div class="header-project">
-
-                <span class="project-name">
-                    90_G4ME_WiP
-                </span>
-
-                <span class="project-version">
-                    v1.0
-                </span>
-
+            <div class="header-subtitle">
+                DIGITAL L4B &amp; EXPERIMENTATION
             </div>
 
+        </div>
 
-            <div class="header-player">
+        <div class="header-project">
 
-                <span>
-                    PLAYER
-                </span>
-
-                <strong id="player-value">
-                    P1
-                </strong>
-
-            </div>
-
-        </header>
-
-
-        <!-- =================================================
-             GAME AREA
-        ================================================== -->
-
-        <main id="game-area">
-
-
-            <!-- =============================================
-                 RADIAL INTERFACE
-            ============================================== -->
-
-            <svg
-                id="radial-interface"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-label="Interface radiale"
-            >
-
-                <defs>
-
-                    <filter
-                        id="cyan-glow"
-                        x="-50%"
-                        y="-50%"
-                        width="200%"
-                        height="200%"
-                    >
-
-                        <feGaussianBlur
-                            stdDeviation="2.5"
-                            result="blur"
-                        />
-
-                        <feMerge>
-
-                            <feMergeNode
-                                in="blur"
-                            />
-
-                            <feMergeNode
-                                in="SourceGraphic"
-                            />
-
-                        </feMerge>
-
-                    </filter>
-
-                </defs>
-
-
-                <!-- Anneau -->
-
-                <g id="menu-ring"></g>
-
-
-                <!-- Séparateurs -->
-
-                <g id="menu-guides"></g>
-
-
-                <!-- Chemins des titres -->
-
-                <g id="menu-title-paths"></g>
-
-
-                <!-- Titres -->
-
-                <g id="menu-titles"></g>
-
-
-            </svg>
-
-
-            <!-- =============================================
-                 MAP CENTRALE
-            ============================================== -->
-
-            <section
-                id="map"
-                aria-label="MAP"
-            >
-
-                <div id="map-inner">
-
-                    <div id="map-label">
-                        MAP
-                    </div>
-
-
-                    <div id="map-grid">
-
-                        <div
-                            id="octagon-grid"
-                        ></div>
-
-                        <div
-                            id="square-grid"
-                        ></div>
-
-                    </div>
-
-
-                    <div id="map-center">
-                        3xØc3t
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- =============================================
-                 CONTENU DES MENUS
-            ============================================== -->
-
-            <div
-                id="menu-content"
-                aria-label="Contenu des menus"
-            ></div>
-
-
-        </main>
-
-
-        <!-- =================================================
-             FOOTER
-        ================================================== -->
-
-        <footer id="footer">
-
-            <span>
+            <span class="project-name">
                 90_G4ME_WiP
             </span>
 
-            <span>
-                DIGITAL EXPERIMENT
-            </span>
-
-            <span>
+            <span class="project-version">
                 v1.0
             </span>
 
-        </footer>
+        </div>
+
+        <div class="header-player">
+
+            <span>
+                PLAYER
+            </span>
+
+            <strong id="player-value">
+                P1
+            </strong>
+
+        </div>
+
+    </header>
 
 
-    </div>
+    <main id="game-area">
+
+        <svg
+            id="radial-interface"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-label="Interface radiale"
+        >
+
+            <defs>
+
+                <filter
+                    id="cyan-glow"
+                    x="-50%"
+                    y="-50%"
+                    width="200%"
+                    height="200%"
+                >
+
+                    <feGaussianBlur
+                        stdDeviation="2.5"
+                        result="blur"
+                    />
+
+                    <feMerge>
+
+                        <feMergeNode in="blur"></feMergeNode>
+
+                        <feMergeNode in="SourceGraphic"></feMergeNode>
+
+                    </feMerge>
+
+                </filter>
+
+            </defs>
+
+            <g id="menu-ring"></g>
+
+            <g id="menu-guides"></g>
+
+            <g id="menu-title-paths"></g>
+
+            <g id="menu-titles"></g>
+
+        </svg>
 
 
-    <script src="index.js"></script>
+        <section
+            id="map"
+            aria-label="MAP"
+        >
+
+            <div id="map-inner">
+
+                <div id="map-label">
+                    MAP
+                </div>
+
+                <div id="map-grid">
+
+                    <div id="octagon-grid"></div>
+
+                    <div id="square-grid"></div>
+
+                </div>
+
+                <div id="map-center">
+                    3xØc3t
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer id="footer">
+
+        <span>
+            90_G4ME_WiP
+        </span>
+
+        <span>
+            DIGITAL EXPERIMENT
+        </span>
+
+        <span>
+            v1.0
+        </span>
+
+    </footer>
+
+</div>
+
+<script src="index.js"></script>
 
 </body>
-
 </html>
