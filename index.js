@@ -225,7 +225,7 @@ const SVG_NS =
    ========================================================= */
 
 const MAP_RADIUS_RATIO =
-    0.25;
+    0.30;
 
 
 const MAP_RING_GAP =
@@ -239,10 +239,8 @@ const TITLE_RING_GAP =
 /*
    Rotation de la roue des titres.
 
-   Les menus restent sur leurs rayons respectifs.
-   Seule la roue qui contient les titres est tournée.
-
-   22.5° = moitié de l'écart entre deux menus.
+   Les menus restent fixes.
+   Seule la roue des titres tourne.
 */
 
 const TITLE_WHEEL_ROTATION =
@@ -555,11 +553,9 @@ function drawSectorLines(
 
 
     /*
-       Les rayons des menus NE SONT PAS
-       concernés par la rotation de 22.5°.
-
-       Ils constituent les axes fixes
-       des différents contenus.
+       Les rayons commencent
+       exactement sur le cercle
+       entourant la MAP.
     */
 
     const startRadius =
@@ -647,7 +643,7 @@ function drawTitles(
 
 
     /*
-       Les titres sont placés exactement
+       Les titres sont placés
        entre les deux cercles.
     */
 
@@ -660,14 +656,10 @@ function drawTitles(
 
 
     /*
-       Groupe global de la roue des titres.
+       ROUE DES TITRES
 
-       IMPORTANT :
-
-       Les menus restent fixes.
-
-       La roue contenant les titres est
-       tournée de 22.5° autour du centre.
+       La roue entière est tournée
+       de 22.5° autour du centre.
     */
 
     const wheel =
@@ -702,16 +694,16 @@ function drawTitles(
         menu => {
 
             /*
-               Position du titre sur la roue.
-
-               On utilise l'angle du menu,
-               puis le groupe parent effectue
-               automatiquement la rotation de 22.5°.
+               Angle de base du menu.
             */
 
             const angle =
                 menu.angle;
 
+
+            /*
+               Position du titre.
+            */
 
             const position =
                 polarPoint(
@@ -723,12 +715,7 @@ function drawTitles(
 
 
             /*
-               Orientation du texte.
-
-               Le texte suit la tangente au cercle.
-
-               On ne rajoute PAS les 22.5° ici :
-               le groupe parent s'en charge déjà.
+               Orientation tangentielle.
             */
 
             let rotation =
@@ -736,10 +723,8 @@ function drawTitles(
 
 
             /*
-               Maintien de la lisibilité.
-
-               Les textes de la moitié basse
-               sont retournés de 180°.
+               Retourner les textes
+               qui seraient à l'envers.
             */
 
             if (
@@ -762,6 +747,10 @@ function drawTitles(
                     360
                 ) % 360;
 
+
+            /*
+               Groupe individuel.
+            */
 
             const group =
                 svgElement(
@@ -786,6 +775,10 @@ function drawTitles(
                 );
 
 
+            /*
+               Texte.
+            */
+
             const text =
                 svgElement(
                     "text",
@@ -809,15 +802,6 @@ function drawTitles(
                     }
                 );
 
-
-            /*
-               Le nom apparaît UNIQUEMENT
-               dans la roue des titres.
-
-               Les panneaux de contenu doivent
-               maintenant contenir uniquement
-               leurs informations.
-            */
 
             text.textContent =
                 menu.label;
@@ -879,7 +863,10 @@ function drawRadialInterface() {
 
 
     /*
-       RAYON MAP
+       RAYON DE LA MAP
+
+       0.30 au lieu de 0.25
+       pour agrandir le cercle central.
     */
 
     const mapRadius =
