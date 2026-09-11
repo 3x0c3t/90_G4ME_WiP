@@ -1,198 +1,188 @@
 "use strict";
 
 
-/* =========================================================
-   MAP
-   Gestion complète de la carte
-   ========================================================= */
-
 const MAP = {
 
-
-    /* =====================================================
-       ETAT
-       ===================================================== */
+    /* ========================================================
+       STATE
+       ======================================================== */
 
     state: {
-
-        selectedCell:
-            null,
-
-        selectedType:
-            null,
-
-        selectedX:
-            null,
-
-        selectedY:
-            null,
-
-        zoom:
-            100
-
+        selectedCell: null,
+        selectedType: null,
+        selectedX: null,
+        selectedY: null,
+        zoom: 100
     },
 
 
-    /* =====================================================
+    /* ========================================================
        DOM
-       ===================================================== */
+       ======================================================== */
 
     DOM: {
-
-        map:
-            document.getElementById(
-                "map"
-            ),
+        map: document.getElementById("map"),
 
         octagonGrid:
-            document.getElementById(
-                "octagon-grid"
-            ),
+            document.getElementById("octagon-grid"),
 
         squareGrid:
-            document.getElementById(
-                "square-grid"
-            ),
+            document.getElementById("square-grid"),
 
         selectedCell:
-            document.getElementById(
-                "selected-cell"
-            ),
+            document.getElementById("selected-cell"),
 
         selectedType:
-            document.getElementById(
-                "selected-type"
-            ),
+            document.getElementById("selected-type"),
 
         positionX:
-            document.getElementById(
-                "position-x"
-            ),
+            document.getElementById("position-x"),
 
         positionY:
-            document.getElementById(
-                "position-y"
-            ),
+            document.getElementById("position-y"),
 
         zoomValue:
-            document.getElementById(
-                "zoom-value"
-            ),
+            document.getElementById("zoom-value"),
 
         systemMessage:
-            document.getElementById(
-                "system-message"
-            ),
+            document.getElementById("system-message"),
 
         btnZoomIn:
-            document.getElementById(
-                "btn-zoom-in"
-            ),
+            document.getElementById("btn-zoom-in"),
 
         btnZoomOut:
-            document.getElementById(
-                "btn-zoom-out"
-            ),
+            document.getElementById("btn-zoom-out"),
 
         octagonCount:
-            document.getElementById(
-                "octagon-count"
-            ),
+            document.getElementById("octagon-count"),
 
         squareCount:
-            document.getElementById(
-                "square-count"
-            )
-
+            document.getElementById("square-count")
     },
 
 
-    /* =====================================================
+    /* ========================================================
+       CONFIGURATION
+       ======================================================== */
+
+    config: {
+        rows: 11,
+        columns: 11,
+        cellType: "HEXAGON"
+    },
+
+
+    /* ========================================================
        INIT
-       ===================================================== */
+       ======================================================== */
 
     init() {
 
-        this.createOctagonGrid();
-
-        this.createSquareGrid();
+        this.createHexagonGrid();
 
         this.bindEvents();
 
         this.updateInterface();
-
     },
 
 
-    /* =====================================================
-       ETAT PUBLIC
-       ===================================================== */
+    /* ========================================================
+       GET STATE
+       ======================================================== */
 
     getState() {
 
         return {
-
-            selectedCell:
-                this.state.selectedCell,
-
-            selectedType:
-                this.state.selectedType,
-
-            selectedX:
-                this.state.selectedX,
-
-            selectedY:
-                this.state.selectedY,
-
-            zoom:
-                this.state.zoom
-
+            selectedCell: this.state.selectedCell,
+            selectedType: this.state.selectedType,
+            selectedX: this.state.selectedX,
+            selectedY: this.state.selectedY,
+            zoom: this.state.zoom
         };
-
     },
 
 
-    /* =====================================================
-       GRILLE OCTOGONALE
-       ===================================================== */
+    /* ========================================================
+       CREATE HONEYCOMB GRID
+       ======================================================== */
 
-    createOctagonGrid() {
+    createHexagonGrid() {
 
         const grid =
             this.DOM.octagonGrid;
 
-
         if (!grid) {
-
             return;
-
         }
 
 
-        grid.innerHTML =
-            "";
+        /*
+         * Nettoyage complet.
+         */
+
+        grid.innerHTML = "";
 
 
-        const size =
-            7;
+        const rows =
+            this.config.rows;
 
+        const columns =
+            this.config.columns;
+
+
+        let totalCells = 0;
+
+
+        /*
+         * Création des lignes.
+         *
+         * Chaque ligne est indépendante.
+         * Une ligne sur deux reçoit la classe
+         * "offset".
+         */
 
         for (
             let y = 1;
-            y <= size;
+            y <= rows;
             y++
         ) {
 
+            const row =
+                document.createElement("div");
+
+
+            row.className =
+                "hex-row";
+
+
+            /*
+             * Décalage horizontal d'une
+             * demi-cellule.
+             */
+
+            if (y % 2 === 0) {
+
+                row.classList.add(
+                    "offset"
+                );
+            }
+
+
+            /*
+             * Création des cellules.
+             */
+
             for (
                 let x = 1;
-                x <= size;
+                x <= columns;
                 x++
             ) {
 
+                totalCells++;
+
+
                 const cell =
-                    document.createElement(
-                        "div"
-                    );
+                    document.createElement("div");
 
 
                 cell.className =
@@ -208,7 +198,7 @@ const MAP = {
 
 
                 cell.dataset.type =
-                    "EMPTY";
+                    this.config.cellType;
 
 
                 cell.dataset.id =
@@ -227,6 +217,10 @@ const MAP = {
                 );
 
 
+                /*
+                 * Sélection.
+                 */
+
                 cell.addEventListener(
                     "click",
                     () => {
@@ -234,144 +228,100 @@ const MAP = {
                         this.selectCell(
                             cell
                         );
-
                     }
                 );
 
 
-                grid.appendChild(
+                row.appendChild(
                     cell
                 );
-
             }
 
+
+            grid.appendChild(
+                row
+            );
         }
 
 
-        if (
-            this.DOM.octagonCount
-        ) {
+        /*
+         * Compteurs.
+         */
+
+        if (this.DOM.octagonCount) {
 
             this.DOM.octagonCount.textContent =
-                String(
-                    size * size
-                );
-
+                String(totalCells);
         }
 
+
+        if (this.DOM.squareCount) {
+
+            this.DOM.squareCount.textContent =
+                "0";
+        }
     },
 
 
-    /* =====================================================
-       GRILLE CARREE
-       ===================================================== */
+    /* ========================================================
+       COMPATIBILITY
+       ======================================================== */
+
+    createOctagonGrid() {
+
+        this.createHexagonGrid();
+    },
+
 
     createSquareGrid() {
 
-        const grid =
-            this.DOM.squareGrid;
+        if (this.DOM.squareGrid) {
 
-
-        if (!grid) {
-
-            return;
-
+            this.DOM.squareGrid.innerHTML =
+                "";
         }
 
 
-        grid.innerHTML =
-            "";
-
-
-        const size =
-            8;
-
-
-        for (
-            let y = 1;
-            y <= size;
-            y++
-        ) {
-
-            for (
-                let x = 1;
-                x <= size;
-                x++
-            ) {
-
-                const cell =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                cell.className =
-                    "square-cell";
-
-
-                cell.dataset.x =
-                    String(x);
-
-
-                cell.dataset.y =
-                    String(y);
-
-
-                grid.appendChild(
-                    cell
-                );
-
-            }
-
-        }
-
-
-        if (
-            this.DOM.squareCount
-        ) {
+        if (this.DOM.squareCount) {
 
             this.DOM.squareCount.textContent =
-                String(
-                    size * size
-                );
-
+                "0";
         }
-
     },
 
 
-    /* =====================================================
-       SELECTION
-       ===================================================== */
+    /* ========================================================
+       SELECT CELL
+       ======================================================== */
 
-    selectCell(
-        cell
-    ) {
+    selectCell(cell) {
 
         if (!cell) {
-
             return;
-
         }
 
 
-        const previous =
-            this.DOM.octagonGrid
-                ?.querySelectorAll(
-                    ".octagon-cell.selected"
-                );
+        /*
+         * Désélection des autres cellules.
+         */
+
+        this.DOM.octagonGrid
+            ?.querySelectorAll(
+                ".octagon-cell.selected"
+            )
+            .forEach(
+                selected => {
+
+                    selected.classList.remove(
+                        "selected"
+                    );
+                }
+            );
 
 
-        previous?.forEach(
-            selected => {
-
-                selected.classList.remove(
-                    "selected"
-                );
-
-            }
-        );
-
+        /*
+         * Sélection actuelle.
+         */
 
         cell.classList.add(
             "selected"
@@ -392,13 +342,17 @@ const MAP = {
 
         const type =
             cell.dataset.type ||
-            "EMPTY";
+            "HEXAGON";
 
 
         const id =
             cell.dataset.id ||
             `X${x}-Y${y}`;
 
+
+        /*
+         * Etat.
+         */
 
         this.state.selectedCell =
             id;
@@ -416,19 +370,22 @@ const MAP = {
             y;
 
 
+        /*
+         * Interface.
+         */
+
         this.updateInterface();
 
 
         this.setSystemMessage(
             "CELL SELECTED"
         );
-
     },
 
 
-    /* =====================================================
-       DESELECTION
-       ===================================================== */
+    /* ========================================================
+       CLEAR SELECTION
+       ======================================================== */
 
     clearSelection() {
 
@@ -442,7 +399,6 @@ const MAP = {
                     cell.classList.remove(
                         "selected"
                     );
-
                 }
             );
 
@@ -464,32 +420,21 @@ const MAP = {
 
 
         this.updateInterface();
-
     },
 
 
-    /* =====================================================
+    /* ========================================================
        ZOOM
-       ===================================================== */
+       ======================================================== */
 
-    setZoom(
-        value
-    ) {
+    setZoom(value) {
 
         const numeric =
-            Number(
-                value
-            );
+            Number(value);
 
 
-        if (
-            !Number.isFinite(
-                numeric
-            )
-        ) {
-
+        if (!Number.isFinite(numeric)) {
             return;
-
         }
 
 
@@ -506,7 +451,6 @@ const MAP = {
         this.applyZoom();
 
         this.updateInterface();
-
     },
 
 
@@ -515,7 +459,6 @@ const MAP = {
         this.setZoom(
             this.state.zoom + 10
         );
-
     },
 
 
@@ -524,35 +467,28 @@ const MAP = {
         this.setZoom(
             this.state.zoom - 10
         );
-
     },
 
 
     applyZoom() {
 
-        if (
-            !this.DOM.map
-        ) {
-
+        if (!this.DOM.map) {
             return;
-
         }
 
 
         const scale =
-            this.state.zoom /
-            100;
+            this.state.zoom / 100;
 
 
         this.DOM.map.style.transform =
             `scale(${scale})`;
-
     },
 
 
-    /* =====================================================
+    /* ========================================================
        RESET
-       ===================================================== */
+       ======================================================== */
 
     reset() {
 
@@ -572,17 +508,14 @@ const MAP = {
 
 
         this.updateInterface();
-
     },
 
 
-    /* =====================================================
-       MESSAGE SYSTEME
-       ===================================================== */
+    /* ========================================================
+       SYSTEM MESSAGE
+       ======================================================== */
 
-    setSystemMessage(
-        message
-    ) {
+    setSystemMessage(message) {
 
         if (
             this.DOM.systemMessage
@@ -590,15 +523,13 @@ const MAP = {
 
             this.DOM.systemMessage.textContent =
                 message;
-
         }
-
     },
 
 
-    /* =====================================================
-       INTERFACE
-       ===================================================== */
+    /* ========================================================
+       UPDATE INTERFACE
+       ======================================================== */
 
     updateInterface() {
 
@@ -609,7 +540,6 @@ const MAP = {
             this.DOM.selectedCell.textContent =
                 this.state.selectedCell ||
                 "NONE";
-
         }
 
 
@@ -620,7 +550,6 @@ const MAP = {
             this.DOM.selectedType.textContent =
                 this.state.selectedType ||
                 "EMPTY";
-
         }
 
 
@@ -637,7 +566,6 @@ const MAP = {
                         "0"
                     )
                     : "--";
-
         }
 
 
@@ -654,7 +582,6 @@ const MAP = {
                         "0"
                     )
                     : "--";
-
         }
 
 
@@ -666,15 +593,13 @@ const MAP = {
                 String(
                     this.state.zoom
                 );
-
         }
-
     },
 
 
-    /* =====================================================
-       EVENEMENTS
-       ===================================================== */
+    /* ========================================================
+       EVENTS
+       ======================================================== */
 
     bindEvents() {
 
@@ -687,10 +612,8 @@ const MAP = {
                 () => {
 
                     this.zoomIn();
-
                 }
             );
-
         }
 
 
@@ -703,12 +626,8 @@ const MAP = {
                 () => {
 
                     this.zoomOut();
-
                 }
             );
-
         }
-
     }
-
 };

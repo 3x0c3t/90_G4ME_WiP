@@ -1,406 +1,421 @@
-/* =========================================================
+/* ============================================================
    MAP
-   ========================================================= */
+   ============================================================ */
 
 #map-container {
+    position: absolute;
 
-    position:
-        absolute;
+    top: 50%;
+    left: 50%;
 
-    top:
-        50%;
+    width: min(58vh, 58vw);
+    height: min(58vh, 58vw);
 
-    left:
-        50%;
+    transform: translate(-50%, -50%);
 
-    width:
-        min(48vh, 48vw);
+    z-index: 20;
 
-    height:
-        min(48vh, 48vw);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    transform:
-        translate(-50%, -50%);
-
-    z-index:
-        20;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    pointer-events:
-        auto;
-
+    pointer-events: none;
 }
 
 
-/* =========================================================
-   MAP PRINCIPALE
-   ========================================================= */
+/* ============================================================
+   MAP
+   ============================================================ */
 
 #map {
+    position: relative;
 
-    position:
-        relative;
+    width: 100%;
+    height: 100%;
 
-    width:
-        100%;
+    transform-origin: center center;
 
-    height:
-        100%;
+    overflow: hidden;
 
-    display:
-        flex;
+    border-radius: 50%;
 
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    transform-origin:
-        center center;
-
-    transition:
-        transform 160ms ease;
-
+    pointer-events: none;
 }
 
 
-/* =========================================================
-   GRILLE OCTOGONALE
-   ========================================================= */
+/* ============================================================
+   HONEYCOMB GRID
+   ============================================================ */
 
 #octagon-grid {
+    position: absolute;
 
-    position:
-        absolute;
+    top: 50%;
+    left: 50%;
 
-    top:
-        50%;
+    width: 118%;
+    height: 118%;
 
-    left:
-        50%;
+    transform: translate(-50%, -50%);
 
-    width:
-        76%;
+    display: flex;
+    flex-direction: column;
 
-    height:
-        76%;
+    align-items: center;
+    justify-content: center;
 
-    transform:
-        translate(-50%, -50%);
+    gap: 0;
 
-    display:
-        grid;
-
-    grid-template-columns:
-        repeat(7, 1fr);
-
-    grid-template-rows:
-        repeat(7, 1fr);
-
-    gap:
-        1px;
-
-    padding:
-        5px;
-
-    pointer-events:
-        auto;
-
+    pointer-events: auto;
 }
 
 
-/* =========================================================
-   CELLULE OCTOGONALE
-   ========================================================= */
+/* ============================================================
+   HONEYCOMB ROW
+   ============================================================ */
+
+.hex-row {
+    position: relative;
+
+    width: 100%;
+    height: 9.1%;
+
+    display: flex;
+
+    flex-shrink: 0;
+
+    align-items: center;
+    justify-content: center;
+
+    margin: 0;
+
+    padding: 0;
+
+    gap: 0;
+}
+
+
+/*
+ * Une ligne sur deux est décalée d'une demi-cellule.
+ */
+
+.hex-row.offset {
+    transform: translateX(4.545%);
+}
+
+
+/* ============================================================
+   HEXAGON
+   ============================================================ */
 
 .octagon-cell {
+    position: relative;
 
-    position:
-        relative;
+    display: block;
 
-    min-width:
-        0;
+    flex: 0 0 9.09%;
 
-    min-height:
-        0;
+    width: 9.09%;
+    height: 115%;
 
-    background:
-        rgba(0, 234, 255, 0.035);
+    margin: 0;
 
-    border:
-        1px solid
-        rgba(0, 234, 255, 0.20);
+    padding: 0;
 
-    clip-path:
-        polygon(
-            25% 0%,
-            75% 0%,
-            100% 25%,
-            100% 75%,
-            75% 100%,
-            25% 100%,
-            0% 75%,
-            0% 25%
-        );
+    box-sizing: border-box;
 
-    cursor:
-        pointer;
+    clip-path: polygon(
+        25% 0%,
+        75% 0%,
+        100% 50%,
+        75% 100%,
+        25% 100%,
+        0% 50%
+    );
+
+    background: rgba(0, 234, 255, 0.55);
+
+    cursor: pointer;
+
+    pointer-events: auto;
+
+    z-index: 1;
 
     transition:
-        background 120ms ease,
-        border-color 120ms ease,
-        box-shadow 120ms ease;
-
+        background 0.15s ease,
+        filter 0.15s ease;
 }
 
 
-.octagon-cell:hover {
+/* ============================================================
+   HEXAGON INNER
+   ============================================================ */
+
+.octagon-cell::before {
+    content: "";
+
+    position: absolute;
+
+    top: 1px;
+    right: 1px;
+    bottom: 1px;
+    left: 1px;
+
+    clip-path: polygon(
+        25% 0%,
+        75% 0%,
+        100% 50%,
+        75% 100%,
+        25% 100%,
+        0% 50%
+    );
 
     background:
-        rgba(0, 234, 255, 0.12);
+        linear-gradient(
+            135deg,
+            rgba(4, 25, 32, 0.98),
+            rgba(2, 8, 13, 0.98)
+        );
 
-    border-color:
-        rgba(0, 234, 255, 0.65);
+    z-index: 1;
 
+    pointer-events: none;
 }
 
 
-.octagon-cell.selected {
-
-    background:
-        rgba(0, 255, 153, 0.15);
-
-    border-color:
-        var(--green);
-
-    box-shadow:
-        inset 0 0 12px
-        rgba(0, 255, 153, 0.20),
-        0 0 8px
-        rgba(0, 255, 153, 0.20);
-
-}
-
+/* ============================================================
+   HEXAGON INNER LIGHT
+   ============================================================ */
 
 .octagon-cell::after {
+    content: "";
 
-    content:
-        "";
+    position: absolute;
 
-    position:
-        absolute;
+    top: 3px;
+    right: 3px;
+    bottom: 3px;
+    left: 3px;
 
-    inset:
-        3px;
-
-    pointer-events:
-        none;
-
-    border:
-        1px solid
-        rgba(0, 234, 255, 0.035);
-
-    clip-path:
-        inherit;
-
-}
-
-
-/* =========================================================
-   GRILLE CARREE
-   ========================================================= */
-
-#square-grid {
-
-    position:
-        absolute;
-
-    top:
-        50%;
-
-    left:
-        50%;
-
-    width:
-        92%;
-
-    height:
-        92%;
-
-    transform:
-        translate(-50%, -50%);
-
-    display:
-        grid;
-
-    grid-template-columns:
-        repeat(8, 1fr);
-
-    grid-template-rows:
-        repeat(8, 1fr);
-
-    pointer-events:
-        none;
-
-    opacity:
-        0.20;
-
-}
-
-
-.square-cell {
-
-    border:
-        1px solid
-        rgba(0, 234, 255, 0.12);
-
-}
-
-
-/* =========================================================
-   CENTRE MAP
-   ========================================================= */
-
-#map-center {
-
-    position:
-        absolute;
-
-    top:
-        50%;
-
-    left:
-        50%;
-
-    width:
-        20%;
-
-    height:
-        20%;
-
-    transform:
-        translate(-50%, -50%);
-
-    z-index:
-        10;
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    border:
-        1px solid
-        rgba(0, 234, 255, 0.35);
-
-    border-radius:
-        50%;
+    clip-path: polygon(
+        25% 0%,
+        75% 0%,
+        100% 50%,
+        75% 100%,
+        25% 100%,
+        0% 50%
+    );
 
     background:
-        rgba(2, 7, 12, 0.92);
+        linear-gradient(
+            135deg,
+            rgba(0, 234, 255, 0.10),
+            rgba(0, 234, 255, 0.025)
+        );
 
-    box-shadow:
-        0 0 18px
-        rgba(0, 234, 255, 0.08);
+    z-index: 2;
 
-    pointer-events:
-        none;
-
+    pointer-events: none;
 }
 
 
-.center-number {
+/* ============================================================
+   HOVER
+   ============================================================ */
 
-    color:
-        var(--cyan);
-
-    font-size:
-        clamp(18px, 3vw, 30px);
-
-    font-weight:
-        bold;
-
-    line-height:
-        1;
-
-}
-
-
-.center-label {
-
-    margin-top:
-        4px;
-
-    color:
-        var(--white);
-
-    font-size:
-        clamp(7px, 0.8vw, 10px);
-
-    letter-spacing:
-        2px;
-
-}
-
-
-/* =========================================================
-   ETAT MAP
-   ========================================================= */
-
-#map.map-disabled {
-
-    opacity:
-        0.45;
+.octagon-cell:hover {
+    background: rgba(0, 234, 255, 0.90);
 
     filter:
-        grayscale(0.5);
+        drop-shadow(
+            0 0 5px rgba(0, 234, 255, 0.45)
+        );
 
+    z-index: 10;
+}
+
+.octagon-cell:hover::before {
+    background:
+        rgba(0, 30, 40, 0.96);
+}
+
+.octagon-cell:hover::after {
+    background:
+        rgba(0, 234, 255, 0.16);
 }
 
 
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
+/* ============================================================
+   SELECTED
+   ============================================================ */
 
-@media (
-    max-width: 700px
-) {
+.octagon-cell.selected {
+    background: rgba(0, 234, 255, 1);
+
+    filter:
+        drop-shadow(
+            0 0 7px rgba(0, 234, 255, 0.90)
+        )
+        drop-shadow(
+            0 0 15px rgba(0, 234, 255, 0.35)
+        );
+
+    z-index: 20;
+}
+
+.octagon-cell.selected::before {
+    background:
+        rgba(0, 50, 65, 0.96);
+}
+
+.octagon-cell.selected::after {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0, 234, 255, 0.30),
+            rgba(0, 234, 255, 0.08)
+        );
+}
+
+
+/* ============================================================
+   OLD SQUARE GRID
+   ============================================================ */
+
+#square-grid {
+    display: none !important;
+}
+
+
+/* ============================================================
+   MAP CENTER
+   ============================================================ */
+
+#map-center {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    width: 22%;
+    height: 22%;
+
+    transform: translate(-50%, -50%);
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(2, 12, 18, 0.99) 0%,
+            rgba(2, 7, 12, 0.98) 68%,
+            rgba(0, 234, 255, 0.13) 100%
+        );
+
+    border: 1px solid rgba(0, 234, 255, 0.75);
+
+    box-shadow:
+        0 0 12px rgba(0, 234, 255, 0.35),
+        0 0 28px rgba(0, 234, 255, 0.10),
+        inset 0 0 20px rgba(0, 234, 255, 0.12);
+
+    z-index: 100;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    pointer-events: none;
+}
+
+
+/* ============================================================
+   CENTER NUMBER
+   ============================================================ */
+
+#center-number {
+    color: var(--cyan);
+
+    font-family: var(--font);
+
+    font-size: clamp(18px, 3vh, 32px);
+
+    font-weight: bold;
+
+    line-height: 1;
+
+    letter-spacing: 2px;
+
+    text-shadow:
+        0 0 8px rgba(0, 234, 255, 0.60);
+}
+
+
+/* ============================================================
+   CENTER LABEL
+   ============================================================ */
+
+#center-label {
+    margin-top: 4px;
+
+    color: rgba(0, 234, 255, 0.72);
+
+    font-family: var(--font);
+
+    font-size: clamp(7px, 1vh, 11px);
+
+    font-weight: bold;
+
+    line-height: 1;
+
+    letter-spacing: 2px;
+}
+
+
+/* ============================================================
+   MAP CIRCLE
+   ============================================================ */
+
+#map::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(0, 234, 255, 0.25);
+
+    box-shadow:
+        0 0 15px rgba(0, 234, 255, 0.08),
+        inset 0 0 25px rgba(0, 234, 255, 0.05);
+
+    pointer-events: none;
+
+    z-index: 120;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 700px) {
 
     #map-container {
-
-        width:
-            min(58vh, 58vw);
-
-        height:
-            min(58vh, 58vw);
-
+        width: min(72vw, 58vh);
+        height: min(72vw, 58vh);
     }
-
 
     #octagon-grid {
-
-        width:
-            78%;
-
-        height:
-            78%;
-
+        width: 122%;
+        height: 122%;
     }
 
+    #map-center {
+        width: 24%;
+        height: 24%;
+    }
 }
