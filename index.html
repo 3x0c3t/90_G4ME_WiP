@@ -15,7 +15,9 @@
 
     <div class="header-brand">
         <div class="header-title">-3xØc3t- L4B</div>
-        <div class="header-subtitle">DIGITAL L4B & EXPERIMENTATION</div>
+        <div class="header-subtitle">
+            DIGITAL L4B & EXPERIMENTATION
+        </div>
     </div>
 
     <div class="header-game">
@@ -24,7 +26,7 @@
 
     <div class="header-status">
         <span class="status-dot"></span>
-        <span>ONLINE</span>
+        ONLINE
     </div>
 
 </header>
@@ -37,232 +39,49 @@
         <svg
             id="radial-menus"
             xmlns="http://www.w3.org/2000/svg"
-            preserveAspectRatio="none"
-            aria-hidden="true"
         >
-            <path class="menu-sector" data-menu="game"></path>
-            <path class="menu-sector" data-menu="cell"></path>
-            <path class="menu-sector" data-menu="action"></path>
-            <path class="menu-sector" data-menu="position"></path>
-            <path class="menu-sector" data-menu="system"></path>
-            <path class="menu-sector" data-menu="grid"></path>
-            <path class="menu-sector" data-menu="map"></path>
-            <path class="menu-sector" data-menu="player"></path>
+
+            <defs>
+
+                <filter id="glow">
+                    <feGaussianBlur
+                        stdDeviation="2"
+                        result="blur"
+                    />
+
+                    <feMerge>
+                        <feMergeNode in="blur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+
+            </defs>
+
+
+            <g id="menu-sectors"></g>
+
+            <g
+                id="menu-guides"
+                pointer-events="none"
+            ></g>
+
+            <g
+                id="menu-title-paths"
+                pointer-events="none"
+            ></g>
+
+            <g
+                id="menu-titles"
+                pointer-events="none"
+            ></g>
+
+            <g
+                id="menu-information"
+                pointer-events="none"
+            ></g>
+
         </svg>
 
-
-        <!-- GAME -->
-
-        <section
-            class="radial-content radial-game"
-            data-menu="game"
-        >
-            <div class="menu-title">GAME</div>
-
-            <div class="menu-line">
-                <span>TURN</span>
-                <strong id="turn-value">01</strong>
-            </div>
-
-            <div class="menu-line">
-                <span>ROUND</span>
-                <strong id="round-value">01</strong>
-            </div>
-
-            <div class="menu-line">
-                <span>PLAYERS</span>
-                <strong id="players-value">02</strong>
-            </div>
-        </section>
-
-
-        <!-- CELL -->
-
-        <section
-            class="radial-content radial-cell"
-            data-menu="cell"
-        >
-            <div class="menu-title">CELL</div>
-
-            <div class="menu-line">
-                <span>ID</span>
-                <strong id="cell-id">---</strong>
-            </div>
-
-            <div class="menu-line">
-                <span>TYPE</span>
-                <strong id="cell-type">---</strong>
-            </div>
-
-            <div class="menu-line">
-                <span>STATE</span>
-                <strong id="cell-state">READY</strong>
-            </div>
-        </section>
-
-
-        <!-- ACTION -->
-
-        <section
-            class="radial-content radial-action"
-            data-menu="action"
-        >
-            <div class="menu-title">ACTION</div>
-
-            <button
-                id="action-confirm"
-                class="menu-button"
-                type="button"
-            >
-                CONFIRM
-            </button>
-
-            <button
-                id="action-cancel"
-                class="menu-button"
-                type="button"
-            >
-                CANCEL
-            </button>
-
-            <button
-                id="action-reset"
-                class="menu-button"
-                type="button"
-            >
-                RESET
-            </button>
-        </section>
-
-
-        <!-- POSITION -->
-
-        <section
-            class="radial-content radial-position"
-            data-menu="position"
-        >
-            <div class="menu-title">POSITION</div>
-
-            <div class="menu-line">
-                <span>X</span>
-                <strong id="position-x">--</strong>
-            </div>
-
-            <div class="menu-line">
-                <span>Y</span>
-                <strong id="position-y">--</strong>
-            </div>
-
-            <div class="menu-line">
-                <span>PLAYER</span>
-                <strong id="position-player">P1</strong>
-            </div>
-        </section>
-
-
-        <!-- SYSTEM -->
-
-        <section
-            class="radial-content radial-system"
-            data-menu="system"
-        >
-            <div class="menu-title">SYSTEM</div>
-
-            <div class="menu-line">
-                <span>STATUS</span>
-                <strong id="system-status">READY</strong>
-            </div>
-
-            <div class="menu-line">
-                <span>VERSION</span>
-                <strong>1.0</strong>
-            </div>
-
-            <div class="menu-line">
-                <span>MODE</span>
-                <strong>GAME</strong>
-            </div>
-        </section>
-
-
-        <!-- GRID -->
-
-        <section
-            class="radial-content radial-grid"
-            data-menu="grid"
-        >
-            <div class="menu-title">GRID</div>
-
-            <div class="menu-line">
-                <span>OCTAGON</span>
-                <strong id="grid-value">7 × 7</strong>
-            </div>
-
-            <div class="menu-line">
-                <span>SQUARE</span>
-                <strong>8 × 8</strong>
-            </div>
-
-            <div class="menu-line">
-                <span>MODE</span>
-                <strong>HYBRID</strong>
-            </div>
-        </section>
-
-
-        <!-- MAP -->
-
-        <section
-            class="radial-content radial-map"
-            data-menu="map"
-        >
-            <div class="menu-title">MAP</div>
-
-            <button
-                id="zoom-out"
-                class="menu-button"
-                type="button"
-            >
-                ZOOM -
-            </button>
-
-            <div class="zoom-value">
-                <span id="zoom-value">100</span>
-                <small>%</small>
-            </div>
-
-            <button
-                id="zoom-in"
-                class="menu-button"
-                type="button"
-            >
-                ZOOM +
-            </button>
-        </section>
-
-
-        <!-- PLAYER -->
-
-        <section
-            class="radial-content radial-player"
-            data-menu="player"
-        >
-            <div class="menu-title">PLAYER</div>
-
-            <div class="player-number" id="player-number">
-                P1
-            </div>
-
-            <div class="menu-line">
-                <span>STATUS</span>
-                <strong>ACTIVE</strong>
-            </div>
-
-            <div class="player-indicator"></div>
-        </section>
-
-
-        <!-- MAP -->
 
         <div id="map-container">
 
@@ -273,8 +92,13 @@
                 <div id="square-grid"></div>
 
                 <div id="map-center">
-                    <div class="map-center-title">MAP</div>
-                    <div class="map-center-subtitle">90_G4ME</div>
+                    <div class="map-center-title">
+                        MAP
+                    </div>
+
+                    <div class="map-center-subtitle">
+                        90_G4ME
+                    </div>
                 </div>
 
             </div>
@@ -288,15 +112,15 @@
 
 <footer id="footer">
 
-    <div class="footer-left">
+    <div>
         90_G4ME_WiP
     </div>
 
-    <div class="footer-center">
+    <div>
         DIGITAL GAME EXPERIMENT
     </div>
 
-    <div class="footer-right">
+    <div class="footer-online">
         <span class="status-dot"></span>
         ONLINE
     </div>

@@ -1,25 +1,31 @@
 :root {
-    --background: #05080b;
-    --background-2: #081016;
 
-    --panel: rgba(5, 12, 17, 0.94);
-    --panel-soft: rgba(7, 17, 23, 0.90);
+    --background: #05080b;
+    --background-soft: #081016;
 
     --cyan: #00eaff;
-    --cyan-soft: rgba(0, 234, 255, 0.35);
-    --cyan-dark: rgba(0, 234, 255, 0.12);
-
     --green: #00ff99;
     --orange: #ff9900;
     --red: #ff3355;
 
     --text: #d9faff;
-    --text-soft: #75909a;
+    --text-soft: #6f8992;
 
-    --border: rgba(0, 234, 255, 0.55);
+    --menu-background: rgba(3, 10, 14, 0.88);
 
     --header-height: 64px;
     --footer-height: 28px;
+
+    /*
+        MAP +20 %
+    */
+    --map-size: min(62.4vh, 62.4vw);
+
+    /*
+        Distance entre le cercle
+        de la MAP et le bord du menu.
+    */
+    --menu-depth: 155px;
 }
 
 
@@ -33,14 +39,17 @@
 
 html,
 body {
+
     width: 100%;
     height: 100%;
+
     margin: 0;
     padding: 0;
 
     overflow: hidden;
 
     background: var(--background);
+
     color: var(--text);
 
     font-family:
@@ -49,16 +58,13 @@ body {
         monospace;
 }
 
-button {
-    font-family: inherit;
-}
-
 
 /* =========================================================
    HEADER
    ========================================================= */
 
 #header {
+
     position: fixed;
 
     top: 0;
@@ -68,6 +74,7 @@ button {
     height: var(--header-height);
 
     display: flex;
+
     align-items: center;
     justify-content: space-between;
 
@@ -80,62 +87,80 @@ button {
             rgba(3, 8, 12, 0.98)
         );
 
-    border-bottom: 1px solid var(--border);
+    border-bottom:
+        1px solid
+        rgba(0, 234, 255, 0.45);
 
     z-index: 1000;
 }
 
 .header-brand {
+
     display: flex;
+
     flex-direction: column;
+
     gap: 3px;
 }
 
 .header-title {
-    font-size: 17px;
-    font-weight: 700;
-    letter-spacing: 2px;
+
     color: var(--cyan);
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
 }
 
 .header-subtitle {
-    font-size: 8px;
-    letter-spacing: 1.5px;
+
     color: var(--text-soft);
+
+    font-size: 8px;
+
+    letter-spacing: 1.5px;
 }
 
 .header-game {
+
     position: absolute;
 
     left: 50%;
     top: 50%;
 
-    transform: translate(-50%, -50%);
-
-    font-size: 20px;
-    font-weight: 700;
+    transform:
+        translate(-50%, -50%);
 
     color: var(--green);
+
+    font-size: 20px;
+
+    font-weight: 700;
 
     letter-spacing: 3px;
 }
 
 .header-status {
+
     display: flex;
+
     align-items: center;
+
     gap: 7px;
 
-    font-size: 9px;
-    letter-spacing: 1.5px;
-
     color: var(--green);
+
+    font-size: 9px;
+
+    letter-spacing: 1.5px;
 }
 
 .status-dot {
+
     width: 7px;
     height: 7px;
-
-    display: inline-block;
 
     border-radius: 50%;
 
@@ -143,7 +168,7 @@ button {
 
     box-shadow:
         0 0 6px var(--green),
-        0 0 12px rgba(0, 255, 153, 0.4);
+        0 0 12px rgba(0, 255, 153, 0.45);
 }
 
 
@@ -152,6 +177,7 @@ button {
    ========================================================= */
 
 #game {
+
     position: fixed;
 
     top: var(--header-height);
@@ -164,12 +190,10 @@ button {
     background:
         radial-gradient(
             circle at center,
-            rgba(0, 234, 255, 0.025),
-            transparent 55%
+            rgba(0, 234, 255, 0.035),
+            transparent 60%
         ),
         var(--background);
-
-    z-index: 1;
 }
 
 
@@ -178,22 +202,22 @@ button {
    ========================================================= */
 
 #radial-interface {
+
     position: absolute;
 
     inset: 0;
 
     width: 100%;
     height: 100%;
-
-    pointer-events: none;
 }
 
 
 /* =========================================================
-   SVG MENUS
+   SVG
    ========================================================= */
 
 #radial-menus {
+
     position: absolute;
 
     inset: 0;
@@ -203,23 +227,29 @@ button {
 
     overflow: visible;
 
-    pointer-events: none;
-
     z-index: 10;
 }
 
+
+/* =========================================================
+   MENUS
+   ========================================================= */
+
 .menu-sector {
-    fill: var(--panel);
 
-    stroke: var(--cyan);
+    fill: var(--menu-background);
 
-    stroke-width: 1.25;
+    stroke:
+        rgba(0, 234, 255, 0.48);
 
-    vector-effect: non-scaling-stroke;
+    stroke-width: 1;
 
-    pointer-events: auto;
+    vector-effect:
+        non-scaling-stroke;
 
     cursor: pointer;
+
+    pointer-events: auto;
 
     transition:
         fill 0.15s ease,
@@ -227,374 +257,139 @@ button {
 }
 
 .menu-sector:hover {
-    fill: rgba(0, 234, 255, 0.14);
 
-    stroke: var(--green);
+    fill:
+        rgba(0, 234, 255, 0.09);
+
+    stroke:
+        var(--cyan);
+
+    stroke-width: 1.5;
+}
+
+.menu-sector.active {
+
+    fill:
+        rgba(0, 255, 153, 0.07);
+
+    stroke:
+        var(--green);
+
+    stroke-width: 1.5;
 }
 
 
 /* =========================================================
-   MENU CONTENT
+   CERCLE DE LA MAP
    ========================================================= */
 
-.radial-content {
-    position: absolute;
+.map-circle-guide {
 
-    width: 0;
-    height: 0;
+    fill: none;
 
-    pointer-events: none;
+    stroke:
+        rgba(0, 234, 255, 0.65);
 
-    z-index: 30;
+    stroke-width: 1;
 
-    transform-origin: center;
-}
-
-.radial-content.active {
-    z-index: 40;
+    vector-effect:
+        non-scaling-stroke;
 }
 
 
-/*
-    Chaque menu est placé dans son secteur.
-    Aucun fond propre.
-    Aucun rectangle.
-    Aucun border-radius.
+/* =========================================================
+   SEPARATIONS
+   ========================================================= */
 
-    Le seul contour visible est celui du secteur SVG.
-*/
+.menu-separator {
+
+    stroke:
+        rgba(0, 234, 255, 0.45);
+
+    stroke-width: 1;
+
+    vector-effect:
+        non-scaling-stroke;
+}
+
+
+/* =========================================================
+   ARCS DES TITRES
+   ========================================================= */
+
+.menu-title-path {
+
+    fill: none;
+
+    stroke: none;
+}
 
 .menu-title {
-    position: absolute;
 
-    color: var(--cyan);
+    fill: var(--cyan);
 
-    font-size: 12px;
+    font-family:
+        "Courier New",
+        Courier,
+        monospace;
+
+    font-size: 13px;
+
     font-weight: 700;
 
     letter-spacing: 2px;
 
-    white-space: nowrap;
-}
+    text-anchor: middle;
 
-.menu-line {
-    position: absolute;
+    dominant-baseline: middle;
 
-    display: flex;
-
-    align-items: center;
-    justify-content: space-between;
-
-    gap: 12px;
-
-    width: 105px;
-
-    font-size: 8px;
-
-    letter-spacing: 1px;
-
-    color: var(--text-soft);
-
-    white-space: nowrap;
-}
-
-.menu-line strong {
-    color: var(--text);
-
-    font-size: 9px;
-
-    font-weight: 700;
-}
-
-.menu-button {
-    position: absolute;
-
-    width: 82px;
-    height: 20px;
-
-    padding: 0;
-
-    border: 1px solid rgba(0, 234, 255, 0.5);
-
-    background: rgba(0, 234, 255, 0.05);
-
-    color: var(--cyan);
-
-    font-size: 8px;
-    letter-spacing: 1px;
-
-    cursor: pointer;
-
-    pointer-events: auto;
-
-    transition:
-        background 0.15s ease,
-        color 0.15s ease,
-        border-color 0.15s ease;
-}
-
-.menu-button:hover {
-    background: rgba(0, 234, 255, 0.18);
-
-    border-color: var(--cyan);
-
-    color: #ffffff;
-}
-
-.menu-button:active {
-    background: rgba(0, 255, 153, 0.18);
-
-    border-color: var(--green);
-
-    color: var(--green);
+    filter:
+        drop-shadow(
+            0 0 4px
+            rgba(0, 234, 255, 0.35)
+        );
 }
 
 
 /* =========================================================
-   INDIVIDUAL MENU CONTENT
+   INFORMATIONS
    ========================================================= */
 
-/* GAME */
+.menu-info-label {
 
-.radial-game {
-    left: 50%;
-    top: 10%;
+    fill: var(--text-soft);
+
+    font-size: 7px;
+
+    letter-spacing: 1px;
+
+    text-anchor: middle;
 }
 
-.radial-game .menu-title {
-    transform: translate(-50%, 0);
-}
+.menu-info-value {
 
-.radial-game .menu-line:nth-child(2) {
-    left: -52px;
-    top: 25px;
-}
+    fill: var(--text);
 
-.radial-game .menu-line:nth-child(3) {
-    left: -52px;
-    top: 43px;
-}
+    font-size: 9px;
 
-.radial-game .menu-line:nth-child(4) {
-    left: -52px;
-    top: 61px;
-}
-
-
-/* CELL */
-
-.radial-cell {
-    left: 69%;
-    top: 28%;
-}
-
-.radial-cell .menu-title {
-    left: -5px;
-}
-
-.radial-cell .menu-line:nth-child(2) {
-    left: -5px;
-    top: 25px;
-}
-
-.radial-cell .menu-line:nth-child(3) {
-    left: -5px;
-    top: 43px;
-}
-
-.radial-cell .menu-line:nth-child(4) {
-    left: -5px;
-    top: 61px;
-}
-
-
-/* ACTION */
-
-.radial-action {
-    left: 82%;
-    top: 50%;
-}
-
-.radial-action .menu-title {
-    left: -15px;
-    top: -42px;
-}
-
-.radial-action .menu-button:nth-child(2) {
-    left: -15px;
-    top: -10px;
-}
-
-.radial-action .menu-button:nth-child(3) {
-    left: -15px;
-    top: 17px;
-}
-
-.radial-action .menu-button:nth-child(4) {
-    left: -15px;
-    top: 44px;
-}
-
-
-/* POSITION */
-
-.radial-position {
-    left: 69%;
-    top: 73%;
-}
-
-.radial-position .menu-title {
-    left: -5px;
-}
-
-.radial-position .menu-line:nth-child(2) {
-    left: -5px;
-    top: 25px;
-}
-
-.radial-position .menu-line:nth-child(3) {
-    left: -5px;
-    top: 43px;
-}
-
-.radial-position .menu-line:nth-child(4) {
-    left: -5px;
-    top: 61px;
-}
-
-
-/* SYSTEM */
-
-.radial-system {
-    left: 50%;
-    top: 86%;
-}
-
-.radial-system .menu-title {
-    transform: translate(-50%, 0);
-}
-
-.radial-system .menu-line:nth-child(2) {
-    left: -52px;
-    top: 25px;
-}
-
-.radial-system .menu-line:nth-child(3) {
-    left: -52px;
-    top: 43px;
-}
-
-.radial-system .menu-line:nth-child(4) {
-    left: -52px;
-    top: 61px;
-}
-
-
-/* GRID */
-
-.radial-grid {
-    left: 31%;
-    top: 73%;
-}
-
-.radial-grid .menu-title {
-    right: -5px;
-}
-
-.radial-grid .menu-line:nth-child(2) {
-    right: -5px;
-    top: 25px;
-}
-
-.radial-grid .menu-line:nth-child(3) {
-    right: -5px;
-    top: 43px;
-}
-
-.radial-grid .menu-line:nth-child(4) {
-    right: -5px;
-    top: 61px;
-}
-
-
-/* MAP */
-
-.radial-map {
-    left: 18%;
-    top: 50%;
-}
-
-.radial-map .menu-title {
-    right: -15px;
-    top: -42px;
-}
-
-.radial-map .menu-button:nth-child(2) {
-    right: -15px;
-    top: -10px;
-}
-
-.radial-map .zoom-value {
-    position: absolute;
-
-    right: 4px;
-    top: 17px;
-
-    width: 45px;
-
-    text-align: center;
-
-    font-size: 12px;
-
-    color: var(--green);
-}
-
-.radial-map .menu-button:nth-child(4) {
-    right: -15px;
-    top: 44px;
-}
-
-
-/* PLAYER */
-
-.radial-player {
-    left: 31%;
-    top: 28%;
-}
-
-.radial-player .menu-title {
-    right: -5px;
-}
-
-.radial-player .player-number {
-    position: absolute;
-
-    right: 0;
-    top: 25px;
-
-    font-size: 22px;
     font-weight: 700;
 
-    color: var(--green);
+    letter-spacing: 1px;
+
+    text-anchor: middle;
 }
 
-.radial-player .menu-line {
-    right: -5px;
-    top: 57px;
-}
+.menu-info-accent {
 
-.player-indicator {
-    position: absolute;
+    fill: var(--green);
 
-    right: 0;
-    top: 80px;
+    font-size: 15px;
 
-    width: 30px;
-    height: 3px;
+    font-weight: 700;
 
-    background: var(--green);
+    letter-spacing: 1px;
 
-    box-shadow: 0 0 8px rgba(0, 255, 153, 0.5);
+    text-anchor: middle;
 }
 
 
@@ -603,25 +398,25 @@ button {
    ========================================================= */
 
 #map-container {
+
     position: absolute;
 
     left: 50%;
     top: 50%;
 
-    width: min(52vh, 52vw);
-    height: min(52vh, 52vw);
+    width: var(--map-size);
+    height: var(--map-size);
 
-    min-width: 280px;
-    min-height: 280px;
-
-    transform: translate(-50%, -50%);
-
-    pointer-events: none;
+    transform:
+        translate(-50%, -50%);
 
     z-index: 50;
+
+    pointer-events: none;
 }
 
 #map {
+
     position: relative;
 
     width: 100%;
@@ -638,20 +433,45 @@ button {
             rgba(2, 8, 12, 0.98) 72%
         );
 
-    border: 2px solid var(--cyan);
+    border:
+        2px solid var(--cyan);
 
     box-shadow:
-        0 0 0 1px rgba(0, 234, 255, 0.15),
-        0 0 20px rgba(0, 234, 255, 0.08),
-        inset 0 0 30px rgba(0, 234, 255, 0.04);
+
+        0 0 0 1px
+        rgba(0, 234, 255, 0.14),
+
+        0 0 30px
+        rgba(0, 234, 255, 0.08),
+
+        inset 0 0 40px
+        rgba(0, 234, 255, 0.04);
+}
+
+#map::after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 8px;
+
+    border-radius: 50%;
+
+    border:
+        1px solid
+        rgba(0, 234, 255, 0.18);
+
+    pointer-events: none;
 }
 
 
 /* =========================================================
-   OCTAGON GRID
+   OCTAGONS
    ========================================================= */
 
 #octagon-grid {
+
     position: absolute;
 
     inset: 0;
@@ -660,30 +480,31 @@ button {
 
     flex-direction: column;
 
-    align-items: center;
     justify-content: center;
 
-    gap: 0;
+    align-items: center;
 
-    opacity: 0.65;
+    opacity: 0.62;
 }
 
 .octagon-row {
+
     display: flex;
 
-    align-items: center;
-
     height: 46px;
+
+    align-items: center;
 
     margin-top: -1px;
 }
 
 .octagon-row.offset {
-    transform: translateX(26px);
+
+    transform:
+        translateX(26px);
 }
 
 .octagon-cell {
-    position: relative;
 
     width: 52px;
     height: 46px;
@@ -693,53 +514,58 @@ button {
     background:
         rgba(0, 234, 255, 0.025);
 
-    border: 1px solid rgba(0, 234, 255, 0.24);
+    border:
+        1px solid
+        rgba(0, 234, 255, 0.24);
 
-    clip-path: polygon(
-        25% 0%,
-        75% 0%,
-        100% 50%,
-        75% 100%,
-        25% 100%,
-        0% 50%
-    );
+    clip-path:
+        polygon(
+            25% 0%,
+            75% 0%,
+            100% 50%,
+            75% 100%,
+            25% 100%,
+            0% 50%
+        );
 
     pointer-events: auto;
 
     cursor: pointer;
-
-    transition:
-        background 0.15s ease,
-        border-color 0.15s ease;
 }
 
 .octagon-cell:hover {
-    background: rgba(0, 234, 255, 0.12);
+
+    background:
+        rgba(0, 234, 255, 0.12);
 }
 
 .octagon-cell.selected {
-    background: rgba(0, 255, 153, 0.15);
 
-    outline: 1px solid var(--green);
+    background:
+        rgba(0, 255, 153, 0.15);
 
-    box-shadow:
-        0 0 10px rgba(0, 255, 153, 0.35);
+    outline:
+        1px solid var(--green);
 }
 
 
 /* =========================================================
-   SQUARE GRID
+   SQUARES
    ========================================================= */
 
 #square-grid {
+
     position: absolute;
 
     inset: 0;
 
     display: grid;
 
-    grid-template-columns: repeat(8, 34px);
-    grid-template-rows: repeat(8, 34px);
+    grid-template-columns:
+        repeat(8, 34px);
+
+    grid-template-rows:
+        repeat(8, 34px);
 
     gap: 4px;
 
@@ -752,45 +578,50 @@ button {
 }
 
 .square-cell {
-    border: 1px solid rgba(255, 255, 255, 0.14);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.14);
 }
 
 
 /* =========================================================
-   MAP CENTER
+   CENTRE MAP
    ========================================================= */
 
 #map-center {
+
     position: absolute;
 
     left: 50%;
     top: 50%;
 
-    transform: translate(-50%, -50%);
+    transform:
+        translate(-50%, -50%);
 
     width: 120px;
 
     text-align: center;
 
     pointer-events: none;
-
-    opacity: 0.75;
 }
 
 .map-center-title {
-    font-size: 18px;
 
     color: var(--cyan);
+
+    font-size: 18px;
 
     letter-spacing: 3px;
 }
 
 .map-center-subtitle {
+
     margin-top: 4px;
 
-    font-size: 8px;
-
     color: var(--text-soft);
+
+    font-size: 8px;
 
     letter-spacing: 2px;
 }
@@ -801,6 +632,7 @@ button {
    ========================================================= */
 
 #footer {
+
     position: fixed;
 
     left: 0;
@@ -812,24 +644,29 @@ button {
     display: flex;
 
     align-items: center;
+
     justify-content: space-between;
 
     padding: 0 12px;
 
-    background: rgba(4, 9, 13, 0.98);
+    background:
+        rgba(4, 9, 13, 0.98);
 
-    border-top: 1px solid rgba(0, 234, 255, 0.25);
+    border-top:
+        1px solid
+        rgba(0, 234, 255, 0.25);
 
     z-index: 1000;
+
+    color: var(--text-soft);
 
     font-size: 8px;
 
     letter-spacing: 1px;
-
-    color: var(--text-soft);
 }
 
-.footer-right {
+.footer-online {
+
     display: flex;
 
     align-items: center;
@@ -846,33 +683,18 @@ button {
 
 @media (max-width: 900px) {
 
-    #map-container {
-        width: min(48vh, 58vw);
-        height: min(48vh, 58vw);
+    :root {
 
-        min-width: 240px;
-        min-height: 240px;
+        --map-size: min(58vh, 58vw);
+
+        --menu-depth: 125px;
     }
 
     .menu-title {
-        font-size: 10px;
-    }
 
-    .menu-line {
-        width: 90px;
+        font-size: 11px;
 
-        font-size: 7px;
-    }
-
-    .menu-line strong {
-        font-size: 8px;
-    }
-
-    .menu-button {
-        width: 70px;
-        height: 18px;
-
-        font-size: 7px;
+        letter-spacing: 1.5px;
     }
 }
 
@@ -880,52 +702,35 @@ button {
 @media (max-width: 650px) {
 
     :root {
-        --header-height: 54px;
-        --footer-height: 24px;
-    }
 
-    #header {
-        padding: 0 10px;
+        --header-height: 54px;
+
+        --footer-height: 24px;
+
+        --map-size: min(48vh, 65vw);
+
+        --menu-depth: 95px;
     }
 
     .header-title {
+
         font-size: 13px;
     }
 
     .header-subtitle {
+
         display: none;
     }
 
     .header-game {
+
         font-size: 16px;
     }
 
-    .header-status {
+    .menu-title {
+
         font-size: 8px;
-    }
 
-    #map-container {
-        width: min(42vh, 65vw);
-        height: min(42vh, 65vw);
-
-        min-width: 210px;
-        min-height: 210px;
-    }
-
-    .radial-content {
-        transform: scale(0.82);
-    }
-}
-
-
-@media (max-height: 650px) {
-
-    #map-container {
-        width: min(48vh, 50vw);
-        height: min(48vh, 50vw);
-    }
-
-    .radial-content {
-        transform: scale(0.82);
+        letter-spacing: 1px;
     }
 }
