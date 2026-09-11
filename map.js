@@ -68,6 +68,16 @@ const MAP = {
                 "selected-content"
             ),
 
+        cellX:
+            document.getElementById(
+                "cell-x"
+            ),
+
+        cellY:
+            document.getElementById(
+                "cell-y"
+            ),
+
         positionX:
             document.getElementById(
                 "position-x"
@@ -1275,6 +1285,38 @@ const MAP = {
         ) {
 
             this.DOM.positionY.textContent =
+                this.state.selectedY !== null
+                    ? String(
+                        this.state.selectedY
+                    ).padStart(
+                        2,
+                        "0"
+                    )
+                    : "--";
+        }
+
+
+        if (
+            this.DOM.cellX
+        ) {
+
+            this.DOM.cellX.textContent =
+                this.state.selectedX !== null
+                    ? String(
+                        this.state.selectedX
+                    ).padStart(
+                        2,
+                        "0"
+                    )
+                    : "--";
+        }
+
+
+        if (
+            this.DOM.cellY
+        ) {
+
+            this.DOM.cellY.textContent =
                 this.state.selectedY !== null
                     ? String(
                         this.state.selectedY
