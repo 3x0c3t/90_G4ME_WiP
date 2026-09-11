@@ -2,349 +2,105 @@
 <html lang="fr">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>90_G4ME_WiP | -3xØc3t- L4B</title>
+    <meta charset="UTF-8">
 
     <meta
-        name="description"
-        content="-3xØc3t- L4B | 90_G4ME_WiP"
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
     >
 
-    <link rel="stylesheet" href="index.css">
+    <meta
+        name="theme-color"
+        content="#02070c"
+    >
+
+    <title>
+        90_G4ME_WiP | 3xØc3t L4B
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="index.css"
+    >
+
 </head>
+
 
 <body>
 
-<header id="main-header">
+<div id="game">
 
-    <div class="header-left">
 
-        <div class="brand">
-            <span class="brand-main">-3xØc3t- L4B</span>
-            <span class="brand-sub">
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <header id="header">
+
+        <div class="header-brand">
+
+            <div class="header-title">
+                -3xØc3t- L4B
+            </div>
+
+            <div class="header-subtitle">
                 DIGITAL L4B &amp; EXPERIMENTATION
+            </div>
+
+        </div>
+
+
+        <div class="header-project">
+
+            <span class="project-name">
+                90_G4ME_WiP
             </span>
+
+            <span class="project-version">
+                v1.0
+            </span>
+
         </div>
 
-    </div>
 
+        <div class="header-player">
 
-    <div class="header-center">
+            <span>
+                PLAYER
+            </span>
 
-        <div class="game-title">
-            <span class="game-number">90</span>
-            <span class="game-name">G4ME_WiP</span>
+            <strong id="player-value">
+                P1
+            </strong>
+
         </div>
 
-        <div class="game-status">
-            <span class="status-dot"></span>
-            <span>WORK IN PROGRESS</span>
-        </div>
-
-    </div>
+    </header>
 
 
-    <div class="header-right">
 
-        <button
-            class="header-button"
-            id="btn-reset"
-            type="button"
-        >
-            RESET
-        </button>
+    <!-- =====================================================
+         GAME AREA
+         ===================================================== -->
 
-        <button
-            class="header-button"
-            id="btn-menu"
-            type="button"
-        >
-            MENU
-        </button>
-
-    </div>
-
-</header>
-
-
-<main id="game">
-
-    <div id="radial-interface">
+    <main id="game-area">
 
 
         <!-- =================================================
-             CONTENU DES MENUS
-             ================================================= -->
-
-        <div id="menu-content">
-
-            <section
-                class="menu-content-panel menu-game"
-                id="panel-top"
-            >
-                <div class="content-inner">
-
-                    <div class="content-label">
-                        GAME
-                    </div>
-
-                    <div class="game-info">
-
-                        <div>
-                            <span>TURN</span>
-                            <strong id="turn-value">01</strong>
-                        </div>
-
-                        <div>
-                            <span>ROUND</span>
-                            <strong id="round-value">01</strong>
-                        </div>
-
-                        <div>
-                            <span>PLAYERS</span>
-                            <strong id="players-value">02</strong>
-                        </div>
-
-                    </div>
-
-                </div>
-            </section>
-
-
-            <section
-                class="menu-content-panel menu-cell"
-                id="panel-top-right"
-            >
-                <div class="content-inner">
-
-                    <div class="content-label">
-                        CELL
-                    </div>
-
-                    <div class="cell-info">
-
-                        <div>
-                            <span>SELECTED</span>
-                            <strong id="selected-cell">NONE</strong>
-                        </div>
-
-                        <div>
-                            <span>TYPE</span>
-                            <strong id="selected-type">EMPTY</strong>
-                        </div>
-
-                    </div>
-
-                </div>
-            </section>
-
-
-            <section
-                class="menu-content-panel menu-action"
-                id="panel-right"
-            >
-                <div class="content-inner">
-
-                    <div class="content-label">
-                        ACTION
-                    </div>
-
-                    <div class="actions">
-
-                        <button
-                            class="action-button"
-                            id="btn-select"
-                            type="button"
-                        >
-                            SELECT
-                        </button>
-
-                        <button
-                            class="action-button"
-                            id="btn-confirm"
-                            type="button"
-                        >
-                            CONFIRM
-                        </button>
-
-                        <button
-                            class="action-button"
-                            id="btn-cancel"
-                            type="button"
-                        >
-                            CANCEL
-                        </button>
-
-                    </div>
-
-                </div>
-            </section>
-
-
-            <section
-                class="menu-content-panel menu-position"
-                id="panel-bottom-right"
-            >
-                <div class="content-inner">
-
-                    <div class="content-label">
-                        POSITION
-                    </div>
-
-                    <div class="position-info">
-
-                        <span>
-                            X:
-                            <strong id="position-x">--</strong>
-                        </span>
-
-                        <span>
-                            Y:
-                            <strong id="position-y">--</strong>
-                        </span>
-
-                    </div>
-
-                </div>
-            </section>
-
-
-            <section
-                class="menu-content-panel menu-system"
-                id="panel-bottom"
-            >
-                <div class="content-inner">
-
-                    <div class="content-label">
-                        SYSTEM
-                    </div>
-
-                    <div
-                        class="system-message"
-                        id="system-message"
-                    >
-                        SYSTEM READY
-                    </div>
-
-                </div>
-            </section>
-
-
-            <section
-                class="menu-content-panel menu-grid"
-                id="panel-bottom-left"
-            >
-                <div class="content-inner">
-
-                    <div class="content-label">
-                        GRID
-                    </div>
-
-                    <div class="grid-info">
-
-                        <div>
-                            <span>OCTAGONS</span>
-                            <strong id="octagon-count">49</strong>
-                        </div>
-
-                        <div>
-                            <span>SQUARES</span>
-                            <strong id="square-count">64</strong>
-                        </div>
-
-                    </div>
-
-                </div>
-            </section>
-
-
-            <section
-                class="menu-content-panel menu-map"
-                id="panel-left"
-            >
-                <div class="content-inner">
-
-                    <div class="content-label">
-                        MAP
-                    </div>
-
-                    <div class="map-controls">
-
-                        <button
-                            class="control-button"
-                            id="btn-zoom-in"
-                            type="button"
-                        >
-                            +
-                        </button>
-
-                        <span class="zoom-value">
-                            <span id="zoom-value">100</span>%
-                        </span>
-
-                        <button
-                            class="control-button"
-                            id="btn-zoom-out"
-                            type="button"
-                        >
-                            −
-                        </button>
-
-                    </div>
-
-                </div>
-            </section>
-
-
-            <section
-                class="menu-content-panel menu-player"
-                id="panel-top-left"
-            >
-                <div class="content-inner">
-
-                    <div class="content-label">
-                        PLAYER
-                    </div>
-
-                    <div class="player-indicator">
-
-                        <span class="player-color"></span>
-
-                        <div>
-                            <strong id="player-name">
-                                PLAYER 01
-                            </strong>
-
-                            <small id="player-state">
-                                READY
-                            </small>
-                        </div>
-
-                    </div>
-
-                </div>
-            </section>
-
-        </div>
-
-
-        <!-- =================================================
-             STRUCTURE CIRCULAIRE
+             RADIAL INTERFACE
              ================================================= -->
 
         <svg
-            id="radial-interface-svg"
-            viewBox="0 0 1000 1000"
-            preserveAspectRatio="none"
-            aria-hidden="true"
+            id="radial-interface"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-label="Interface radiale"
         >
 
             <defs>
 
                 <filter
-                    id="title-glow"
+                    id="cyan-glow"
                     x="-50%"
                     y="-50%"
                     width="200%"
@@ -357,8 +113,15 @@
                     />
 
                     <feMerge>
-                        <feMergeNode in="blur"></feMergeNode>
-                        <feMergeNode in="SourceGraphic"></feMergeNode>
+
+                        <feMergeNode
+                            in="blur"
+                        ></feMergeNode>
+
+                        <feMergeNode
+                            in="SourceGraphic"
+                        ></feMergeNode>
+
                     </feMerge>
 
                 </filter>
@@ -366,96 +129,312 @@
             </defs>
 
 
-            <!-- Limites des 8 secteurs -->
+            <g id="menu-guides"></g>
 
-            <g id="menu-sector-lines"></g>
+            <g id="menu-title-paths"></g>
 
-
-            <!-- Cercle immédiatement autour de la MAP -->
-
-            <g id="map-circle-layer"></g>
-
-
-            <!-- Cercle support des titres -->
-
-            <g id="title-circle-layer"></g>
-
-
-            <!-- Arcs des titres -->
-
-            <g id="menu-title-layer"></g>
+            <g id="menu-titles"></g>
 
         </svg>
 
 
+
         <!-- =================================================
-             MAP CENTRALE
+             MENU CONTENT
              ================================================= -->
 
         <section
-            id="map-container"
-            aria-label="Carte de jeu"
+            id="menu-information"
+            aria-label="Contenu des menus"
         >
 
-            <div id="map">
+
+            <!-- GAME -->
+
+            <article
+                class="radial-content radial-content-game"
+                data-menu="game"
+            >
+
+                <div class="menu-content-item">
+                    <span>TURN</span>
+                    <strong id="content-turn">01</strong>
+                </div>
+
+                <div class="menu-content-item">
+                    <span>ROUND</span>
+                    <strong id="content-round">01</strong>
+                </div>
+
+                <div class="menu-content-item">
+                    <span>MODE</span>
+                    <strong>NORMAL</strong>
+                </div>
+
+            </article>
+
+
+
+            <!-- CELL -->
+
+            <article
+                class="radial-content radial-content-cell"
+                data-menu="cell"
+            >
+
+                <div class="menu-content-item">
+                    <span>CELL</span>
+                    <strong id="content-cell">NONE</strong>
+                </div>
+
+                <div class="menu-content-item">
+                    <span>TYPE</span>
+                    <strong id="content-type">EMPTY</strong>
+                </div>
+
+            </article>
+
+
+
+            <!-- ACTION -->
+
+            <article
+                class="radial-content radial-content-action"
+                data-menu="action"
+            >
+
+                <button
+                    type="button"
+                    class="menu-action-button"
+                    id="btn-select"
+                >
+                    SELECT
+                </button>
+
+                <button
+                    type="button"
+                    class="menu-action-button"
+                    id="btn-confirm"
+                >
+                    CONFIRM
+                </button>
+
+                <button
+                    type="button"
+                    class="menu-action-button"
+                    id="btn-cancel"
+                >
+                    CANCEL
+                </button>
+
+            </article>
+
+
+
+            <!-- POSITION -->
+
+            <article
+                class="radial-content radial-content-position"
+                data-menu="position"
+            >
+
+                <div class="menu-content-item">
+                    <span>X</span>
+                    <strong id="content-x">--</strong>
+                </div>
+
+                <div class="menu-content-item">
+                    <span>Y</span>
+                    <strong id="content-y">--</strong>
+                </div>
+
+                <div class="menu-content-item">
+                    <span>Z</span>
+                    <strong>00</strong>
+                </div>
+
+            </article>
+
+
+
+            <!-- SYSTEM -->
+
+            <article
+                class="radial-content radial-content-system"
+                data-menu="system"
+            >
+
+                <div class="menu-content-item">
+                    <span>STATUS</span>
+                    <strong>ONLINE</strong>
+                </div>
+
+                <div class="menu-content-item">
+                    <span>SYSTEM</span>
+                    <strong>READY</strong>
+                </div>
 
                 <div
-                    id="octagon-grid"
-                    aria-label="Grille octogonale"
-                ></div>
+                    class="menu-system-message"
+                    id="system-message"
+                >
+                    SYSTEM READY
+                </div>
 
-                <div
-                    id="square-grid"
-                    aria-label="Grille carrée"
-                ></div>
+            </article>
+
+
+
+            <!-- GRID -->
+
+            <article
+                class="radial-content radial-content-grid"
+                data-menu="grid"
+            >
+
+                <div class="menu-content-item">
+                    <span>GRID</span>
+                    <strong>7 × 7</strong>
+                </div>
+
+                <div class="menu-content-item">
+                    <span>CELLS</span>
+                    <strong>49</strong>
+                </div>
+
+                <div class="menu-content-item">
+                    <span>TYPE</span>
+                    <strong>OCTAGON</strong>
+                </div>
+
+            </article>
+
+
+
+            <!-- MAP -->
+
+            <article
+                class="radial-content radial-content-map"
+                data-menu="map"
+            >
+
+                <div class="menu-content-item">
+                    <span>ZOOM</span>
+                    <strong id="content-zoom">
+                        100%
+                    </strong>
+                </div>
+
+                <div class="map-buttons">
+
+                    <button
+                        type="button"
+                        class="menu-action-button"
+                        id="btn-zoom-out"
+                    >
+                        −
+                    </button>
+
+                    <button
+                        type="button"
+                        class="menu-action-button"
+                        id="btn-zoom-in"
+                    >
+                        +
+                    </button>
+
+                </div>
+
+            </article>
+
+
+
+            <!-- PLAYER -->
+
+            <article
+                class="radial-content radial-content-player"
+                data-menu="player"
+            >
+
+                <div class="menu-content-item">
+                    <span>PLAYER</span>
+                    <strong id="content-player">P1</strong>
+                </div>
+
+                <div class="menu-content-item">
+                    <span>PLAYERS</span>
+                    <strong>02</strong>
+                </div>
+
+            </article>
+
+
+        </section>
+
+
+
+        <!-- =================================================
+             MAP
+             ================================================= -->
+
+        <section
+            id="map"
+            aria-label="MAP"
+        >
+
+            <div id="map-inner">
+
+                <div id="map-label">
+                    MAP
+                </div>
+
+                <div id="map-grid">
+
+                    <div id="octagon-grid"></div>
+
+                    <div id="square-grid"></div>
+
+                </div>
 
                 <div id="map-center">
-
-                    <span class="center-number">
-                        90
-                    </span>
-
-                    <span class="center-label">
-                        G4ME
-                    </span>
-
+                    3xØc3t
                 </div>
 
             </div>
 
         </section>
 
-    </div>
 
-</main>
+    </main>
 
 
-<footer id="main-footer">
 
-    <div class="footer-left">
-        -3xØc3t- L4B
-    </div>
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
 
-    <div class="footer-center">
-
-        <span>90_G4ME_WiP</span>
-
-        <span class="footer-separator">•</span>
+    <footer id="footer">
 
         <span>
-            EXPERIMENTAL GAME INTERFACE
+            90_G4ME_WiP
         </span>
 
-    </div>
+        <span>
+            DIGITAL EXPERIMENT
+        </span>
 
-    <div class="footer-right">
-        <span id="footer-status">ONLINE</span>
-    </div>
+        <span>
+            v1.0
+        </span>
 
-</footer>
+    </footer>
+
+
+</div>
 
 
 <script src="index.js"></script>
 
 </body>
+
 </html>

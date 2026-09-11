@@ -1,36 +1,71 @@
 :root {
 
-    --bg: #02070c;
+    --bg:
+        #02070c;
 
-    --cyan: #00eaff;
-    --green: #00ff99;
+    --bg-panel:
+        rgba(2, 10, 16, 0.94);
 
-    --white: #dffcff;
-    --text: #78909a;
+    --map:
+        #34414f;
 
-    --map-size: min(48vh, 48vw);
+    --ring:
+        #60758a;
+
+    --cyan:
+        #00eaff;
+
+    --cyan-soft:
+        rgba(0, 234, 255, 0.45);
+
+    --cyan-faint:
+        rgba(0, 234, 255, 0.14);
+
+    --green:
+        #00ff99;
+
+    --white:
+        #dffcff;
+
+    --text:
+        #8ba0aa;
+
+    --line:
+        rgba(0, 234, 255, 0.42);
 
     --font:
         "Courier New",
         Courier,
         monospace;
+
 }
 
 
 * {
-    box-sizing: border-box;
+
+    box-sizing:
+        border-box;
+
+    margin:
+        0;
+
+    padding:
+        0;
+
 }
 
 
 html,
 body {
 
-    width: 100%;
-    height: 100%;
+    width:
+        100%;
 
-    margin: 0;
+    height:
+        100%;
 
-    overflow: hidden;
+    overflow:
+        hidden;
 
     background:
         var(--bg);
@@ -40,11 +75,37 @@ body {
 
     font-family:
         var(--font);
+
 }
 
 
-body {
-    position: relative;
+#game {
+
+    position:
+        relative;
+
+    width:
+        100vw;
+
+    height:
+        100vh;
+
+    overflow:
+        hidden;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(
+                0,
+                234,
+                255,
+                0.035
+            ),
+            transparent 45%
+        ),
+        var(--bg);
+
 }
 
 
@@ -52,130 +113,114 @@ body {
    HEADER
    ========================================================= */
 
-#main-header {
+#header {
 
-    position: fixed;
+    position:
+        absolute;
 
-    top: 0;
-    left: 0;
-    right: 0;
+    top:
+        0;
 
-    height: 64px;
+    left:
+        0;
 
-    z-index: 100;
+    width:
+        100%;
 
-    display: grid;
+    height:
+        64px;
 
-    grid-template-columns:
-        1fr auto 1fr;
+    z-index:
+        100;
 
-    align-items: center;
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
 
     padding:
-        0 18px;
-
-    background:
-        rgba(2, 7, 12, 0.97);
+        0 22px;
 
     border-bottom:
         1px solid
-        rgba(0, 234, 255, 0.18);
-}
+        var(--cyan-faint);
 
-
-.header-left {
-    justify-self: start;
-}
-
-
-.brand {
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 3px;
-}
-
-
-.brand-main {
-
-    color:
-        var(--cyan);
+    background:
+        rgba(
+            2,
+            7,
+            12,
+            0.94
+        );
 
     font-size:
-        17px;
-
-    font-weight:
-        bold;
+        11px;
 
     letter-spacing:
         1px;
+
 }
 
 
-.brand-sub {
+.header-brand {
 
-    color:
-        #617983;
+    display:
+        flex;
 
-    font-size:
-        8px;
+    flex-direction:
+        column;
 
-    letter-spacing:
-        1.7px;
+    gap:
+        4px;
+
 }
 
 
-.header-center {
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    gap: 2px;
-}
-
-
-.game-title {
-
-    display: flex;
-
-    align-items: baseline;
-
-    gap: 7px;
-}
-
-
-.game-number {
+.header-title {
 
     color:
         var(--cyan);
 
     font-size:
-        18px;
+        16px;
 
     font-weight:
-        bold;
-}
-
-
-.game-name {
-
-    color:
-        var(--white);
-
-    font-size:
-        14px;
+        700;
 
     letter-spacing:
         2px;
+
 }
 
 
-.game-status {
+.header-subtitle {
+
+    color:
+        var(--text);
+
+    font-size:
+        9px;
+
+    letter-spacing:
+        1.5px;
+
+}
+
+
+.header-project {
+
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    transform:
+        translateX(-50%);
 
     display:
         flex;
@@ -184,107 +229,75 @@ body {
         center;
 
     gap:
-        6px;
+        12px;
+
+}
+
+
+.project-name {
 
     color:
-        #5d747e;
+        var(--white);
 
-    font-size:
-        7px;
+    font-weight:
+        700;
 
     letter-spacing:
-        1.3px;
+        2px;
+
 }
 
 
-.status-dot {
+.project-version {
 
-    width:
-        5px;
-
-    height:
-        5px;
-
-    border-radius:
-        50%;
-
-    background:
+    color:
         var(--green);
 
-    box-shadow:
-        0 0 8px
-        var(--green);
+    font-size:
+        10px;
+
 }
 
 
-.header-right {
-
-    justify-self:
-        end;
+.header-player {
 
     display:
         flex;
 
+    align-items:
+        center;
+
     gap:
-        8px;
+        10px;
+
+    color:
+        var(--text);
+
 }
 
 
-.header-button {
-
-    height:
-        27px;
-
-    padding:
-        0 12px;
-
-    border:
-        1px solid
-        rgba(0, 234, 255, 0.30);
-
-    background:
-        rgba(0, 234, 255, 0.035);
+.header-player strong {
 
     color:
         var(--cyan);
 
-    font-family:
-        var(--font);
-
     font-size:
-        8px;
+        13px;
 
-    letter-spacing:
-        1px;
-
-    cursor:
-        pointer;
-}
-
-
-.header-button:hover {
-
-    background:
-        rgba(0, 234, 255, 0.10);
-
-    border-color:
-        var(--cyan);
 }
 
 
 /* =========================================================
-   ZONE DE JEU
+   GAME AREA
    ========================================================= */
 
-#game {
+#game-area {
 
-    position: fixed;
+    position:
+        absolute;
 
     top:
         64px;
-
-    left:
-        0;
 
     right:
         0;
@@ -292,41 +305,24 @@ body {
     bottom:
         32px;
 
+    left:
+        0;
+
     overflow:
         hidden;
+
 }
 
+
+/* =========================================================
+   RADIAL SVG
+   ========================================================= */
 
 #radial-interface {
 
     position:
         absolute;
 
-    inset:
-        0;
-
-    width:
-        100%;
-
-    height:
-        100%;
-
-    overflow:
-        hidden;
-}
-
-
-/* =========================================================
-   SVG RADIAL
-   IMPORTANT :
-   exactement le même repère que #radial-interface
-   ========================================================= */
-
-#radial-interface-svg {
-
-    position:
-        absolute;
-
     top:
         0;
 
@@ -338,661 +334,64 @@ body {
 
     height:
         100%;
-
-    display:
-        block;
-
-    margin:
-        0;
-
-    padding:
-        0;
-
-    z-index:
-        40;
-
-    pointer-events:
-        none;
-}
-
-
-/* =========================================================
-   CONTENU DES MENUS
-   ========================================================= */
-
-#menu-content {
-
-    position:
-        absolute;
-
-    inset:
-        0;
 
     z-index:
         10;
 
-    pointer-events:
-        none;
-}
-
-
-.menu-content-panel {
-
-    position:
-        absolute;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
+    overflow:
+        visible;
 
     pointer-events:
         none;
+
 }
 
 
-.menu-game {
-
-    top:
-        0;
-
-    left:
-        25%;
-
-    width:
-        50%;
-
-    height:
-        46%;
-
-    align-items:
-        flex-start;
-
-    padding-top:
-        5%;
-}
-
-
-.menu-cell {
-
-    top:
-        0;
-
-    right:
-        0;
-
-    width:
-        46%;
-
-    height:
-        50%;
-
-    justify-content:
-        flex-end;
-
-    padding-right:
-        4%;
-}
-
-
-.menu-action {
-
-    top:
-        25%;
-
-    right:
-        0;
-
-    width:
-        46%;
-
-    height:
-        50%;
-
-    justify-content:
-        flex-end;
-
-    padding-right:
-        4%;
-}
-
-
-.menu-position {
-
-    right:
-        0;
-
-    bottom:
-        0;
-
-    width:
-        50%;
-
-    height:
-        46%;
-
-    align-items:
-        flex-end;
-
-    justify-content:
-        flex-end;
-
-    padding-right:
-        4%;
-
-    padding-bottom:
-        5%;
-}
-
-
-.menu-system {
-
-    bottom:
-        0;
-
-    left:
-        25%;
-
-    width:
-        50%;
-
-    height:
-        46%;
-
-    align-items:
-        flex-end;
-
-    padding-bottom:
-        5%;
-}
-
-
-.menu-grid {
-
-    bottom:
-        0;
-
-    left:
-        0;
-
-    width:
-        46%;
-
-    height:
-        50%;
-
-    align-items:
-        flex-end;
-
-    justify-content:
-        flex-start;
-
-    padding-left:
-        4%;
-
-    padding-bottom:
-        5%;
-}
-
-
-.menu-map {
-
-    top:
-        25%;
-
-    left:
-        0;
-
-    width:
-        46%;
-
-    height:
-        50%;
-
-    justify-content:
-        flex-start;
-
-    padding-left:
-        4%;
-}
-
-
-.menu-player {
-
-    top:
-        0;
-
-    left:
-        0;
-
-    width:
-        46%;
-
-    height:
-        50%;
-
-    justify-content:
-        flex-start;
-
-    padding-left:
-        4%;
-}
-
-
-/* =========================================================
-   CONTENU
-   ========================================================= */
-
-.content-inner {
-
-    min-width:
-        170px;
-
-    padding:
-        10px 15px;
-
-    background:
-        rgba(2, 8, 13, 0.42);
-
-    border:
-        1px solid
-        rgba(0, 234, 255, 0.10);
-
-    text-align:
-        center;
-}
-
-
-.content-label {
-
-    margin-bottom:
-        9px;
-
-    color:
-        rgba(0, 234, 255, 0.55);
-
-    font-size:
-        8px;
-
-    letter-spacing:
-        2px;
-}
-
-
-.game-info,
-.grid-info {
-
-    display:
-        flex;
-
-    justify-content:
-        center;
-
-    gap:
-        22px;
-}
-
-
-.game-info > div,
-.grid-info > div {
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
-
-    gap:
-        3px;
-}
-
-
-.game-info span,
-.grid-info span {
-
-    color:
-        #57717b;
-
-    font-size:
-        7px;
-}
-
-
-.game-info strong,
-.grid-info strong {
-
-    color:
-        var(--white);
-
-    font-size:
-        13px;
-}
-
-
-.cell-info {
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
-
-    gap:
-        5px;
-}
-
-
-.cell-info > div {
-
-    display:
-        flex;
-
-    justify-content:
-        space-between;
-
-    gap:
-        20px;
-}
-
-
-.cell-info span {
-
-    color:
-        #57717b;
-
-    font-size:
-        7px;
-}
-
-
-.cell-info strong {
-
-    color:
-        var(--white);
-
-    font-size:
-        10px;
-}
-
-
-.actions {
-
-    display:
-        flex;
-
-    gap:
-        6px;
-}
-
-
-.action-button {
-
-    padding:
-        6px 9px;
-
-    border:
-        1px solid
-        rgba(0, 234, 255, 0.28);
-
-    background:
-        rgba(0, 234, 255, 0.04);
-
-    color:
-        var(--cyan);
-
-    font-family:
-        var(--font);
-
-    font-size:
-        7px;
-
-    cursor:
-        pointer;
-
-    pointer-events:
-        auto;
-}
-
-
-.action-button:hover {
-
-    background:
-        rgba(0, 234, 255, 0.12);
-
-    border-color:
-        var(--cyan);
-}
-
-
-.position-info {
-
-    display:
-        flex;
-
-    gap:
-        20px;
-
-    color:
-        var(--text);
-
-    font-size:
-        9px;
-}
-
-
-.position-info strong {
-    color:
-        var(--white);
-}
-
-
-.system-message {
-
-    color:
-        var(--green);
-
-    font-size:
-        9px;
-
-    letter-spacing:
-        1px;
-}
-
-
-.map-controls {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        9px;
-}
-
-
-.control-button {
-
-    width:
-        25px;
-
-    height:
-        25px;
-
-    border:
-        1px solid
-        rgba(0, 234, 255, 0.30);
-
-    background:
-        rgba(0, 234, 255, 0.04);
-
-    color:
-        var(--cyan);
-
-    font-family:
-        var(--font);
-
-    font-size:
-        14px;
-
-    cursor:
-        pointer;
-
-    pointer-events:
-        auto;
-}
-
-
-.zoom-value {
-
-    min-width:
-        40px;
-
-    color:
-        var(--white);
-
-    font-size:
-        9px;
-}
-
-
-.player-indicator {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        8px;
-}
-
-
-.player-color {
-
-    width:
-        10px;
-
-    height:
-        10px;
-
-    border-radius:
-        50%;
-
-    background:
-        var(--green);
-
-    box-shadow:
-        0 0 9px
-        rgba(0, 255, 153, 0.75);
-}
-
-
-.player-indicator div {
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
-
-    text-align:
-        left;
-}
-
-
-.player-indicator strong {
-
-    color:
-        var(--white);
-
-    font-size:
-        9px;
-}
-
-
-.player-indicator small {
-
-    color:
-        var(--green);
-
-    font-size:
-        7px;
-}
-
-
-/* =========================================================
-   CERCLES SVG
-   ========================================================= */
-
-.map-circle {
+.map-circle-guide {
 
     fill:
         none;
 
     stroke:
-        rgba(0, 234, 255, 0.65);
-
-    stroke-width:
-        2;
-
-    vector-effect:
-        non-scaling-stroke;
-}
-
-
-.map-circle-secondary {
-
-    fill:
-        none;
-
-    stroke:
-        rgba(0, 234, 255, 0.20);
+        var(--cyan-soft);
 
     stroke-width:
         1;
 
     vector-effect:
         non-scaling-stroke;
+
 }
 
 
-.title-circle {
+.menu-outer-guide {
 
     fill:
         none;
 
     stroke:
-        rgba(0, 234, 255, 0.38);
+        var(--cyan-faint);
 
     stroke-width:
         1;
 
     vector-effect:
         non-scaling-stroke;
+
 }
 
 
-/* =========================================================
-   LIGNES RADIALES
-   ========================================================= */
-
-.menu-sector-line {
+.menu-separator {
 
     stroke:
-        rgba(0, 234, 255, 0.15);
+        var(--line);
 
     stroke-width:
         1;
 
     vector-effect:
         non-scaling-stroke;
+
 }
 
 
@@ -1000,15 +399,118 @@ body {
    TITRES
    ========================================================= */
 
-.menu-title-arc {
+/*
+   Le path est invisible.
+   Il sert uniquement de trajectoire
+   au texte.
+*/
+
+.menu-title-path {
 
     fill:
         none;
 
     stroke:
-        transparent;
+        none;
+
 }
 
+
+/*
+   GROUPE DU TITRE
+
+   Le background est maintenant généré
+   directement autour du texte par JS.
+*/
+
+.menu-title-group {
+
+    pointer-events:
+        none;
+
+}
+
+
+/*
+   RECTANGLE DE FOND DU TITRE
+*/
+
+.menu-title-background {
+
+    fill:
+        rgba(
+            2,
+            10,
+            16,
+            0.97
+        );
+
+    stroke:
+        rgba(
+            0,
+            234,
+            255,
+            0.72
+        );
+
+    stroke-width:
+        1;
+
+    rx:
+        4;
+
+    ry:
+        4;
+
+    vector-effect:
+        non-scaling-stroke;
+
+    filter:
+        drop-shadow(
+            0 0 4px
+            rgba(
+                0,
+                234,
+                255,
+                0.30
+            )
+        );
+
+}
+
+
+/*
+   Petite bordure interne
+*/
+
+.menu-title-background-inner {
+
+    fill:
+        none;
+
+    stroke:
+        rgba(
+            0,
+            234,
+            255,
+            0.12
+        );
+
+    stroke-width:
+        1;
+
+    rx:
+        3;
+
+    ry:
+        3;
+
+}
+
+
+/*
+   TEXTE
+*/
 
 .menu-title {
 
@@ -1019,16 +521,23 @@ body {
         var(--font);
 
     font-size:
-        14px;
+        11px;
 
     font-weight:
-        bold;
+        700;
 
     letter-spacing:
         2px;
 
     text-anchor:
         middle;
+
+    dominant-baseline:
+        middle;
+
+    pointer-events:
+        none;
+
 }
 
 
@@ -1036,7 +545,7 @@ body {
    MAP
    ========================================================= */
 
-#map-container {
+#map {
 
     position:
         absolute;
@@ -1048,13 +557,13 @@ body {
         50%;
 
     width:
-        var(--map-size);
+        min(
+            52vh,
+            52vw
+        );
 
-    height:
-        var(--map-size);
-
-    margin:
-        0;
+    aspect-ratio:
+        1 / 1;
 
     transform:
         translate(
@@ -1063,23 +572,15 @@ body {
         );
 
     z-index:
-        50;
+        20;
 
-    pointer-events:
-        none;
 }
 
 
-#map {
+#map-inner {
 
     position:
-        absolute;
-
-    top:
-        0;
-
-    left:
-        0;
+        relative;
 
     width:
         100%;
@@ -1087,91 +588,208 @@ body {
     height:
         100%;
 
+    overflow:
+        hidden;
+
     border-radius:
         50%;
 
     background:
-        radial-gradient(
-            circle at center,
-            #405664 0%,
-            #334854 55%,
-            #263844 100%
-        );
+        var(--map);
 
     border:
-        2px solid
-        rgba(0, 234, 255, 0.62);
+        1px solid
+        rgba(
+            0,
+            234,
+            255,
+            0.55
+        );
 
     box-shadow:
+        0 0 0 1px
+        rgba(
+            0,
+            234,
+            255,
+            0.08
+        ),
+        0 0 30px
+        rgba(
+            0,
+            234,
+            255,
+            0.08
+        );
 
-        0 0 0 7px
-        rgba(2, 7, 12, 0.95),
+}
 
-        0 0 0 8px
-        rgba(0, 234, 255, 0.18),
 
-        0 0 35px
-        rgba(0, 234, 255, 0.10);
+#map-label {
+
+    position:
+        absolute;
+
+    top:
+        14px;
+
+    left:
+        50%;
+
+    transform:
+        translateX(
+            -50%
+        );
+
+    z-index:
+        50;
+
+    color:
+        var(--cyan);
+
+    font-size:
+        11px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        3px;
+
+}
+
+
+#map-grid {
+
+    position:
+        absolute;
+
+    top:
+        10%;
+
+    right:
+        10%;
+
+    bottom:
+        10%;
+
+    left:
+        10%;
 
     overflow:
         hidden;
 
-    pointer-events:
-        auto;
 }
 
-
-#map::before {
-
-    content:
-        "";
-
-    position:
-        absolute;
-
-    inset:
-        8px;
-
-    border:
-        1px solid
-        rgba(0, 234, 255, 0.22);
-
-    border-radius:
-        50%;
-
-    pointer-events:
-        none;
-}
-
-
-#map::after {
-
-    content:
-        "";
-
-    position:
-        absolute;
-
-    inset:
-        17px;
-
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.05);
-
-    border-radius:
-        50%;
-
-    pointer-events:
-        none;
-}
-
-
-/* =========================================================
-   GRILLE
-   ========================================================= */
 
 #octagon-grid {
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            7,
+            1fr
+        );
+
+    grid-template-rows:
+        repeat(
+            7,
+            1fr
+        );
+
+    gap:
+        2px;
+
+    opacity:
+        0.65;
+
+}
+
+
+.octagon-cell {
+
+    min-width:
+        0;
+
+    min-height:
+        0;
+
+    cursor:
+        pointer;
+
+    background:
+        rgba(
+            5,
+            15,
+            22,
+            0.18
+        );
+
+    border:
+        1px solid
+        rgba(
+            0,
+            234,
+            255,
+            0.28
+        );
+
+    clip-path:
+        polygon(
+            22% 0%,
+            78% 0%,
+            100% 22%,
+            100% 78%,
+            78% 100%,
+            22% 100%,
+            0% 78%,
+            0% 22%
+        );
+
+}
+
+
+.octagon-cell:hover {
+
+    background:
+        rgba(
+            0,
+            234,
+            255,
+            0.12
+        );
+
+    border-color:
+        var(--cyan);
+
+}
+
+
+.octagon-cell.selected {
+
+    background:
+        rgba(
+            0,
+            255,
+            153,
+            0.18
+        );
+
+    border-color:
+        var(--green);
+
+}
+
+
+#square-grid {
 
     position:
         absolute;
@@ -1183,76 +801,23 @@ body {
         grid;
 
     grid-template-columns:
-        repeat(7, 1fr);
-
-    grid-template-rows:
-        repeat(7, 1fr);
-
-    gap:
-        2px;
-}
-
-
-.octagon-cell {
-
-    clip-path:
-        polygon(
-            30% 0%,
-            70% 0%,
-            100% 30%,
-            100% 70%,
-            70% 100%,
-            30% 100%,
-            0% 70%,
-            0% 30%
+        repeat(
+            8,
+            1fr
         );
 
-    background:
-        rgba(3, 10, 15, 0.28);
-
-    border:
-        1px solid
-        rgba(0, 234, 255, 0.14);
-
-    cursor:
-        pointer;
-}
-
-
-.octagon-cell:hover {
-    background:
-        rgba(0, 234, 255, 0.12);
-}
-
-
-.octagon-cell.selected {
-    background:
-        rgba(0, 234, 255, 0.20);
-}
-
-
-#square-grid {
-
-    position:
-        absolute;
-
-    inset:
-        14%;
-
-    display:
-        grid;
-
-    grid-template-columns:
-        repeat(8, 1fr);
-
     grid-template-rows:
-        repeat(8, 1fr);
-
-    opacity:
-        0.32;
+        repeat(
+            8,
+            1fr
+        );
 
     pointer-events:
         none;
+
+    opacity:
+        0.16;
+
 }
 
 
@@ -1260,36 +825,75 @@ body {
 
     border:
         1px solid
-        rgba(0, 234, 255, 0.12);
+        rgba(
+            0,
+            234,
+            255,
+            0.5
+        );
+
 }
 
-
-/* =========================================================
-   CENTRE DE LA MAP
-   ========================================================= */
 
 #map-center {
 
     position:
         absolute;
 
-    top:
-        50%;
-
     left:
         50%;
 
-    width:
-        100px;
-
-    height:
-        100px;
+    bottom:
+        15px;
 
     transform:
-        translate(
-            -50%,
+        translateX(
             -50%
         );
+
+    z-index:
+        50;
+
+    color:
+        var(--white);
+
+    font-size:
+        10px;
+
+    letter-spacing:
+        2px;
+
+    opacity:
+        0.7;
+
+}
+
+
+/* =========================================================
+   CONTENU DES MENUS
+   ========================================================= */
+
+#menu-information {
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    z-index:
+        30;
+
+    pointer-events:
+        none;
+
+}
+
+
+.radial-content {
+
+    position:
+        absolute;
 
     display:
         flex;
@@ -1297,53 +901,200 @@ body {
     flex-direction:
         column;
 
+    justify-content:
+        center;
+
+    gap:
+        4px;
+
+    padding:
+        8px;
+
+    border:
+        1px solid
+        rgba(
+            0,
+            234,
+            255,
+            0.20
+        );
+
+    background:
+        rgba(
+            2,
+            10,
+            16,
+            0.92
+        );
+
+    box-shadow:
+        0 0 14px
+        rgba(
+            0,
+            0,
+            0,
+            0.35
+        );
+
+    pointer-events:
+        auto;
+
+    overflow:
+        hidden;
+
+    text-align:
+        center;
+
+}
+
+
+.menu-content-item {
+
+    display:
+        flex;
+
     align-items:
         center;
 
     justify-content:
-        center;
+        space-between;
 
-    border-radius:
-        50%;
+    gap:
+        8px;
 
-    background:
-        rgba(2, 9, 14, 0.84);
-
-    border:
-        1px solid
-        rgba(0, 234, 255, 0.32);
-
-    pointer-events:
-        none;
-}
-
-
-.center-number {
+    padding:
+        3px 0;
 
     color:
-        var(--cyan);
-
-    font-size:
-        26px;
-
-    font-weight:
-        bold;
-}
-
-
-.center-label {
-
-    margin-top:
-        5px;
-
-    color:
-        #718892;
+        var(--text);
 
     font-size:
         8px;
 
     letter-spacing:
+        1px;
+
+    border-bottom:
+        1px solid
+        rgba(
+            0,
+            234,
+            255,
+            0.06
+        );
+
+}
+
+
+.menu-content-item:last-child {
+
+    border-bottom:
+        none;
+
+}
+
+
+.menu-content-item strong {
+
+    color:
+        var(--cyan);
+
+    font-size:
+        8px;
+
+}
+
+
+.menu-system-message {
+
+    margin-top:
         3px;
+
+    padding-top:
+        4px;
+
+    color:
+        var(--green);
+
+    font-size:
+        7px;
+
+    letter-spacing:
+        1px;
+
+}
+
+
+.menu-action-button {
+
+    width:
+        100%;
+
+    min-height:
+        20px;
+
+    border:
+        1px solid
+        rgba(
+            0,
+            234,
+            255,
+            0.28
+        );
+
+    background:
+        rgba(
+            0,
+            234,
+            255,
+            0.04
+        );
+
+    color:
+        var(--cyan);
+
+    font-family:
+        var(--font);
+
+    font-size:
+        8px;
+
+    letter-spacing:
+        1px;
+
+    cursor:
+        pointer;
+
+}
+
+
+.menu-action-button:hover {
+
+    background:
+        rgba(
+            0,
+            234,
+            255,
+            0.12
+        );
+
+    border-color:
+        var(--cyan);
+
+}
+
+
+.map-buttons {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:
+        5px;
+
 }
 
 
@@ -1351,18 +1102,18 @@ body {
    FOOTER
    ========================================================= */
 
-#main-footer {
+#footer {
 
     position:
-        fixed;
-
-    left:
-        0;
+        absolute;
 
     right:
         0;
 
     bottom:
+        0;
+
+    left:
         0;
 
     height:
@@ -1372,160 +1123,186 @@ body {
         100;
 
     display:
-        grid;
-
-    grid-template-columns:
-        1fr auto 1fr;
+        flex;
 
     align-items:
         center;
 
-    padding:
-        0 14px;
+    justify-content:
+        space-between;
 
-    background:
-        rgba(2, 7, 12, 0.98);
+    padding:
+        0 22px;
 
     border-top:
         1px solid
-        rgba(0, 234, 255, 0.18);
+        var(--cyan-faint);
 
     color:
-        #526871;
+        var(--text);
+
+    background:
+        rgba(
+            2,
+            7,
+            12,
+            0.94
+        );
 
     font-size:
-        7px;
+        8px;
 
     letter-spacing:
         1px;
-}
 
-
-.footer-left {
-    justify-self:
-        start;
-}
-
-
-.footer-center {
-
-    display:
-        flex;
-
-    gap:
-        8px;
-}
-
-
-.footer-separator {
-    color:
-        var(--cyan);
-}
-
-
-.footer-right {
-
-    justify-self:
-        end;
-
-    color:
-        var(--green);
 }
 
 
 /* =========================================================
-   MENU
+   RESPONSIVE
    ========================================================= */
 
-#radial-interface.menu-hidden
-.menu-content-panel {
+@media (max-width: 900px) {
 
-    opacity:
-        0;
-}
+    #header {
 
+        padding:
+            0 14px;
 
-#radial-interface.menu-hidden
-.menu-title {
-
-    opacity:
-        0.20;
-}
-
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media (max-width: 700px) {
-
-    :root {
-        --map-size:
-            min(50vh, 65vw);
     }
 
-    #main-header {
-        height:
-            56px;
-    }
 
-    #game {
-        top:
-            56px;
-    }
+    .header-subtitle {
 
-    .brand-sub {
         display:
             none;
+
     }
 
-    .content-inner {
-        min-width:
-            120px;
+
+    .header-project {
+
+        position:
+            static;
+
+        transform:
+            none;
+
+        margin-left:
+            auto;
+
+        margin-right:
+            20px;
+
     }
 
-    .menu-title {
-        font-size:
-            11px;
-    }
-}
 
-
-@media (max-width: 500px) {
-
-    :root {
-        --map-size:
-            min(47vh, 72vw);
-    }
-
-    .content-inner {
-        min-width:
-            90px;
+    .radial-content {
 
         padding:
             6px;
+
     }
+
 
     .menu-title {
 
         font-size:
-            9px;
+            10px;
+
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    #header {
+
+        height:
+            54px;
+
+    }
+
+
+    #game-area {
+
+        top:
+            54px;
+
+    }
+
+
+    .header-title {
+
+        font-size:
+            12px;
+
+    }
+
+
+    .header-project {
+
+        display:
+            none;
+
+    }
+
+
+    #map {
+
+        width:
+            min(
+                58vh,
+                70vw
+            );
+
+    }
+
+
+    .radial-content {
+
+        padding:
+            5px;
+
+    }
+
+
+    .menu-content-item {
+
+        font-size:
+            6px;
+
+    }
+
+
+    .menu-content-item strong {
+
+        font-size:
+            6px;
+
+    }
+
+
+    .menu-action-button {
+
+        min-height:
+            16px;
+
+        font-size:
+            6px;
+
+    }
+
+
+    .menu-title {
+
+        font-size:
+            8px;
 
         letter-spacing:
             1px;
+
     }
 
-    #main-footer {
-
-        height:
-            27px;
-
-        grid-template-columns:
-            1fr auto;
-    }
-
-    .footer-center {
-        display:
-            none;
-    }
 }
