@@ -21,7 +21,8 @@ const MAP = {
        ======================================================== */
 
     DOM: {
-        map: document.getElementById("map"),
+        map:
+            document.getElementById("map"),
 
         octagonGrid:
             document.getElementById("octagon-grid"),
@@ -66,8 +67,11 @@ const MAP = {
        ======================================================== */
 
     config: {
+
         rows: 11,
+
         columns: 11,
+
         cellType: "HEXAGON"
     },
 
@@ -82,6 +86,8 @@ const MAP = {
 
         this.bindEvents();
 
+        this.observeResize();
+
         this.updateInterface();
     },
 
@@ -93,17 +99,26 @@ const MAP = {
     getState() {
 
         return {
-            selectedCell: this.state.selectedCell,
-            selectedType: this.state.selectedType,
-            selectedX: this.state.selectedX,
-            selectedY: this.state.selectedY,
-            zoom: this.state.zoom
+            selectedCell:
+                this.state.selectedCell,
+
+            selectedType:
+                this.state.selectedType,
+
+            selectedX:
+                this.state.selectedX,
+
+            selectedY:
+                this.state.selectedY,
+
+            zoom:
+                this.state.zoom
         };
     },
 
 
     /* ========================================================
-       CREATE HONEYCOMB GRID
+       CREATE HONEYCOMB
        ======================================================== */
 
     createHexagonGrid() {
@@ -116,73 +131,30 @@ const MAP = {
         }
 
 
-        /*
-         * Nettoyage complet.
-         */
-
         grid.innerHTML = "";
 
 
-        const rows =
-            this.config.rows;
-
-        const columns =
+        const total =
+            this.config.rows *
             this.config.columns;
 
 
-        let totalCells = 0;
-
-
-        /*
-         * Création des lignes.
-         *
-         * Chaque ligne est indépendante.
-         * Une ligne sur deux reçoit la classe
-         * "offset".
-         */
-
         for (
             let y = 1;
-            y <= rows;
+            y <= this.config.rows;
             y++
         ) {
 
-            const row =
-                document.createElement("div");
-
-
-            row.className =
-                "hex-row";
-
-
-            /*
-             * Décalage horizontal d'une
-             * demi-cellule.
-             */
-
-            if (y % 2 === 0) {
-
-                row.classList.add(
-                    "offset"
-                );
-            }
-
-
-            /*
-             * Création des cellules.
-             */
-
             for (
                 let x = 1;
-                x <= columns;
+                x <= this.config.columns;
                 x++
             ) {
 
-                totalCells++;
-
-
                 const cell =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
 
                 cell.className =
@@ -192,14 +164,11 @@ const MAP = {
                 cell.dataset.x =
                     String(x);
 
-
                 cell.dataset.y =
                     String(y);
 
-
                 cell.dataset.type =
                     this.config.cellType;
-
 
                 cell.dataset.id =
                     `X${x}-Y${y}`;
@@ -217,10 +186,6 @@ const MAP = {
                 );
 
 
-                /*
-                 * Sélection.
-                 */
-
                 cell.addEventListener(
                     "click",
                     () => {
@@ -232,26 +197,17 @@ const MAP = {
                 );
 
 
-                row.appendChild(
+                grid.appendChild(
                     cell
                 );
             }
-
-
-            grid.appendChild(
-                row
-            );
         }
 
-
-        /*
-         * Compteurs.
-         */
 
         if (this.DOM.octagonCount) {
 
             this.DOM.octagonCount.textContent =
-                String(totalCells);
+                String(total);
         }
 
 
@@ -259,6 +215,336 @@ const MAP = {
 
             this.DOM.squareCount.textContent =
                 "0";
+        }
+
+
+        requestAnimationFrame(
+            () => {
+
+                this.layoutHoneycomb();
+            }
+        );
+    },
+
+
+    /* ========================================================
+       HONEYCOMB GEOMETRY
+       ======================================================== */
+
+    layoutHoneycomb() {
+
+        const map =
+            this.DOM.map;
+
+        const grid =
+            this.DOM.octagonGrid;
+
+
+        if (!map || !grid) {
+            return;
+        }
+
+
+        const rect =
+            map.getBoundingClientRect();
+
+
+        const width =
+            rect.width;
+
+        const height =
+            rect.height;
+
+
+        if (
+            width <= 0 ||
+            height <= 0
+        ) {
+            return;
+        }
+
+
+        /*
+         * La map est circulaire.
+         *
+         * On utilise son diamètre réel.
+         */
+
+        const diameter =
+            Math.min(
+                width,
+                height
+            );
+
+
+        const rows =
+            this.config.rows;
+
+        const columns =
+            this.config.columns;
+
+
+        /*
+         * ====================================================
+         * HEXAGONE FLAT-TOP
+         * ====================================================
+         *
+         * largeur hexagone = W
+         *
+         * hauteur hexagone = W * sqrt(3) / 2
+         *
+         * pas horizontal = 3/4 W
+         *
+         * décalage vertical = H/2
+         *
+         * ====================================================
+         */
+
+
+        const sqrt3 =
+            Math.sqrt(3);
+
+
+        /*
+         * IMPORTANT :
+         *
+         * La largeur est maintenant prioritaire.
+         *
+         * 11 colonnes :
+         *
+         * 10 intervalles * 0.75W
+         * + 1 largeur W
+         *
+         * = 8.5W
+         *
+         * Donc :
+         *
+         * W = diamètre / 8.5
+         *
+         * Les cellules remplissent réellement
+         * toute la largeur disponible.
+         */
+
+        const cellWidth =
+            diameter /
+            (
+                (
+                    columns - 1
+                ) * 0.75
+                +
+                1
+            );
+
+
+        const cellHeight =
+            cellWidth *
+            sqrt3 /
+            2;
+
+
+        /*
+         * Distance horizontale entre
+         * deux centres.
+         */
+
+        const horizontalStep =
+            cellWidth *
+            0.75;
+
+
+        /*
+         * Distance verticale entre
+         * deux centres dans une même colonne.
+         */
+
+        const verticalStep =
+            cellHeight;
+
+
+        /*
+         * Hauteur totale réelle de la grille.
+         *
+         * Une colonne sur deux est décalée
+         * de H/2.
+         */
+
+        const gridHeight =
+            (
+                rows - 1
+            ) *
+            verticalStep
+            +
+            cellHeight
+            +
+            cellHeight / 2;
+
+
+        /*
+         * Largeur totale exacte.
+         */
+
+        const gridWidth =
+            (
+                columns - 1
+            ) *
+            horizontalStep
+            +
+            cellWidth;
+
+
+        /*
+         * Centrage horizontal.
+         */
+
+        const startX =
+            (
+                width -
+                gridWidth
+            ) / 2;
+
+
+        /*
+         * Centrage vertical.
+         *
+         * La grille peut dépasser légèrement
+         * du cercle en haut et en bas.
+         *
+         * #map possède overflow:hidden,
+         * donc les cellules périphériques
+         * sont naturellement découpées par
+         * le cercle.
+         */
+
+        const startY =
+            (
+                height -
+                gridHeight
+            ) / 2;
+
+
+        /*
+         * ====================================================
+         * POSITIONNEMENT DES CELLULES
+         * ====================================================
+         */
+
+        const cells =
+            grid.querySelectorAll(
+                ".octagon-cell"
+            );
+
+
+        cells.forEach(
+            cell => {
+
+                const x =
+                    Number(
+                        cell.dataset.x
+                    ) - 1;
+
+
+                const y =
+                    Number(
+                        cell.dataset.y
+                    ) - 1;
+
+
+                /*
+                 * Une colonne sur deux
+                 * est décalée de H/2.
+                 */
+
+                const verticalOffset =
+                    (
+                        x % 2
+                    ) *
+                    (
+                        cellHeight / 2
+                    );
+
+
+                const left =
+                    startX +
+                    (
+                        x *
+                        horizontalStep
+                    );
+
+
+                const top =
+                    startY +
+                    (
+                        y *
+                        verticalStep
+                    ) +
+                    verticalOffset;
+
+
+                cell.style.setProperty(
+                    "--hex-left",
+                    `${left}px`
+                );
+
+
+                cell.style.setProperty(
+                    "--hex-top",
+                    `${top}px`
+                );
+
+
+                cell.style.setProperty(
+                    "--hex-width",
+                    `${cellWidth}px`
+                );
+
+
+                cell.style.setProperty(
+                    "--hex-height",
+                    `${cellHeight}px`
+                );
+            }
+        );
+    },
+
+
+    /* ========================================================
+       RESIZE OBSERVER
+       ======================================================== */
+
+    observeResize() {
+
+        if (!this.DOM.map) {
+            return;
+        }
+
+
+        if (
+            typeof ResizeObserver !==
+            "undefined"
+        ) {
+
+            this.resizeObserver =
+                new ResizeObserver(
+                    () => {
+
+                        this.layoutHoneycomb();
+                    }
+                );
+
+
+            this.resizeObserver.observe(
+                this.DOM.map
+            );
+
+        } else {
+
+            window.addEventListener(
+                "resize",
+                () => {
+
+                    this.layoutHoneycomb();
+                }
+            );
         }
     },
 
@@ -301,10 +587,6 @@ const MAP = {
         }
 
 
-        /*
-         * Désélection des autres cellules.
-         */
-
         this.DOM.octagonGrid
             ?.querySelectorAll(
                 ".octagon-cell.selected"
@@ -318,10 +600,6 @@ const MAP = {
                 }
             );
 
-
-        /*
-         * Sélection actuelle.
-         */
 
         cell.classList.add(
             "selected"
@@ -350,29 +628,18 @@ const MAP = {
             `X${x}-Y${y}`;
 
 
-        /*
-         * Etat.
-         */
-
         this.state.selectedCell =
             id;
-
 
         this.state.selectedType =
             type;
 
-
         this.state.selectedX =
             x;
-
 
         this.state.selectedY =
             y;
 
-
-        /*
-         * Interface.
-         */
 
         this.updateInterface();
 
@@ -406,14 +673,11 @@ const MAP = {
         this.state.selectedCell =
             null;
 
-
         this.state.selectedType =
             null;
 
-
         this.state.selectedX =
             null;
-
 
         this.state.selectedY =
             null;
@@ -433,7 +697,11 @@ const MAP = {
             Number(value);
 
 
-        if (!Number.isFinite(numeric)) {
+        if (
+            !Number.isFinite(
+                numeric
+            )
+        ) {
             return;
         }
 
@@ -478,7 +746,8 @@ const MAP = {
 
 
         const scale =
-            this.state.zoom / 100;
+            this.state.zoom /
+            100;
 
 
         this.DOM.map.style.transform =
