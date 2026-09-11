@@ -1,296 +1,408 @@
+/* =========================================================
+   ROOT
+========================================================= */
+
 :root {
 
-    --background: #05080b;
-    --background-soft: #081016;
+    --bg:
+        #02070c;
 
-    --cyan: #00eaff;
-    --green: #00ff99;
-    --orange: #ff9900;
-    --red: #ff3355;
+    --bg-panel:
+        rgba(2, 10, 16, 0.92);
 
-    --text: #d9faff;
-    --text-soft: #6f8992;
+    --map:
+        #34414f;
 
-    --menu-background: rgba(3, 10, 14, 0.88);
+    --ring:
+        #60758a;
 
-    --header-height: 64px;
-    --footer-height: 28px;
+    --cyan:
+        #00eaff;
 
-    /*
-        MAP +20 %
-    */
-    --map-size: min(62.4vh, 62.4vw);
+    --cyan-soft:
+        rgba(0, 234, 255, 0.45);
 
-    /*
-        Distance entre le cercle
-        de la MAP et le bord du menu.
-    */
-    --menu-depth: 155px;
+    --cyan-faint:
+        rgba(0, 234, 255, 0.14);
+
+    --green:
+        #00ff99;
+
+    --white:
+        #dffcff;
+
+    --text:
+        #8ba0aa;
+
+    --line:
+        rgba(0, 234, 255, 0.42);
+
+    --font:
+        "Courier New",
+        Courier,
+        monospace;
 }
 
 
 /* =========================================================
    RESET
-   ========================================================= */
+========================================================= */
 
 * {
-    box-sizing: border-box;
+
+    box-sizing:
+        border-box;
+
+    margin:
+        0;
+
+    padding:
+        0;
 }
+
 
 html,
 body {
 
-    width: 100%;
-    height: 100%;
+    width:
+        100%;
 
-    margin: 0;
-    padding: 0;
+    height:
+        100%;
 
-    overflow: hidden;
-
-    background: var(--background);
-
-    color: var(--text);
-
-    font-family:
-        "Courier New",
-        Courier,
-        monospace;
+    overflow:
+        hidden;
 }
 
 
-/* =========================================================
-   HEADER
-   ========================================================= */
-
-#header {
-
-    position: fixed;
-
-    top: 0;
-    left: 0;
-    right: 0;
-
-    height: var(--header-height);
-
-    display: flex;
-
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 0 18px;
+body {
 
     background:
-        linear-gradient(
-            180deg,
-            rgba(7, 16, 22, 0.98),
-            rgba(3, 8, 12, 0.98)
-        );
+        var(--bg);
 
-    border-bottom:
-        1px solid
-        rgba(0, 234, 255, 0.45);
+    color:
+        var(--text);
 
-    z-index: 1000;
-}
+    font-family:
+        var(--font);
 
-.header-brand {
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 3px;
-}
-
-.header-title {
-
-    color: var(--cyan);
-
-    font-size: 17px;
-
-    font-weight: 700;
-
-    letter-spacing: 2px;
-}
-
-.header-subtitle {
-
-    color: var(--text-soft);
-
-    font-size: 8px;
-
-    letter-spacing: 1.5px;
-}
-
-.header-game {
-
-    position: absolute;
-
-    left: 50%;
-    top: 50%;
-
-    transform:
-        translate(-50%, -50%);
-
-    color: var(--green);
-
-    font-size: 20px;
-
-    font-weight: 700;
-
-    letter-spacing: 3px;
-}
-
-.header-status {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 7px;
-
-    color: var(--green);
-
-    font-size: 9px;
-
-    letter-spacing: 1.5px;
-}
-
-.status-dot {
-
-    width: 7px;
-    height: 7px;
-
-    border-radius: 50%;
-
-    background: var(--green);
-
-    box-shadow:
-        0 0 6px var(--green),
-        0 0 12px rgba(0, 255, 153, 0.45);
+    font-size:
+        12px;
 }
 
 
 /* =========================================================
    GAME
-   ========================================================= */
+========================================================= */
 
 #game {
 
-    position: fixed;
+    position:
+        relative;
 
-    top: var(--header-height);
-    right: 0;
-    bottom: var(--footer-height);
-    left: 0;
+    width:
+        100vw;
 
-    overflow: hidden;
+    height:
+        100vh;
+
+    overflow:
+        hidden;
 
     background:
+
         radial-gradient(
             circle at center,
-            rgba(0, 234, 255, 0.035),
-            transparent 60%
+            rgba(0, 234, 255, 0.025),
+            transparent 48%
         ),
-        var(--background);
+
+        #02070c;
 }
 
 
 /* =========================================================
-   RADIAL INTERFACE
-   ========================================================= */
+   BACKGROUND
+========================================================= */
+
+#game::before {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    pointer-events:
+        none;
+
+    background-image:
+
+        linear-gradient(
+            rgba(0, 234, 255, 0.018) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(0, 234, 255, 0.018) 1px,
+            transparent 1px
+        );
+
+    background-size:
+        32px 32px;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+#header {
+
+    position:
+        absolute;
+
+    top:
+        0;
+
+    left:
+        0;
+
+    right:
+        0;
+
+    height:
+        64px;
+
+    z-index:
+        100;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    padding:
+        0 22px;
+
+    border-bottom:
+        1px solid
+        rgba(0, 234, 255, 0.20);
+
+    background:
+        rgba(2, 7, 12, 0.94);
+
+    pointer-events:
+        none;
+}
+
+
+.header-brand {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        3px;
+}
+
+
+.header-title {
+
+    color:
+        var(--cyan);
+
+    font-size:
+        16px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        3px;
+}
+
+
+.header-subtitle {
+
+    color:
+        #58717b;
+
+    font-size:
+        9px;
+
+    letter-spacing:
+        2px;
+}
+
+
+.header-project {
+
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    transform:
+        translateX(-50%);
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        12px;
+
+    color:
+        var(--white);
+
+    letter-spacing:
+        2px;
+}
+
+
+.project-name {
+
+    color:
+        var(--cyan);
+
+    font-weight:
+        700;
+}
+
+
+.project-version {
+
+    padding:
+        3px 7px;
+
+    border:
+        1px solid
+        rgba(0, 234, 255, 0.30);
+
+    color:
+        var(--green);
+
+    font-size:
+        9px;
+}
+
+
+.header-player {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        9px;
+
+    color:
+        #58717b;
+
+    font-size:
+        9px;
+
+    letter-spacing:
+        2px;
+}
+
+
+.header-player strong {
+
+    color:
+        var(--green);
+
+    font-size:
+        13px;
+}
+
+
+/* =========================================================
+   GAME AREA
+========================================================= */
+
+#game-area {
+
+    position:
+        absolute;
+
+    top:
+        64px;
+
+    right:
+        0;
+
+    bottom:
+        32px;
+
+    left:
+        0;
+
+    overflow:
+        hidden;
+}
+
+
+/* =========================================================
+   RADIAL SVG
+========================================================= */
 
 #radial-interface {
 
-    position: absolute;
+    position:
+        absolute;
 
-    inset: 0;
+    inset:
+        0;
 
-    width: 100%;
-    height: 100%;
+    width:
+        100%;
+
+    height:
+        100%;
+
+    z-index:
+        10;
+
+    overflow:
+        visible;
+
+    pointer-events:
+        none;
 }
 
 
 /* =========================================================
-   SVG
-   ========================================================= */
+   MENU RING
+========================================================= */
 
-#radial-menus {
-
-    position: absolute;
-
-    inset: 0;
-
-    width: 100%;
-    height: 100%;
-
-    overflow: visible;
-
-    z-index: 10;
-}
-
-
-/* =========================================================
-   MENUS
-   ========================================================= */
-
-.menu-sector {
-
-    fill: var(--menu-background);
-
-    stroke:
-        rgba(0, 234, 255, 0.48);
-
-    stroke-width: 1;
-
-    vector-effect:
-        non-scaling-stroke;
-
-    cursor: pointer;
-
-    pointer-events: auto;
-
-    transition:
-        fill 0.15s ease,
-        stroke 0.15s ease;
-}
-
-.menu-sector:hover {
+.menu-ring {
 
     fill:
-        rgba(0, 234, 255, 0.09);
+        var(--ring);
 
     stroke:
-        var(--cyan);
+        rgba(0, 234, 255, 0.18);
 
-    stroke-width: 1.5;
-}
-
-.menu-sector.active {
-
-    fill:
-        rgba(0, 255, 153, 0.07);
-
-    stroke:
-        var(--green);
-
-    stroke-width: 1.5;
-}
-
-
-/* =========================================================
-   CERCLE DE LA MAP
-   ========================================================= */
-
-.map-circle-guide {
-
-    fill: none;
-
-    stroke:
-        rgba(0, 234, 255, 0.65);
-
-    stroke-width: 1;
+    stroke-width:
+        1;
 
     vector-effect:
         non-scaling-stroke;
@@ -298,439 +410,611 @@ body {
 
 
 /* =========================================================
-   SEPARATIONS
-   ========================================================= */
+   INNER MAP GUIDE
+========================================================= */
+
+.map-ring-guide {
+
+    fill:
+        none;
+
+    stroke:
+        rgba(0, 234, 255, 0.28);
+
+    stroke-width:
+        1;
+
+    vector-effect:
+        non-scaling-stroke;
+}
+
+
+/* =========================================================
+   OUTER RING GUIDE
+========================================================= */
+
+.menu-outer-guide {
+
+    fill:
+        none;
+
+    stroke:
+        rgba(0, 234, 255, 0.18);
+
+    stroke-width:
+        1;
+
+    vector-effect:
+        non-scaling-stroke;
+}
+
+
+/* =========================================================
+   RADIAL SEPARATORS
+========================================================= */
 
 .menu-separator {
 
     stroke:
-        rgba(0, 234, 255, 0.45);
+        var(--line);
 
-    stroke-width: 1;
+    stroke-width:
+        2;
+
+    stroke-linecap:
+        round;
 
     vector-effect:
         non-scaling-stroke;
-}
-
-
-/* =========================================================
-   ARCS DES TITRES
-   ========================================================= */
-
-.menu-title-path {
-
-    fill: none;
-
-    stroke: none;
-}
-
-.menu-title {
-
-    fill: var(--cyan);
-
-    font-family:
-        "Courier New",
-        Courier,
-        monospace;
-
-    font-size: 13px;
-
-    font-weight: 700;
-
-    letter-spacing: 2px;
-
-    text-anchor: middle;
-
-    dominant-baseline: middle;
 
     filter:
         drop-shadow(
-            0 0 4px
-            rgba(0, 234, 255, 0.35)
+            0 0 3px
+            rgba(0, 234, 255, 0.22)
         );
 }
 
 
 /* =========================================================
-   INFORMATIONS
-   ========================================================= */
+   TITLE PATH
+========================================================= */
 
-.menu-info-label {
+.menu-title-path {
 
-    fill: var(--text-soft);
+    fill:
+        none;
 
-    font-size: 7px;
-
-    letter-spacing: 1px;
-
-    text-anchor: middle;
+    stroke:
+        none;
 }
 
-.menu-info-value {
 
-    fill: var(--text);
+/* =========================================================
+   TITLE
+========================================================= */
 
-    font-size: 9px;
+.menu-title {
 
-    font-weight: 700;
+    fill:
+        #061017;
 
-    letter-spacing: 1px;
+    font-family:
+        var(--font);
 
-    text-anchor: middle;
-}
+    font-size:
+        12px;
 
-.menu-info-accent {
+    font-weight:
+        700;
 
-    fill: var(--green);
+    letter-spacing:
+        1.5px;
 
-    font-size: 15px;
+    text-anchor:
+        middle;
 
-    font-weight: 700;
+    dominant-baseline:
+        middle;
 
-    letter-spacing: 1px;
-
-    text-anchor: middle;
+    pointer-events:
+        none;
 }
 
 
 /* =========================================================
    MAP
-   ========================================================= */
-
-#map-container {
-
-    position: absolute;
-
-    left: 50%;
-    top: 50%;
-
-    width: var(--map-size);
-    height: var(--map-size);
-
-    transform:
-        translate(-50%, -50%);
-
-    z-index: 50;
-
-    pointer-events: none;
-}
+========================================================= */
 
 #map {
 
-    position: relative;
+    position:
+        absolute;
 
-    width: 100%;
-    height: 100%;
+    left:
+        50%;
 
-    overflow: hidden;
+    top:
+        50%;
 
-    border-radius: 50%;
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(0, 234, 255, 0.06),
-            rgba(2, 8, 12, 0.98) 72%
+    width:
+        min(
+            52vh,
+            52vw
         );
 
-    border:
-        2px solid var(--cyan);
+    height:
+        min(
+            52vh,
+            52vw
+        );
 
-    box-shadow:
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
 
-        0 0 0 1px
-        rgba(0, 234, 255, 0.14),
+    z-index:
+        20;
 
-        0 0 30px
-        rgba(0, 234, 255, 0.08),
-
-        inset 0 0 40px
-        rgba(0, 234, 255, 0.04);
+    pointer-events:
+        none;
 }
 
-#map::after {
 
-    content: "";
+#map-inner {
 
-    position: absolute;
+    position:
+        absolute;
 
-    inset: 8px;
+    inset:
+        0;
 
-    border-radius: 50%;
+    border-radius:
+        50%;
 
-    border:
-        1px solid
-        rgba(0, 234, 255, 0.18);
+    overflow:
+        hidden;
 
-    pointer-events: none;
+    background:
+        var(--map);
+
+    box-shadow:
+        0 0 35px
+        rgba(0, 0, 0, 0.30);
 }
 
 
 /* =========================================================
-   OCTAGONS
-   ========================================================= */
+   MAP LABEL
+========================================================= */
+
+#map-label {
+
+    position:
+        absolute;
+
+    top:
+        50%;
+
+    left:
+        50%;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+
+    z-index:
+        20;
+
+    color:
+        #071017;
+
+    font-size:
+        15px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        2px;
+}
+
+
+/* =========================================================
+   MAP CENTER
+========================================================= */
+
+#map-center {
+
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    bottom:
+        14%;
+
+    transform:
+        translateX(
+            -50%
+        );
+
+    z-index:
+        20;
+
+    color:
+        rgba(0, 234, 255, 0.22);
+
+    font-size:
+        8px;
+
+    letter-spacing:
+        2px;
+}
+
+
+/* =========================================================
+   MAP GRID
+========================================================= */
+
+#map-grid {
+
+    position:
+        absolute;
+
+    inset:
+        15%;
+
+    opacity:
+        0.28;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+}
+
 
 #octagon-grid {
 
-    position: absolute;
+    position:
+        absolute;
 
-    inset: 0;
+    display:
+        flex;
 
-    display: flex;
+    flex-direction:
+        column;
 
-    flex-direction: column;
+    gap:
+        2px;
 
-    justify-content: center;
-
-    align-items: center;
-
-    opacity: 0.62;
+    transform:
+        scale(
+            0.8
+        );
 }
+
 
 .octagon-row {
 
-    display: flex;
+    display:
+        flex;
 
-    height: 46px;
+    gap:
+        2px;
 
-    align-items: center;
-
-    margin-top: -1px;
+    justify-content:
+        center;
 }
+
 
 .octagon-row.offset {
 
     transform:
-        translateX(26px);
+        translateX(
+            7px
+        );
 }
+
 
 .octagon-cell {
 
-    width: 52px;
-    height: 46px;
+    width:
+        17px;
 
-    margin-left: -1px;
-
-    background:
-        rgba(0, 234, 255, 0.025);
+    height:
+        17px;
 
     border:
         1px solid
-        rgba(0, 234, 255, 0.24);
+        rgba(0, 234, 255, 0.25);
+
+    background:
+        rgba(0, 234, 255, 0.025);
 
     clip-path:
         polygon(
             25% 0%,
             75% 0%,
-            100% 50%,
+            100% 25%,
+            100% 75%,
             75% 100%,
             25% 100%,
-            0% 50%
+            0% 75%,
+            0% 25%
         );
-
-    pointer-events: auto;
-
-    cursor: pointer;
-}
-
-.octagon-cell:hover {
-
-    background:
-        rgba(0, 234, 255, 0.12);
-}
-
-.octagon-cell.selected {
-
-    background:
-        rgba(0, 255, 153, 0.15);
-
-    outline:
-        1px solid var(--green);
 }
 
 
 /* =========================================================
-   SQUARES
-   ========================================================= */
+   SQUARE GRID
+========================================================= */
 
 #square-grid {
 
-    position: absolute;
+    position:
+        absolute;
 
-    inset: 0;
+    width:
+        75%;
 
-    display: grid;
+    height:
+        75%;
+
+    display:
+        grid;
 
     grid-template-columns:
-        repeat(8, 34px);
+        repeat(
+            8,
+            1fr
+        );
 
     grid-template-rows:
-        repeat(8, 34px);
+        repeat(
+            8,
+            1fr
+        );
 
-    gap: 4px;
-
-    justify-content: center;
-    align-content: center;
-
-    opacity: 0.3;
-
-    pointer-events: none;
+    opacity:
+        0.12;
 }
+
 
 .square-cell {
 
     border:
         1px solid
-        rgba(255, 255, 255, 0.14);
+        rgba(0, 234, 255, 0.25);
 }
 
 
 /* =========================================================
-   CENTRE MAP
-   ========================================================= */
+   MENU CONTENT
+========================================================= */
 
-#map-center {
+#menu-content {
 
-    position: absolute;
+    position:
+        absolute;
 
-    left: 50%;
-    top: 50%;
+    inset:
+        0;
 
-    transform:
-        translate(-50%, -50%);
+    z-index:
+        40;
 
-    width: 120px;
-
-    text-align: center;
-
-    pointer-events: none;
+    pointer-events:
+        none;
 }
 
-.map-center-title {
 
-    color: var(--cyan);
+.menu-content {
 
-    font-size: 18px;
+    position:
+        absolute;
 
-    letter-spacing: 3px;
+    width:
+        180px;
+
+    min-height:
+        50px;
+
+    color:
+        var(--text);
+
+    pointer-events:
+        auto;
+
+    transition:
+        opacity 0.15s,
+        color 0.15s;
 }
 
-.map-center-subtitle {
 
-    margin-top: 4px;
+.menu-content:hover {
 
-    color: var(--text-soft);
+    color:
+        var(--white);
+}
 
-    font-size: 8px;
 
-    letter-spacing: 2px;
+.menu-content-title {
+
+    margin-bottom:
+        7px;
+
+    color:
+        var(--cyan);
+
+    font-size:
+        10px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        2px;
+}
+
+
+.menu-content-line {
+
+    color:
+        #718891;
+
+    font-size:
+        10px;
+
+    line-height:
+        1.6;
+
+    letter-spacing:
+        0.5px;
 }
 
 
 /* =========================================================
    FOOTER
-   ========================================================= */
+========================================================= */
 
 #footer {
 
-    position: fixed;
+    position:
+        absolute;
 
-    left: 0;
-    right: 0;
-    bottom: 0;
+    left:
+        0;
 
-    height: var(--footer-height);
+    right:
+        0;
 
-    display: flex;
+    bottom:
+        0;
 
-    align-items: center;
+    height:
+        32px;
 
-    justify-content: space-between;
+    z-index:
+        100;
 
-    padding: 0 12px;
+    display:
+        flex;
 
-    background:
-        rgba(4, 9, 13, 0.98);
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    padding:
+        0 18px;
 
     border-top:
         1px solid
-        rgba(0, 234, 255, 0.25);
+        rgba(0, 234, 255, 0.15);
 
-    z-index: 1000;
+    background:
+        rgba(2, 7, 12, 0.94);
 
-    color: var(--text-soft);
+    color:
+        #405861;
 
-    font-size: 8px;
+    font-size:
+        8px;
 
-    letter-spacing: 1px;
-}
+    letter-spacing:
+        2px;
 
-.footer-online {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 6px;
-
-    color: var(--green);
+    pointer-events:
+        none;
 }
 
 
 /* =========================================================
    RESPONSIVE
-   ========================================================= */
+========================================================= */
 
-@media (max-width: 900px) {
+@media (
+    max-width: 800px
+) {
 
-    :root {
+    .header-subtitle,
+    .header-project {
 
-        --map-size: min(58vh, 58vw);
-
-        --menu-depth: 125px;
+        display:
+            none;
     }
+
+
+    .header-title {
+
+        font-size:
+            13px;
+    }
+
+
+    .menu-content {
+
+        width:
+            140px;
+    }
+
+
+    .menu-content-line {
+
+        font-size:
+            8px;
+    }
+
 
     .menu-title {
 
-        font-size: 11px;
-
-        letter-spacing: 1.5px;
+        font-size:
+            10px;
     }
 }
 
 
-@media (max-width: 650px) {
+@media (
+    max-height: 650px
+) {
 
-    :root {
+    #header {
 
-        --header-height: 54px;
-
-        --footer-height: 24px;
-
-        --map-size: min(48vh, 65vw);
-
-        --menu-depth: 95px;
+        height:
+            54px;
     }
 
-    .header-title {
 
-        font-size: 13px;
+    #game-area {
+
+        top:
+            54px;
     }
 
-    .header-subtitle {
 
-        display: none;
-    }
+    #map {
 
-    .header-game {
+        width:
+            min(
+                48vh,
+                48vw
+            );
 
-        font-size: 16px;
-    }
-
-    .menu-title {
-
-        font-size: 8px;
-
-        letter-spacing: 1px;
+        height:
+            min(
+                48vh,
+                48vw
+            );
     }
 }
