@@ -896,7 +896,7 @@ function positionMenuContents(
             outerRadius -
             innerRadius
         ) *
-        0.48;
+        0.72;
 
 
     /*
