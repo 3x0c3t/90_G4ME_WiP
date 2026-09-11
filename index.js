@@ -699,7 +699,7 @@ function drawTitles(
 
 
             if (
-                rotation > 90 &&
+                rotation >= 90 &&
                 rotation < 270
             ) {
 
