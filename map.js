@@ -21,6 +21,9 @@ const MAP = {
         selectedY:
             null,
 
+        selectedContent:
+            null,
+
         zoom:
             100,
 
@@ -58,6 +61,11 @@ const MAP = {
         selectedType:
             document.getElementById(
                 "selected-type"
+            ),
+
+        selectedContent:
+            document.getElementById(
+                "selected-content"
             ),
 
         positionX:
@@ -189,6 +197,9 @@ const MAP = {
             selectedY:
                 this.state.selectedY,
 
+            selectedContent:
+                this.state.selectedContent,
+
             zoom:
                 this.state.zoom,
 
@@ -254,6 +265,10 @@ const MAP = {
 
                 cell.dataset.type =
                     this.config.cellType;
+
+
+                cell.dataset.content =
+                    "EMPTY";
 
 
                 cell.dataset.id =
@@ -673,6 +688,11 @@ const MAP = {
 
         this.state.selectedY =
             y;
+
+
+        this.state.selectedContent =
+            cell.dataset.content ||
+            "EMPTY";
 
 
         this.updateInterface();
@@ -1263,6 +1283,16 @@ const MAP = {
                         "0"
                     )
                     : "--";
+        }
+
+
+        if (
+            this.DOM.selectedContent
+        ) {
+
+            this.DOM.selectedContent.textContent =
+                this.state.selectedContent ||
+                "EMPTY";
         }
 
 
