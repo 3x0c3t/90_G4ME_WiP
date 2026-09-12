@@ -4,6 +4,7 @@
 
 #map-container {
     position: absolute;
+
     top: 50%;
     left: 50%;
 
@@ -15,6 +16,7 @@
     z-index: 20;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -78,11 +80,8 @@
     user-select: none;
 }
 
-#octagon-grid.is-dragging {
-    cursor: grabbing;
-}
 
-#octagon-grid.is-dragging .octagon-cell {
+#octagon-grid.is-dragging {
     cursor: grabbing;
 }
 
@@ -114,7 +113,8 @@
         0% 50%
     );
 
-    background: rgba(0, 234, 255, 0.72);
+    background:
+        rgba(0, 234, 255, 0.72);
 
     cursor: grab;
 
@@ -124,8 +124,13 @@
 
     transition:
         background 0.12s ease,
-        filter 0.12s ease,
-        opacity 0.12s ease;
+        filter 0.12s ease;
+}
+
+
+#octagon-grid.is-dragging
+.octagon-cell {
+    cursor: grabbing;
 }
 
 
@@ -206,7 +211,8 @@
    ============================================================ */
 
 .octagon-cell:hover {
-    background: rgba(0, 234, 255, 0.95);
+    background:
+        rgba(0, 234, 255, 0.95);
 
     filter:
         drop-shadow(
@@ -216,12 +222,16 @@
     z-index: 50;
 }
 
+
 .octagon-cell:hover::before {
-    background: rgba(0, 34, 45, 0.97);
+    background:
+        rgba(0, 34, 45, 0.97);
 }
 
+
 .octagon-cell:hover::after {
-    background: rgba(0, 234, 255, 0.18);
+    background:
+        rgba(0, 234, 255, 0.18);
 }
 
 
@@ -230,48 +240,52 @@
    ============================================================ */
 
 .octagon-cell.selected {
-    background: #00eaff !important;
-
-    border-color: #ffffff !important;
-
-    opacity: 1 !important;
-
-    visibility: visible !important;
-
-    z-index: 1000 !important;
+    background:
+        rgba(0, 234, 255, 1);
 
     filter:
         drop-shadow(
-            0 0 4px rgba(0, 234, 255, 1)
+            0 0 7px rgba(0, 234, 255, 0.95)
         )
         drop-shadow(
-            0 0 10px rgba(0, 234, 255, 0.95)
-        )
-        drop-shadow(
-            0 0 18px rgba(0, 234, 255, 0.75)
-        ) !important;
+            0 0 16px rgba(0, 234, 255, 0.40)
+        );
 
-    box-shadow:
-        inset 0 0 0 2px #00eaff,
-        0 0 0 2px rgba(255, 255, 255, 0.9),
-        0 0 16px rgba(0, 234, 255, 0.9);
+    z-index: 100;
 }
+
 
 .octagon-cell.selected::before {
-    background: rgba(0, 28, 38, 0.35) !important;
-
-    z-index: 1;
+    background:
+        rgba(0, 52, 68, 0.97);
 }
+
 
 .octagon-cell.selected::after {
     background:
         linear-gradient(
             135deg,
-            rgba(255, 255, 255, 0.45),
-            rgba(0, 234, 255, 0.18)
-        ) !important;
+            rgba(0, 234, 255, 0.32),
+            rgba(0, 234, 255, 0.08)
+        );
+}
 
-    z-index: 2;
+
+/* ============================================================
+   OLD SQUARE GRID
+   ============================================================ */
+
+#square-grid {
+    display: none !important;
+}
+
+
+/* ============================================================
+   REMOVE MAP CENTER
+   ============================================================ */
+
+#map-center {
+    display: none !important;
 }
 
 
@@ -301,25 +315,7 @@
 
     pointer-events: none;
 
-    z-index: 1;
-}
-
-
-/* ============================================================
-   OLD SQUARE GRID
-   ============================================================ */
-
-#square-grid {
-    display: none !important;
-}
-
-
-/* ============================================================
-   REMOVE MAP CENTER
-   ============================================================ */
-
-#map-center {
-    display: none !important;
+    z-index: 300;
 }
 
 
@@ -328,8 +324,18 @@
    ============================================================ */
 
 @media (max-width: 700px) {
+
     #map-container {
-        width: min(72vw, 58vh);
-        height: min(72vw, 58vh);
+        width:
+            min(
+                72vw,
+                58vh
+            );
+
+        height:
+            min(
+                72vw,
+                58vh
+            );
     }
 }
