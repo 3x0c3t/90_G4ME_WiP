@@ -5,14 +5,20 @@ const MAP = {
 
     DEBUG: true,
 
+
     log(...args) {
+
         if (this.DEBUG) {
+
             console.log(
                 "[90_G4ME_WiP][MAP]",
                 ...args
             );
+
         }
+
     },
+
 
     /* ========================================================
        STATE
@@ -40,6 +46,7 @@ const MAP = {
 
         rotation:
             0
+
     },
 
 
@@ -128,6 +135,7 @@ const MAP = {
             document.getElementById(
                 "square-count"
             )
+
     },
 
 
@@ -148,6 +156,7 @@ const MAP = {
 
         dragThreshold:
             4
+
     },
 
 
@@ -177,6 +186,7 @@ const MAP = {
 
         startRotation:
             0
+
     },
 
 
@@ -195,6 +205,7 @@ const MAP = {
         this.applyTransform();
 
         this.updateInterface();
+
     },
 
 
@@ -226,7 +237,9 @@ const MAP = {
 
             rotation:
                 this.state.rotation
+
         };
+
     },
 
 
@@ -240,13 +253,31 @@ const MAP = {
             "createHexagonGrid() START"
         );
 
+
         const grid =
             this.DOM.octagonGrid;
 
 
         if (!grid) {
+
             return;
+
         }
+
+
+        /*
+         * IMPORTANT
+         *
+         * On mémorise la cellule active
+         * avant de reconstruire le DOM.
+         *
+         * La grille peut être reconstruite
+         * après un changement de taille ou
+         * une autre opération.
+         */
+
+        const selectedId =
+            this.state.selectedCell;
 
 
         grid.innerHTML =
@@ -295,20 +326,30 @@ const MAP = {
                 cell.dataset.content =
                     "EMPTY";
 
-                this.log(
-                    "CELL CREATED",
-                    {
-                        id: cell.dataset.id,
-                        x: cell.dataset.x,
-                        y: cell.dataset.y,
-                        type: cell.dataset.type,
-                        content: cell.dataset.content
-                    }
-                );
-
 
                 cell.dataset.id =
                     `X${x}-Y${y}`;
+
+
+                this.log(
+                    "CELL CREATED",
+                    {
+                        id:
+                            cell.dataset.id,
+
+                        x:
+                            cell.dataset.x,
+
+                        y:
+                            cell.dataset.y,
+
+                        type:
+                            cell.dataset.type,
+
+                        content:
+                            cell.dataset.content
+                    }
+                );
 
 
                 cell.setAttribute(
@@ -323,6 +364,10 @@ const MAP = {
                 );
 
 
+                /*
+                 * Sélection directe de la cellule.
+                 */
+
                 cell.addEventListener(
                     "click",
                     () => {
@@ -332,12 +377,14 @@ const MAP = {
                         ) {
 
                             return;
+
                         }
 
 
                         this.selectCell(
                             cell
                         );
+
                     }
                 );
 
@@ -345,7 +392,9 @@ const MAP = {
                 grid.appendChild(
                     cell
                 );
+
             }
+
         }
 
 
@@ -355,6 +404,7 @@ const MAP = {
 
             this.DOM.octagonCount.textContent =
                 String(total);
+
         }
 
 
@@ -364,15 +414,168 @@ const MAP = {
 
             this.DOM.squareCount.textContent =
                 "0";
+
         }
 
+
+        /*
+         * On attend que les cellules soient
+         * réellement présentes avant de
+         * recalculer leur position.
+         *
+         * Puis on restaure la sélection.
+         */
 
         requestAnimationFrame(
             () => {
 
                 this.layoutHoneycomb();
+
+                this.restoreSelection(
+                    selectedId
+                );
+
             }
         );
+
+    },
+
+
+    /* ========================================================
+       RESTORE ACTIVE CELL
+       ======================================================== */
+
+    restoreSelection(
+        selectedId =
+            this.state.selectedCell
+    ) {
+
+        if (
+            !selectedId
+        ) {
+
+            return;
+
+        }
+
+
+        const grid =
+            this.DOM.octagonGrid;
+
+
+        if (!grid) {
+
+            return;
+
+        }
+
+
+        /*
+         * Nettoyage de toutes les anciennes
+         * classes selected.
+         */
+
+        grid
+            .querySelectorAll(
+                ".octagon-cell.selected"
+            )
+            .forEach(
+                cell => {
+
+                    cell.classList.remove(
+                        "selected"
+                    );
+
+                }
+            );
+
+
+        /*
+         * Recherche de la cellule mémorisée.
+         */
+
+        const selectedCell =
+            Array.from(
+                grid.querySelectorAll(
+                    ".octagon-cell"
+                )
+            ).find(
+                cell =>
+                    cell.dataset.id ===
+                    selectedId
+            );
+
+
+        if (
+            !selectedCell
+        ) {
+
+            this.log(
+                "RESTORE SELECTION FAILED",
+                selectedId
+            );
+
+            return;
+
+        }
+
+
+        /*
+         * Réactivation visuelle.
+         */
+
+        selectedCell.classList.add(
+            "selected"
+        );
+
+
+        /*
+         * On resynchronise l'état.
+         */
+
+        this.state.selectedCell =
+            selectedCell.dataset.id;
+
+
+        this.state.selectedType =
+            selectedCell.dataset.type ||
+            "HEXAGON";
+
+
+        this.state.selectedX =
+            Number(
+                selectedCell.dataset.x
+            );
+
+
+        this.state.selectedY =
+            Number(
+                selectedCell.dataset.y
+            );
+
+
+        this.state.selectedContent =
+            selectedCell.dataset.content ||
+            "EMPTY";
+
+
+        this.log(
+            "SELECTION RESTORED",
+            {
+                id:
+                    this.state.selectedCell,
+
+                x:
+                    this.state.selectedX,
+
+                y:
+                    this.state.selectedY
+            }
+        );
+
+
+        this.updateInterface();
+
     },
 
 
@@ -396,6 +599,7 @@ const MAP = {
         ) {
 
             return;
+
         }
 
 
@@ -417,6 +621,7 @@ const MAP = {
         ) {
 
             return;
+
         }
 
 
@@ -577,8 +782,31 @@ const MAP = {
                     "--hex-height",
                     `${cellHeight}px`
                 );
+
             }
         );
+
+
+        /*
+         * IMPORTANT
+         *
+         * layoutHoneycomb() ne détruit jamais
+         * les classes .selected.
+         *
+         * La sélection reste donc active
+         * pendant un simple resize.
+         */
+
+        if (
+            this.state.selectedCell
+        ) {
+
+            this.restoreSelection(
+                this.state.selectedCell
+            );
+
+        }
+
     },
 
 
@@ -593,6 +821,7 @@ const MAP = {
         ) {
 
             return;
+
         }
 
 
@@ -606,6 +835,7 @@ const MAP = {
                     () => {
 
                         this.layoutHoneycomb();
+
                     }
                 );
 
@@ -621,9 +851,12 @@ const MAP = {
                 () => {
 
                     this.layoutHoneycomb();
+
                 }
             );
+
         }
+
     },
 
 
@@ -634,6 +867,7 @@ const MAP = {
     createOctagonGrid() {
 
         this.createHexagonGrid();
+
     },
 
 
@@ -645,6 +879,7 @@ const MAP = {
 
             this.DOM.squareGrid.innerHTML =
                 "";
+
         }
 
 
@@ -654,7 +889,9 @@ const MAP = {
 
             this.DOM.squareCount.textContent =
                 "0";
+
         }
+
     },
 
 
@@ -669,10 +906,19 @@ const MAP = {
             cell
         );
 
+
         if (!cell) {
+
             return;
+
         }
 
+
+        /*
+         * Suppression de l'ancienne sélection
+         * uniquement au moment où une nouvelle
+         * cellule est réellement sélectionnée.
+         */
 
         this.DOM.octagonGrid
             ?.querySelectorAll(
@@ -684,9 +930,14 @@ const MAP = {
                     selected.classList.remove(
                         "selected"
                     );
+
                 }
             );
 
+
+        /*
+         * Nouvelle sélection visuelle.
+         */
 
         cell.classList.add(
             "selected"
@@ -715,6 +966,18 @@ const MAP = {
             `X${x}-Y${y}`;
 
 
+        const content =
+            cell.dataset.content ||
+            "EMPTY";
+
+
+        /*
+         * Sauvegarde de l'état.
+         *
+         * C'est cette valeur qui permet
+         * de restaurer la sélection plus tard.
+         */
+
         this.state.selectedCell =
             id;
 
@@ -732,8 +995,28 @@ const MAP = {
 
 
         this.state.selectedContent =
-            cell.dataset.content ||
-            "EMPTY";
+            content;
+
+
+        this.log(
+            "CELL SELECTED",
+            {
+                id:
+                    id,
+
+                x:
+                    x,
+
+                y:
+                    y,
+
+                type:
+                    type,
+
+                content:
+                    content
+            }
+        );
 
 
         this.updateInterface();
@@ -742,6 +1025,7 @@ const MAP = {
         this.setSystemMessage(
             "CELL SELECTED"
         );
+
     },
 
 
@@ -755,6 +1039,7 @@ const MAP = {
             "clearSelection()"
         );
 
+
         this.DOM.octagonGrid
             ?.querySelectorAll(
                 ".octagon-cell.selected"
@@ -765,6 +1050,7 @@ const MAP = {
                     cell.classList.remove(
                         "selected"
                     );
+
                 }
             );
 
@@ -785,7 +1071,12 @@ const MAP = {
             null;
 
 
+        this.state.selectedContent =
+            null;
+
+
         this.updateInterface();
+
     },
 
 
@@ -806,6 +1097,7 @@ const MAP = {
         ) {
 
             return;
+
         }
 
 
@@ -823,6 +1115,7 @@ const MAP = {
 
 
         this.updateInterface();
+
     },
 
 
@@ -831,6 +1124,7 @@ const MAP = {
         this.setZoom(
             this.state.zoom + 10
         );
+
     },
 
 
@@ -839,6 +1133,7 @@ const MAP = {
         this.setZoom(
             this.state.zoom - 10
         );
+
     },
 
 
@@ -859,6 +1154,7 @@ const MAP = {
         ) {
 
             return;
+
         }
 
 
@@ -867,6 +1163,7 @@ const MAP = {
 
 
         this.applyTransform();
+
     },
 
 
@@ -881,6 +1178,7 @@ const MAP = {
         ) {
 
             return;
+
         }
 
 
@@ -890,6 +1188,7 @@ const MAP = {
 
         this.DOM.octagonGrid.style.transform =
             `rotate(${rotation}deg)`;
+
     },
 
 
@@ -904,6 +1203,7 @@ const MAP = {
         ) {
 
             return 0;
+
         }
 
 
@@ -939,6 +1239,7 @@ const MAP = {
             180 /
             Math.PI
         );
+
     },
 
 
@@ -955,6 +1256,7 @@ const MAP = {
         ) {
 
             angle -= 360;
+
         }
 
 
@@ -963,10 +1265,12 @@ const MAP = {
         ) {
 
             angle += 360;
+
         }
 
 
         return angle;
+
     },
 
 
@@ -981,6 +1285,7 @@ const MAP = {
         ) {
 
             return;
+
         }
 
 
@@ -989,6 +1294,7 @@ const MAP = {
         ) {
 
             return;
+
         }
 
 
@@ -1036,10 +1342,12 @@ const MAP = {
         } catch (
             error
         ) {
+
         }
 
 
         event.preventDefault();
+
     },
 
 
@@ -1054,6 +1362,7 @@ const MAP = {
         ) {
 
             return;
+
         }
 
 
@@ -1063,6 +1372,7 @@ const MAP = {
         ) {
 
             return;
+
         }
 
 
@@ -1096,6 +1406,7 @@ const MAP = {
 
             this.interaction.moved =
                 true;
+
         }
 
 
@@ -1104,6 +1415,7 @@ const MAP = {
         ) {
 
             return;
+
         }
 
 
@@ -1113,9 +1425,6 @@ const MAP = {
          * on compare l'angle du curseur
          * autour du centre de la map
          * avec l'angle initial.
-         *
-         * Cela permet de véritablement
-         * "attraper" la map avec la souris.
          */
 
         const currentPointerAngle =
@@ -1137,6 +1446,7 @@ const MAP = {
 
 
         this.applyTransform();
+
     },
 
 
@@ -1151,6 +1461,7 @@ const MAP = {
         ) {
 
             return;
+
         }
 
 
@@ -1161,6 +1472,7 @@ const MAP = {
         ) {
 
             return;
+
         }
 
 
@@ -1185,11 +1497,13 @@ const MAP = {
                 this.DOM.octagonGrid.releasePointerCapture(
                     event.pointerId
                 );
+
             }
 
         } catch (
             error
         ) {
+
         }
 
 
@@ -1216,7 +1530,9 @@ const MAP = {
                 },
                 0
             );
+
         }
+
     },
 
 
@@ -1254,6 +1570,7 @@ const MAP = {
 
 
         this.updateInterface();
+
     },
 
 
@@ -1269,7 +1586,9 @@ const MAP = {
 
             this.DOM.systemMessage.textContent =
                 message;
+
         }
+
     },
 
 
@@ -1282,13 +1601,23 @@ const MAP = {
         this.log(
             "updateInterface()",
             {
-                selectedCell: this.state.selectedCell,
-                selectedX: this.state.selectedX,
-                selectedY: this.state.selectedY,
-                selectedType: this.state.selectedType,
-                selectedContent: this.state.selectedContent
+                selectedCell:
+                    this.state.selectedCell,
+
+                selectedX:
+                    this.state.selectedX,
+
+                selectedY:
+                    this.state.selectedY,
+
+                selectedType:
+                    this.state.selectedType,
+
+                selectedContent:
+                    this.state.selectedContent
             }
         );
+
 
         if (
             this.DOM.selectedCell
@@ -1297,6 +1626,7 @@ const MAP = {
             this.DOM.selectedCell.textContent =
                 this.state.selectedCell ||
                 "NONE";
+
         }
 
 
@@ -1307,6 +1637,7 @@ const MAP = {
             this.DOM.selectedType.textContent =
                 this.state.selectedType ||
                 "EMPTY";
+
         }
 
 
@@ -1323,6 +1654,7 @@ const MAP = {
                         "0"
                     )
                     : "--";
+
         }
 
 
@@ -1339,6 +1671,7 @@ const MAP = {
                         "0"
                     )
                     : "--";
+
         }
 
 
@@ -1355,6 +1688,7 @@ const MAP = {
                         "0"
                     )
                     : "--";
+
         }
 
 
@@ -1371,6 +1705,7 @@ const MAP = {
                         "0"
                     )
                     : "--";
+
         }
 
 
@@ -1382,30 +1717,39 @@ const MAP = {
                 this.state.selectedContent ||
                 "EMPTY";
 
+
             this.log(
                 "DOM CELL UPDATED",
                 {
-                    cell: this.DOM.selectedCell
-                        ? this.DOM.selectedCell.textContent
-                        : null,
 
-                    x: this.DOM.cellX
-                        ? this.DOM.cellX.textContent
-                        : null,
+                    cell:
+                        this.DOM.selectedCell
+                            ? this.DOM.selectedCell.textContent
+                            : null,
 
-                    y: this.DOM.cellY
-                        ? this.DOM.cellY.textContent
-                        : null,
+                    x:
+                        this.DOM.cellX
+                            ? this.DOM.cellX.textContent
+                            : null,
 
-                    type: this.DOM.selectedType
-                        ? this.DOM.selectedType.textContent
-                        : null,
+                    y:
+                        this.DOM.cellY
+                            ? this.DOM.cellY.textContent
+                            : null,
 
-                    content: this.DOM.selectedContent
-                        ? this.DOM.selectedContent.textContent
-                        : null
+                    type:
+                        this.DOM.selectedType
+                            ? this.DOM.selectedType.textContent
+                            : null,
+
+                    content:
+                        this.DOM.selectedContent
+                            ? this.DOM.selectedContent.textContent
+                            : null
+
                 }
             );
+
         }
 
 
@@ -1417,7 +1761,9 @@ const MAP = {
                 String(
                     this.state.zoom
                 );
+
         }
+
     },
 
 
@@ -1436,8 +1782,10 @@ const MAP = {
                 () => {
 
                     this.zoomIn();
+
                 }
             );
+
         }
 
 
@@ -1450,8 +1798,10 @@ const MAP = {
                 () => {
 
                     this.zoomOut();
+
                 }
             );
+
         }
 
 
@@ -1466,6 +1816,7 @@ const MAP = {
                     this.startRotation(
                         event
                     );
+
                 }
             );
 
@@ -1477,6 +1828,7 @@ const MAP = {
                     this.moveRotation(
                         event
                     );
+
                 }
             );
 
@@ -1488,6 +1840,7 @@ const MAP = {
                     this.endRotation(
                         event
                     );
+
                 }
             );
 
@@ -1499,6 +1852,7 @@ const MAP = {
                     this.endRotation(
                         event
                     );
+
                 }
             );
 
@@ -1514,12 +1868,18 @@ const MAP = {
                         this.interaction.dragging =
                             false;
 
+
                         this.DOM.octagonGrid.classList.remove(
                             "is-dragging"
                         );
+
                     }
+
                 }
             );
+
         }
+
     }
+
 };
